@@ -54,11 +54,11 @@ const buttonVariants = cva(
         xs: 'h-6 gap-1 rounded-sm px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
         sm: 'h-7 gap-1 rounded-sm px-2',
         lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
-        icon: 'size-8',
+        icon: 'size-8 squircle',
         'icon-xs':
-          'size-6 rounded-sm pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
-        'icon-sm': 'size-7 rounded-sm',
-        'icon-lg': 'size-9',
+          'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        'icon-sm': 'size-7 squircle',
+        'icon-lg': 'size-9 squircle',
       },
     },
     defaultVariants: {

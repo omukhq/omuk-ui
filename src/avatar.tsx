@@ -23,8 +23,8 @@ const avatarVariants = cva(
     variants: {
       kind: {
         person: 'rounded-full bg-primary text-on-primary',
-        app: 'rounded-sm bg-page text-foreground inset-ring inset-ring-border',
-        team: 'rounded-sm bg-primary text-on-primary',
+        app: 'squircle bg-page text-foreground inset-ring inset-ring-border',
+        team: 'squircle bg-primary text-on-primary',
       },
       size: {
         sm: 'size-4 text-2xs',
