@@ -1,0 +1,1024 @@
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, XIcon } from 'lucide-react';
+import {
+  type ComponentPropsWithRef,
+  createContext,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+  use,
+  useId,
+  useRef,
+  useState,
+} from 'react';
+import { Button } from './button';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from './input-group';
+import {
+  type OpenChangeDetails,
+  PopupFrame,
+  type PopupRoot,
+  type PopupRootProps,
+  popupState,
+  triggerState,
+  usePopupRoot,
+} from './popup';
+import type { Align, Side } from './position';
+import {
+  CHIP,
+  FIELD_WRAPPER_EDGE,
+  MENU_SEPARATOR,
+  OPTION_ROW,
+  POP,
+  SECTION_LABEL,
+  SURFACE,
+  TICK_SLOT,
+} from './recipes';
+import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
+import { cn } from './utils';
+
+// A combobox: a text field that filters a list of options under it
+// (WAI-ARIA combobox with a listbox popup). The focus stays in the field;
+// the highlighted option is `aria-activedescendant`. The arrow keys move
+// the highlight and open the list, Enter chooses, Escape closes, typing
+// filters. With `multiple`, the chosen options are chips beside the field.
+
+export type ChangeDetails = Omit<OpenChangeDetails, 'trigger'>;
+
+function details(reason: string, event: Event | undefined): ChangeDetails {
+  let canceled = false;
+  return {
+    reason,
+    event,
+    cancel() {
+      canceled = true;
+    },
+    get isCanceled() {
+      return canceled;
+    },
+  };
+}
+
+type Group<Item> = { items: readonly Item[] };
+
+function isGroup(item: unknown): item is Group<unknown> {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    Array.isArray((item as { items?: unknown }).items)
+  );
+}
+
+/** Base UI's default label: the `label`, else the `value`, else the item. */
+function defaultLabel(item: unknown) {
+  if (item && typeof item === 'object') {
+    if ('label' in item && item.label != null) return String(item.label);
+    if ('value' in item) return String(item.value);
+  }
+  return item == null ? '' : String(item);
+}
+
+/** Lower case and without accents: "Zürich" is found by "zur". */
+function fold(text: string) {
+  return text
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLocaleLowerCase();
+}
+
+type ValueOf<Value, Multiple> = Multiple extends true ? Value[] : Value | null;
+
+type ComboboxState = PopupRoot & {
+  id: string;
+  multiple: boolean;
+  disabled: boolean;
+  readOnly: boolean;
+  openOnInputClick: boolean;
+  autoHighlight: boolean;
+  value: unknown;
+  selected: unknown[];
+  isSelected: (item: unknown) => boolean;
+  choose: (item: unknown, event: Event) => void;
+  remove: (index: number, event: Event) => void;
+  clear: (event: Event) => void;
+  labelOf: (item: unknown) => string;
+  inputValue: string;
+  type: (text: string, event: Event) => void;
+  /** The items left after filtering: flat, or groups with their items. */
+  shown: readonly unknown[];
+  empty: boolean;
+  highlighted: string | null;
+  setHighlighted: (id: string | null) => void;
+  /** What to highlight when the list opens. */
+  pending: RefObject<'first' | 'last' | 'selected' | 'chosen' | null>;
+  input: RefObject<HTMLInputElement | null>;
+  list: RefObject<HTMLDivElement | null>;
+};
+
+const ComboboxContext = createContext<ComboboxState | null>(null);
+
+function useCombobox() {
+  const combobox = use(ComboboxContext);
+  if (!combobox) throw new Error('A combobox part must be inside <Combobox>.');
+  return combobox;
+}
+
+type ComboboxProps<
+  Value,
+  Multiple extends boolean | undefined,
+> = PopupRootProps & {
+  items?: readonly Value[] | readonly Group<Value>[];
+  multiple?: Multiple;
+  value?: ValueOf<Value, Multiple>;
+  defaultValue?: ValueOf<Value, Multiple>;
+  onValueChange?: (
+    value: ValueOf<Value, Multiple>,
+    eventDetails: ChangeDetails,
+  ) => void;
+  inputValue?: string;
+  defaultInputValue?: string;
+  onInputValueChange?: (
+    inputValue: string,
+    eventDetails: ChangeDetails,
+  ) => void;
+  isItemEqualToValue?: (item: Value, value: Value) => boolean;
+  itemToStringLabel?: (item: Value) => string;
+  itemToStringValue?: (item: Value) => string;
+  /** Which items match the typed text; null shows every item. */
+  filter?:
+    | ((
+        item: Value,
+        query: string,
+        itemToString?: (item: Value) => string,
+      ) => boolean)
+    | null;
+  name?: string;
+  required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  autoHighlight?: boolean;
+  openOnInputClick?: boolean;
+  children?: ReactNode;
+};
+
+function Combobox<Value, Multiple extends boolean | undefined = false>({
+  items,
+  multiple,
+  value: controlled,
+  defaultValue,
+  onValueChange,
+  inputValue: controlledInput,
+  defaultInputValue,
+  onInputValueChange,
+  isItemEqualToValue,
+  itemToStringLabel,
+  itemToStringValue,
+  filter,
+  name,
+  required,
+  disabled = false,
+  readOnly = false,
+  autoHighlight = false,
+  openOnInputClick = true,
+  onOpenChange,
+  children,
+  ...props
+}: ComboboxProps<Value, Multiple>) {
+  const many = Boolean(multiple);
+  const id = useId();
+  const [own, setOwn] = useState<unknown>(defaultValue ?? (many ? [] : null));
+  const value: unknown = controlled === undefined ? own : controlled;
+  const selected = many
+    ? ((value as unknown[] | null) ?? [])
+    : value == null
+      ? []
+      : [value];
+
+  function equal(a: unknown, b: unknown) {
+    if (a == null || b == null) return a === b;
+    return isItemEqualToValue
+      ? isItemEqualToValue(a as Value, b as Value)
+      : Object.is(a, b);
+  }
+  function labelOf(item: unknown) {
+    return itemToStringLabel && item != null
+      ? itemToStringLabel(item as Value)
+      : defaultLabel(item);
+  }
+  const chosenLabel = !many && value != null ? labelOf(value) : '';
+
+  const [ownInput, setOwnInput] = useState(defaultInputValue ?? chosenLabel);
+  const inputValue = controlledInput ?? ownInput;
+  // The value changed from outside (a form reset, a parent's state): the
+  // field shows its label.
+  const [seen, setSeen] = useState(value);
+  const same = many
+    ? (seen as unknown[] | null)?.length === selected.length &&
+      selected.every((item, at) => equal(item, (seen as unknown[])[at]))
+    : equal(seen, value);
+  if (!same) {
+    setSeen(value);
+    if (!many) setOwnInput(chosenLabel);
+  }
+
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const pending = useRef<'first' | 'last' | 'selected' | 'chosen' | null>(null);
+  const input = useRef<HTMLInputElement | null>(null);
+  const list = useRef<HTMLDivElement | null>(null);
+
+  function type(
+    text: string,
+    event: Event | undefined,
+    reason = 'input-change',
+  ) {
+    onInputValueChange?.(text, details(reason, event));
+    setOwnInput(text);
+  }
+
+  const root = usePopupRoot({
+    ...props,
+    onOpenChange(next, change) {
+      onOpenChange?.(next, change);
+      if (next || change.isCanceled) return;
+      // Closed without choosing: the field shows the value again.
+      if (change.reason !== 'item-press') {
+        type(many ? '' : chosenLabel, change.event, change.reason);
+      }
+    },
+  });
+  if (root.status === 'closed' && highlighted !== null) setHighlighted(null);
+
+  function commit(next: unknown, event: Event) {
+    const change = details('item-press', event);
+    onValueChange?.(next as ValueOf<Value, Multiple>, change);
+    if (!change.isCanceled) setOwn(next);
+    return !change.isCanceled;
+  }
+
+  function choose(item: unknown, event: Event) {
+    if (many) {
+      const next = selected.some((each) => equal(each, item))
+        ? selected.filter((each) => !equal(each, item))
+        : [...selected, item];
+      commit(next, event);
+      if (inputValue) type('', event, 'item-press');
+      return;
+    }
+    if (!equal(item, value) && !commit(item, event)) return;
+    type(labelOf(item), event, 'item-press');
+    root.setOpen(false, 'item-press', event);
+  }
+
+  // A field that holds the chosen label lists everything, not just it.
+  const query =
+    !many && value != null && inputValue === chosenLabel ? '' : inputValue;
+  function matches(item: unknown) {
+    if (filter === null || !query) return true;
+    if (filter) return filter(item as Value, query, itemToStringLabel);
+    return fold(labelOf(item)).includes(fold(query.trim()));
+  }
+  const all = (items ?? []) as readonly unknown[];
+  const shown = isGroup(all[0])
+    ? (all as Group<unknown>[])
+        .map((group) => ({ ...group, items: group.items.filter(matches) }))
+        .filter((group) => group.items.length > 0)
+    : all.filter(matches);
+
+  return (
+    <ComboboxContext
+      value={{
+        ...root,
+        id,
+        multiple: many,
+        disabled,
+        readOnly,
+        openOnInputClick,
+        autoHighlight,
+        value,
+        selected,
+        isSelected: (item) => selected.some((each) => equal(each, item)),
+        choose,
+        remove(index, event) {
+          commit(
+            selected.filter((_, at) => at !== index),
+            event,
+          );
+        },
+        clear(event) {
+          commit(many ? [] : null, event);
+          type('', event, 'clear-press');
+          input.current?.focus();
+        },
+        labelOf,
+        inputValue,
+        type,
+        shown,
+        empty: items !== undefined && shown.length === 0,
+        highlighted,
+        setHighlighted,
+        pending,
+        input,
+        list,
+      }}
+    >
+      {children}
+      {name &&
+        (selected.length ? selected : [null]).map((item, at) => (
+          <input
+            key={at}
+            type="hidden"
+            name={name}
+            required={required}
+            disabled={disabled}
+            value={
+              item == null
+                ? ''
+                : itemToStringValue
+                  ? itemToStringValue(item as Value)
+                  : item && typeof item === 'object' && 'value' in item
+                    ? String(item.value)
+                    : String(item)
+            }
+          />
+        ))}
+    </ComboboxContext>
+  );
+}
+
+// --- The field ---------------------------------------------------------------
+
+const OPTIONS = '[role=option]:not([data-disabled])';
+
+function optionsOf(list: Element | null) {
+  return list ? [...list.querySelectorAll<HTMLElement>(OPTIONS)] : [];
+}
+
+function show(combobox: ComboboxState, option: HTMLElement | undefined) {
+  if (!option) return;
+  combobox.setHighlighted(option.id);
+  option.scrollIntoView({ block: 'nearest' });
+}
+
+/** The props of the field's <input>: the combobox role and its keys. */
+function useInputProps(
+  combobox: ComboboxState,
+  { ref, disabled: ownDisabled, ...props }: ComponentPropsWithRef<'input'>,
+) {
+  const disabled = combobox.disabled || ownDisabled;
+  const register = useMergedRef(ref, (node: HTMLInputElement | null) => {
+    combobox.input.current = node;
+    // In chips, the chips box is what the list sits under.
+    if (node && !node.closest('[data-slot=combobox-chips]')) {
+      combobox.setTrigger(node);
+    }
+  });
+
+  function open(
+    event: React.SyntheticEvent,
+    at: ComboboxState['pending']['current'],
+  ) {
+    if (combobox.readOnly) return;
+    combobox.pending.current = at;
+    combobox.setOpen(true, 'list-navigation', event);
+  }
+
+  function move(step: 1 | -1) {
+    const options = optionsOf(combobox.list.current);
+    if (!options.length) return;
+    const at = options.findIndex(
+      (option) => option.id === combobox.highlighted,
+    );
+    const next =
+      at < 0
+        ? step === 1
+          ? 0
+          : options.length - 1
+        : (at + step + options.length) % options.length;
+    show(combobox, options[next]);
+  }
+
+  return mergeProps(
+    {
+      ref: register,
+      type: 'text',
+      role: 'combobox',
+      autoComplete: 'off',
+      'aria-autocomplete': 'list',
+      'aria-expanded': combobox.open,
+      'aria-controls': combobox.open ? `${combobox.id}-list` : undefined,
+      'aria-activedescendant':
+        (combobox.open && combobox.highlighted) || undefined,
+      value: combobox.inputValue,
+      disabled,
+      readOnly: combobox.readOnly || undefined,
+      ...triggerState(combobox.open),
+      onChange(event: React.ChangeEvent<HTMLInputElement>) {
+        combobox.type(event.currentTarget.value, event.nativeEvent);
+        combobox.setHighlighted(null);
+        if (!combobox.open) open(event, null);
+      },
+      onClick(event: React.MouseEvent) {
+        if (combobox.openOnInputClick && !combobox.open) open(event, 'chosen');
+      },
+      onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+        if (event.nativeEvent.isComposing) return;
+        const { open: isOpen, highlighted } = combobox;
+        switch (event.key) {
+          case 'ArrowDown':
+          case 'ArrowUp':
+            event.preventDefault();
+            if (!isOpen) {
+              open(
+                event,
+                event.key === 'ArrowUp'
+                  ? 'last'
+                  : combobox.selected.length
+                    ? 'selected'
+                    : 'first',
+              );
+            } else move(event.key === 'ArrowDown' ? 1 : -1);
+            return;
+          case 'Enter': {
+            if (!isOpen) return;
+            const option = highlighted
+              ? document.getElementById(highlighted)
+              : combobox.autoHighlight
+                ? optionsOf(combobox.list.current)[0]
+                : null;
+            if (!option) return;
+            event.preventDefault();
+            option.click();
+            return;
+          }
+          case 'Tab':
+            if (isOpen) combobox.setOpen(false, 'focus-out', event);
+            return;
+          case 'Backspace':
+            if (
+              combobox.multiple &&
+              combobox.inputValue === '' &&
+              combobox.selected.length
+            ) {
+              combobox.remove(combobox.selected.length - 1, event.nativeEvent);
+            }
+        }
+      },
+    },
+    props,
+  );
+}
+
+function ComboboxValue({
+  children,
+}: {
+  // biome-ignore lint/suspicious/noExplicitAny: Base UI's signature; callers type the value.
+  children?: ReactNode | ((value: any) => ReactNode);
+}) {
+  const combobox = useCombobox();
+  if (typeof children === 'function') return children(combobox.value);
+  if (children != null) return children;
+  return combobox.selected.map(combobox.labelOf).join(', ');
+}
+
+/** Keeps the focus in the field while a button beside it is pressed. */
+function keepFocus(event: React.MouseEvent) {
+  event.preventDefault();
+}
+
+function ComboboxTrigger({
+  className,
+  children,
+  render,
+  nativeButton: _nativeButton,
+  ...props
+}: ComponentPropsWithRef<'button'> & {
+  render?: RenderProp;
+  nativeButton?: boolean;
+}) {
+  const combobox = useCombobox();
+  return useRender(
+    'button',
+    mergeProps(
+      {
+        type: 'button',
+        tabIndex: -1,
+        'aria-label': 'Show options',
+        'aria-haspopup': 'listbox',
+        'aria-expanded': combobox.open,
+        'aria-controls': combobox.open ? `${combobox.id}-list` : undefined,
+        // As Base UI's trigger: both while the list is open. The input's
+        // chevron clears its open background with `data-pressed:`.
+        ...triggerState(combobox.open),
+        'data-pressed': combobox.open ? '' : undefined,
+        'data-slot': 'combobox-trigger',
+        disabled: combobox.disabled || undefined,
+        className: cn("[&_svg:not([class*='size-'])]:size-4", className),
+        onMouseDown: keepFocus,
+        onClick(event: React.MouseEvent) {
+          combobox.pending.current = combobox.open ? null : 'chosen';
+          combobox.setOpen(!combobox.open, 'trigger-press', event);
+          combobox.input.current?.focus();
+        },
+        children: (
+          <>
+            {children}
+            {combobox.open ? (
+              <ChevronUpIcon
+                strokeWidth={1.5}
+                className="pointer-events-none size-4 text-muted"
+              />
+            ) : (
+              <ChevronDownIcon
+                strokeWidth={1.5}
+                className="pointer-events-none size-4 text-muted"
+              />
+            )}
+          </>
+        ),
+      },
+      props,
+    ),
+    render,
+  );
+}
+
+/** Shown while there is something to clear: a value or typed text. */
+function ComboboxClear({
+  className,
+  ...props
+}: React.ComponentProps<typeof InputGroupButton>) {
+  const combobox = useCombobox();
+  if (!combobox.selected.length && !combobox.inputValue) return null;
+  return (
+    <InputGroupButton
+      variant="ghost"
+      size="icon"
+      data-slot="combobox-clear"
+      aria-label="Clear"
+      className={cn(className)}
+      onMouseDown={keepFocus}
+      onClick={(event) => combobox.clear(event.nativeEvent)}
+      {...props}
+    >
+      <XIcon strokeWidth={1.5} className="pointer-events-none" />
+    </InputGroupButton>
+  );
+}
+
+function ComboboxInput({
+  className,
+  children,
+  disabled = false,
+  showTrigger = true,
+  showClear = false,
+  ...props
+}: ComponentPropsWithRef<'input'> & {
+  showTrigger?: boolean;
+  showClear?: boolean;
+}) {
+  const combobox = useCombobox();
+  const off = combobox.disabled || disabled;
+  return (
+    <InputGroup className={cn('w-auto', className)}>
+      <InputGroupInput {...useInputProps(combobox, { disabled, ...props })} />
+      <InputGroupAddon align="inline-end">
+        {showTrigger && (
+          <InputGroupButton
+            size="icon"
+            variant="ghost"
+            render={<ComboboxTrigger />}
+            data-slot="input-group-button"
+            className="data-pressed:bg-transparent [[data-slot=input-group]:has([data-slot=combobox-clear])_&]:hidden"
+            disabled={off}
+          />
+        )}
+        {showClear && <ComboboxClear disabled={off} />}
+      </InputGroupAddon>
+      {children}
+    </InputGroup>
+  );
+}
+
+// --- The popup --------------------------------------------------------------
+
+function ComboboxContent({
+  className,
+  side = 'bottom',
+  sideOffset = 6,
+  align = 'start',
+  alignOffset = 0,
+  anchor,
+  ...props
+}: ComponentPropsWithRef<'div'> & {
+  side?: Side;
+  sideOffset?: number;
+  align?: Align;
+  alignOffset?: number;
+  /** Base UI's anchor: the chips box, which the list already sits under. */
+  anchor?: unknown;
+}) {
+  const combobox = useCombobox();
+
+  function highlightIn(positioner: HTMLElement) {
+    const options = optionsOf(positioner);
+    const chosen = options.find((option) =>
+      option.hasAttribute('data-selected'),
+    );
+    const how = combobox.pending.current;
+    combobox.pending.current = null;
+    const target =
+      how === 'first'
+        ? options[0]
+        : how === 'last'
+          ? options.at(-1)
+          : how === 'selected'
+            ? (chosen ?? options[0])
+            : // A press opens on the chosen option, as Base UI does.
+              how === 'chosen'
+              ? chosen
+              : undefined;
+    chosen?.scrollIntoView({ block: 'nearest' });
+    show(combobox, target);
+  }
+
+  /** A press on the field's own parts (the chevron, the clear) is not outside. */
+  function dismiss(reason: string, event: Event) {
+    const field =
+      combobox.trigger?.closest('[data-slot=input-group]') ?? combobox.trigger;
+    if (reason === 'outside-press' && field?.contains(event.target as Node)) {
+      return;
+    }
+    combobox.setOpen(false, reason, event);
+  }
+
+  return (
+    <PopupFrame
+      root={combobox}
+      kind="popover"
+      placement={{ side, align, sideOffset, alignOffset }}
+      className="isolate z-50"
+      initialFocus={highlightIn}
+      finalFocus={false}
+      onDismiss={dismiss}
+    >
+      <div
+        data-slot="combobox-content"
+        data-chips={!!anchor}
+        data-side={side}
+        data-align={align}
+        data-empty={combobox.empty ? '' : undefined}
+        {...popupState(combobox.open)}
+        // A menu's surface (DESIGN.md, section 3). The list pads itself, so
+        // the surface has none; a search field inside it is a small field.
+        className={cn(
+          SURFACE,
+          POP,
+          'group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-(--anchor-width) overflow-hidden p-0 [&>[data-slot=input-group]]:m-1 [&>[data-slot=input-group]]:mb-0 [&>[data-slot=input-group]]:h-8',
+          className,
+        )}
+        {...props}
+      />
+    </PopupFrame>
+  );
+}
+
+function ComboboxList({
+  className,
+  children,
+  render,
+  ref,
+  ...props
+}: Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+  render?: RenderProp;
+  // biome-ignore lint/suspicious/noExplicitAny: Base UI's signature; callers type the item.
+  children?: ReactNode | ((item: any, index: number) => ReactNode);
+}) {
+  const combobox = useCombobox();
+  const merged = useMergedRef(ref, combobox.list);
+  return useRender(
+    'div',
+    {
+      ref: merged,
+      role: 'listbox',
+      id: `${combobox.id}-list`,
+      'aria-multiselectable': combobox.multiple || undefined,
+      'data-slot': 'combobox-list',
+      'data-empty': combobox.empty ? '' : undefined,
+      // The focus stays in the field while an option is pressed.
+      onMouseDown: keepFocus,
+      className: cn(
+        'no-scrollbar max-h-72 scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0',
+        className,
+      ),
+      ...props,
+      children:
+        typeof children === 'function'
+          ? combobox.shown.map((item, at) => children(item, at))
+          : children,
+    },
+    render,
+  );
+}
+
+function ComboboxItem({
+  className,
+  children,
+  value,
+  disabled = false,
+  index: _index,
+  render,
+  onClick,
+  ...props
+}: ComponentPropsWithRef<'div'> & {
+  value?: unknown;
+  disabled?: boolean;
+  index?: number;
+  render?: RenderProp;
+}) {
+  const combobox = useCombobox();
+  const id = useId();
+  const highlighted = combobox.highlighted === id;
+  const selected = combobox.isSelected(value);
+  return useRender(
+    'div',
+    mergeProps(
+      {
+        id,
+        role: 'option',
+        'aria-selected': selected,
+        'aria-disabled': disabled || undefined,
+        'data-slot': 'combobox-item',
+        'data-highlighted': highlighted ? '' : undefined,
+        'data-selected': selected ? '' : undefined,
+        'data-disabled': disabled ? '' : undefined,
+        className: cn(OPTION_ROW, className),
+        onPointerMove(event: React.PointerEvent) {
+          if (event.pointerType === 'touch' || disabled || highlighted) return;
+          combobox.setHighlighted(id);
+        },
+        onPointerLeave(event: React.PointerEvent) {
+          if (event.pointerType !== 'touch' && highlighted) {
+            combobox.setHighlighted(null);
+          }
+        },
+      },
+      {
+        ...props,
+        onClick(event: React.MouseEvent<HTMLDivElement>) {
+          if (disabled) return;
+          onClick?.(event);
+          combobox.choose(value, event.nativeEvent);
+        },
+        children: (
+          <>
+            <span className={TICK_SLOT}>
+              {selected && (
+                <CheckIcon strokeWidth={1.5} className="pointer-events-none" />
+              )}
+            </span>
+            {children}
+          </>
+        ),
+      },
+    ),
+    render,
+  );
+}
+
+type GroupState = { label: string; items: readonly unknown[] | undefined };
+
+const GroupContext = createContext<GroupState | null>(null);
+
+function ComboboxGroup({
+  className,
+  items,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & {
+  items?: readonly unknown[];
+  render?: RenderProp;
+}) {
+  const label = useId();
+  return (
+    <GroupContext value={{ label, items }}>
+      {useRender(
+        'div',
+        {
+          role: 'group',
+          'aria-labelledby': label,
+          'data-slot': 'combobox-group',
+          className: cn(className),
+          ...props,
+        },
+        render,
+      )}
+    </GroupContext>
+  );
+}
+
+function ComboboxLabel({
+  className,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  const group = use(GroupContext);
+  return useRender(
+    'div',
+    {
+      id: group?.label,
+      'data-slot': 'combobox-label',
+      className: cn(SECTION_LABEL, 'pl-2', className),
+      ...props,
+    },
+    render,
+  );
+}
+
+/** Draws the items of its group (or of the list) with `children`. */
+function ComboboxCollection({
+  children,
+}: {
+  // biome-ignore lint/suspicious/noExplicitAny: Base UI's signature; callers type the item.
+  children: (item: any, index: number) => ReactNode;
+}) {
+  const combobox = useCombobox();
+  const items = use(GroupContext)?.items ?? combobox.shown;
+  return items.map((item, at) => children(item, at));
+}
+
+function ComboboxEmpty({
+  className,
+  children,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  const combobox = useCombobox();
+  return useRender(
+    'div',
+    {
+      // Read out when the list empties, as a status.
+      role: 'status',
+      'data-slot': 'combobox-empty',
+      className: cn(
+        'hidden w-full justify-center py-2 text-center text-sm text-muted group-data-empty/combobox-content:flex',
+        className,
+      ),
+      ...props,
+      children: combobox.empty ? children : null,
+    },
+    render,
+  );
+}
+
+function ComboboxSeparator({
+  className,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  return useRender(
+    'div',
+    {
+      role: 'separator',
+      'aria-orientation': 'horizontal',
+      'data-slot': 'combobox-separator',
+      className: cn(MENU_SEPARATOR, className),
+      ...props,
+    },
+    render,
+  );
+}
+
+// --- Chips (multiple) --------------------------------------------------------
+
+function ComboboxChips({
+  className,
+  render,
+  ref,
+  onMouseDown,
+  ...props
+}: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  const combobox = useCombobox();
+  const merged = useMergedRef(ref, combobox.setTrigger);
+  return useRender(
+    'div',
+    {
+      ref: merged,
+      'data-slot': 'combobox-chips',
+      className: cn(
+        // A field (DESIGN.md, section 3) that grows in height with its chips.
+        `flex min-h-9 flex-wrap items-center gap-1 rounded-md bg-page px-3 py-2 text-sm text-foreground transition-shadow ${FIELD_WRAPPER_EDGE} [&:has([data-slot=combobox-chip])]:pl-2`,
+        className,
+      ),
+      // A press on the box, between the chips, goes to the field.
+      onMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+        onMouseDown?.(event);
+        if (event.target !== event.currentTarget) return;
+        event.preventDefault();
+        combobox.input.current?.focus();
+      },
+      ...props,
+    },
+    render,
+  );
+}
+
+function ComboboxChip({
+  className,
+  children,
+  showRemove = true,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & {
+  showRemove?: boolean;
+  render?: RenderProp;
+}) {
+  const combobox = useCombobox();
+  return useRender(
+    'div',
+    {
+      'data-slot': 'combobox-chip',
+      className: cn(
+        CHIP,
+        'has-disabled:pointer-events-none has-disabled:text-muted [&:has([data-slot=combobox-chip-remove])]:pr-0.5',
+        className,
+      ),
+      ...props,
+      children: (
+        <>
+          {children}
+          {showRemove && (
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              tabIndex={-1}
+              aria-label="Remove"
+              disabled={combobox.disabled}
+              className="size-5 rounded-sm text-muted hover:text-foreground"
+              data-slot="combobox-chip-remove"
+              onMouseDown={keepFocus}
+              onClick={(event) => {
+                // The chip's place among the chips is its value's.
+                const chip = event.currentTarget.closest(
+                  '[data-slot=combobox-chip]',
+                );
+                const chips = [
+                  ...(chip
+                    ?.closest('[data-slot=combobox-chips]')
+                    ?.querySelectorAll('[data-slot=combobox-chip]') ?? []),
+                ];
+                const at = chip ? chips.indexOf(chip) : -1;
+                if (at >= 0) combobox.remove(at, event.nativeEvent);
+              }}
+            >
+              <XIcon strokeWidth={1.5} className="pointer-events-none" />
+            </Button>
+          )}
+        </>
+      ),
+    },
+    render,
+  );
+}
+
+function ComboboxChipsInput({
+  className,
+  ...props
+}: ComponentPropsWithRef<'input'>) {
+  const combobox = useCombobox();
+  return (
+    <input
+      data-slot="combobox-chip-input"
+      className={cn(
+        'min-w-16 flex-1 bg-transparent outline-none placeholder:text-muted',
+        className,
+      )}
+      {...useInputProps(combobox, props)}
+    />
+  );
+}
+
+function useComboboxAnchor() {
+  return useRef<HTMLDivElement | null>(null);
+}
+
+export {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxCollection,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxGroup,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxLabel,
+  ComboboxList,
+  ComboboxSeparator,
+  ComboboxTrigger,
+  ComboboxValue,
+  useComboboxAnchor,
+};

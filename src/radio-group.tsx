@@ -1,0 +1,136 @@
+import {
+  type ComponentPropsWithRef,
+  createContext,
+  type KeyboardEvent,
+  use,
+  useState,
+} from 'react';
+import { cn } from './utils';
+
+// WAI-ARIA radio group: one tab stop (the picked radio; while none is
+// picked, each radio), the arrow keys move AND pick. The root app has no radio; the names follow
+// shadcn's (RadioGroup, RadioGroupItem) so a later root one can match.
+//
+// DESIGN.md, section 3: the checkbox's box, round: the 2-wide control edge,
+// darker on hover. Picked: an on-primary centre in a 5-wide accent ring.
+// Focus: the one focus ring. Disabled: the hover fill and the plain `inset-ring inset-ring-border`.
+
+type RadioGroupState = {
+  value: string | null;
+  pick: (value: string) => void;
+  disabled: boolean;
+};
+
+const RadioGroupContext = createContext<RadioGroupState | null>(null);
+
+/**
+ * The arrow keys in a group of `role=radio` buttons: move to the next one
+ * (round at the ends) and pick it. The segmented control uses it too.
+ */
+export function moveAndPick(event: KeyboardEvent<HTMLElement>) {
+  const back = event.key === 'ArrowUp' || event.key === 'ArrowLeft';
+  const forward = event.key === 'ArrowDown' || event.key === 'ArrowRight';
+  if (!back && !forward) return;
+  const radios = [
+    ...event.currentTarget.querySelectorAll<HTMLButtonElement>(
+      '[role=radio]:not(:disabled)',
+    ),
+  ];
+  const from = radios.indexOf(event.target as HTMLButtonElement);
+  if (from < 0) return;
+  event.preventDefault();
+  const next =
+    radios[(from + (forward ? 1 : -1) + radios.length) % radios.length];
+  next?.focus();
+  next?.click();
+}
+
+type RadioGroupProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'defaultValue' | 'onChange'
+> & {
+  value?: string | null;
+  defaultValue?: string | null;
+  onValueChange?: (value: string) => void;
+  disabled?: boolean;
+  /** The form field's name. Without it, no native input is drawn. */
+  name?: string;
+};
+
+function RadioGroup({
+  className,
+  value: controlled,
+  defaultValue = null,
+  onValueChange,
+  disabled = false,
+  name,
+  children,
+  ...props
+}: RadioGroupProps) {
+  const [own, setOwn] = useState(defaultValue);
+  const value = controlled === undefined ? own : controlled;
+  function pick(next: string) {
+    if (next === value) return;
+    onValueChange?.(next);
+    setOwn(next);
+  }
+  return (
+    <RadioGroupContext value={{ value, pick, disabled }}>
+      <div
+        role="radiogroup"
+        aria-disabled={disabled || undefined}
+        data-slot="radio-group"
+        data-disabled={disabled ? '' : undefined}
+        className={cn('grid gap-3', className)}
+        onKeyDown={moveAndPick}
+        {...props}
+      >
+        {children}
+        {name && <input type="hidden" name={name} value={value ?? ''} />}
+      </div>
+    </RadioGroupContext>
+  );
+}
+
+function RadioGroupItem({
+  className,
+  value,
+  disabled: own = false,
+  ...props
+}: Omit<ComponentPropsWithRef<'button'>, 'value'> & { value: string }) {
+  const group = use(RadioGroupContext);
+  if (!group) throw new Error('A radio must be inside <RadioGroup>.');
+  const checked = group.value === value;
+  const disabled = group.disabled || own;
+  const tabStop = checked || group.value === null ? 0 : -1;
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={checked}
+      disabled={disabled}
+      tabIndex={tabStop}
+      data-slot="radio-group-item"
+      data-checked={checked ? '' : undefined}
+      data-unchecked={checked ? undefined : ''}
+      className={cn(
+        'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-page inset-ring-2 inset-ring-control outline-none transition-colors before:absolute before:-inset-2',
+        'hover:inset-ring-2 hover:inset-ring-outline focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
+        'aria-checked:bg-accent aria-checked:inset-ring-2 aria-checked:inset-ring-accent aria-checked:focus-visible:focus-ring',
+        'disabled:cursor-not-allowed disabled:bg-hover disabled:inset-ring disabled:inset-ring-border aria-checked:disabled:bg-hover aria-checked:disabled:inset-ring aria-checked:disabled:inset-ring-border',
+        className,
+      )}
+      onClick={() => group.pick(value)}
+      {...props}
+    >
+      {checked && (
+        <span
+          data-slot="radio-group-indicator"
+          className="size-1.5 rounded-full bg-on-primary [:disabled>&]:bg-muted"
+        />
+      )}
+    </button>
+  );
+}
+
+export { RadioGroup, RadioGroupItem };
