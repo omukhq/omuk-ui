@@ -98,7 +98,6 @@ function Avatar({
       {...props}
     >
       {src ? (
-        // biome-ignore lint/performance/noImgElement: beta has no next/image; an avatar is a small picture from any host.
         <img src={src} alt="" className="size-full object-cover" />
       ) : (
         children
