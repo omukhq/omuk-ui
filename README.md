@@ -23,7 +23,7 @@ The app's Tailwind build must also scan the package's files, for example `@sourc
 
 ## Rules
 
-- A file in the package must not import from the app (`@/…` or `@beta/…`). The package has its own helpers (`utils.ts` for `cn`, `touch.ts`, `toast-recipe.ts`).
+- A file in the package must not import from an app (`@beta/…`, `@site/…`) or from Markpad's other packages, except `@markpad/shared` (`biome.json` enforces it). The package has its own helpers (`utils.ts` for `cn`, `touch.ts`, `toast-recipe.ts`).
 - Every colour, size, radius and spacing value must come from a token. The test `src/tokens.test.ts` fails on a literal value. A line marked `design-ok` is a documented exception.
 - Imports inside the package are relative (`./button`).
 
