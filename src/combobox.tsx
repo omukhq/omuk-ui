@@ -676,7 +676,7 @@ function ComboboxContent({
         className={cn(
           SURFACE,
           POP,
-          'group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-(--anchor-width) overflow-hidden p-0 [&>[data-slot=input-group]]:m-1 [&>[data-slot=input-group]]:mb-0 [&>[data-slot=input-group]]:h-8',
+          'group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-(--anchor-width) overflow-hidden p-0 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8',
           className,
         )}
         {...props}
@@ -909,7 +909,7 @@ function ComboboxChips({
       'data-slot': 'combobox-chips',
       className: cn(
         // A field (DESIGN.md, section 3) that grows in height with its chips.
-        `flex min-h-9 flex-wrap items-center gap-1 rounded-md bg-page px-3 py-2 text-sm text-foreground transition-shadow ${FIELD_WRAPPER_EDGE} [&:has([data-slot=combobox-chip])]:pl-2`,
+        `flex min-h-9 flex-wrap items-center gap-1 rounded-md bg-page px-3 py-2 text-sm text-foreground transition-shadow ${FIELD_WRAPPER_EDGE} has-data-[slot=combobox-chip]:pl-2`,
         className,
       ),
       // A press on the box, between the chips, goes to the field.
@@ -942,7 +942,7 @@ function ComboboxChip({
       'data-slot': 'combobox-chip',
       className: cn(
         CHIP,
-        'has-disabled:pointer-events-none has-disabled:text-muted [&:has([data-slot=combobox-chip-remove])]:pr-0.5',
+        'has-disabled:pointer-events-none has-disabled:text-muted has-data-[slot=combobox-chip-remove]:pr-0.5',
         className,
       ),
       ...props,

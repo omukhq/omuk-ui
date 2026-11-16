@@ -8,7 +8,7 @@
 export const PHONE_TOUCH = [
   'max-sm:[&_[data-slot=button][data-size^=icon]]:size-12', // design-ok: selectors, not values
   'max-sm:[&_[data-slot=button]:not([data-size^=icon])]:h-12', // design-ok: selectors, not values
-  'max-sm:[&_[data-slot=input]]:h-12', // design-ok: selectors, not values
-  'max-sm:[&_[data-slot=input-group]]:h-12', // design-ok: selectors, not values
-  'max-sm:[&_[data-slot=select-trigger]]:h-12', // design-ok: selectors, not values
+  'max-sm:**:data-[slot=input]:h-12', // design-ok: selectors, not values
+  'max-sm:**:data-[slot=input-group]:h-12', // design-ok: selectors, not values
+  'max-sm:**:data-[slot=select-trigger]:h-12', // design-ok: selectors, not values
 ].join(' ');

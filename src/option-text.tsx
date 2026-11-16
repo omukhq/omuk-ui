@@ -23,7 +23,7 @@ function OptionText({
       className={cn('flex min-w-0 flex-1 flex-col', className)}
       {...props}
     >
-      <span className="truncate [[aria-selected=true]_&]:font-medium [[aria-checked=true]_&]:font-medium">
+      <span className="truncate in-aria-selected:font-medium in-aria-checked:font-medium">
         {title}
       </span>
       {description && (

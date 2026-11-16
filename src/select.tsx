@@ -389,7 +389,7 @@ function SelectTrigger({
           FIELD,
           // A button, so the theme's field size (16 on phones) does not
           // reach it, and it does not need to: nothing is typed into it.
-          "flex w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&>[data-slot=select-value]]:line-clamp-1 [&>[data-slot=select-value]]:flex [&>[data-slot=select-value]]:items-center [&>[data-slot=select-value]]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          "flex w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           size === 'default' ? 'h-8' : 'h-9',
           className,
         ),
@@ -683,7 +683,7 @@ function SelectItem({
         'data-disabled': disabled ? '' : undefined,
         className: cn(
           OPTION_ROW,
-          '[&>[data-item-text]]:flex [&>[data-item-text]]:items-center [&>[data-item-text]]:gap-2',
+          '*:data-item-text:flex *:data-item-text:items-center *:data-item-text:gap-2',
           className,
         ),
         onPointerMove(event: React.PointerEvent<HTMLElement>) {

@@ -16,7 +16,7 @@ import { cn } from './utils';
 
 /** The current row: the selected tint, and the hover tint over it on hover. */
 const CURRENT_ROW =
-  '[&[aria-current]]:bg-selected [&[aria-current]]:font-medium [&[aria-current]]:hover:bg-selected [&[aria-current]]:hover:bg-linear-to-r [&[aria-current]]:hover:from-hover [&[aria-current]]:hover:to-hover [&[aria-current]_svg]:text-foreground';
+  'aria-[current]:bg-selected aria-[current]:font-medium aria-[current]:hover:bg-selected aria-[current]:hover:bg-linear-to-r aria-[current]:hover:from-hover aria-[current]:hover:to-hover [&[aria-current]_svg]:text-foreground';
 
 /** The step in for each level of the tree, from the top level down. */
 const LEVELS = [

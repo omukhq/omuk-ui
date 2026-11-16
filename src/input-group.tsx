@@ -43,7 +43,7 @@ function InputGroup({
         inputGroupVariants({ size, edge }),
         // The search field at the top of a combobox list: the list is the
         // focus, so the field keeps its hover edge and takes no ring.
-        '[[data-slot=combobox-content]_&]:has-[input:focus-visible]:inset-ring-2 [[data-slot=combobox-content]_&]:has-[input:focus-visible]:inset-ring-outline [[data-slot=combobox-content]_&]:has-[input:focus-visible]:ring-0', // design-ok: selectors, not values
+        'in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-2 in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-outline in-data-[slot=combobox-content]:has-[input:focus-visible]:ring-0', // design-ok: selectors, not values
         '[&:has(>[data-align=block-end])]:h-auto [&:has(>[data-align=block-end])]:flex-col [&:has(>[data-align=block-start])]:h-auto [&:has(>[data-align=block-start])]:flex-col [&:has(>textarea)]:h-auto',
         '[&:has(>[data-align=block-end])>input]:pt-3 [&:has(>[data-align=block-start])>input]:pb-3 [&:has(>[data-align=inline-end])>input]:pr-2 [&:has(>[data-align=inline-start])>input]:pl-2',
         className,

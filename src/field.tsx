@@ -42,7 +42,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="field-group"
       className={cn(
-        'group/field-group @container/field-group flex w-full flex-col gap-6 [&[data-slot=checkbox-group]]:gap-3 [&>[data-slot=field-group]]:gap-4',
+        'group/field-group @container/field-group flex w-full flex-col gap-6 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4',
         className,
       )}
       {...props}
@@ -57,9 +57,9 @@ const fieldVariants = cva('group/field flex w-full', {
     orientation: {
       vertical: 'flex-col gap-1 *:w-full [&>.sr-only]:w-auto',
       horizontal:
-        'flex-row items-center gap-2 [&:has(>[data-slot=field-content])]:items-start [&>[data-slot=field-label]]:flex-auto [&:has(>[data-slot=field-content])>[role=checkbox]]:mt-0.5 [&:has(>[data-slot=field-content])>[role=radio]]:mt-0.5',
+        'flex-row items-center gap-2 [&:has(>[data-slot=field-content])]:items-start *:data-[slot=field-label]:flex-auto [&:has(>[data-slot=field-content])>[role=checkbox]]:mt-0.5 [&:has(>[data-slot=field-content])>[role=radio]]:mt-0.5',
       responsive:
-        'flex-col gap-1 *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:gap-2 @md/field-group:*:w-auto @md/field-group:[&:has(>[data-slot=field-content])]:items-start @md/field-group:[&>[data-slot=field-label]]:flex-auto [&>.sr-only]:w-auto',
+        'flex-col gap-1 *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:gap-2 @md/field-group:*:w-auto @md/field-group:[&:has(>[data-slot=field-content])]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto',
     },
   },
   defaultVariants: {
@@ -104,7 +104,7 @@ function FieldLabel({
         'group/field-label peer/field-label flex w-fit gap-2 group-data-disabled/field:text-muted',
         // A label around a whole field is a choice card: the `inset-ring inset-ring-border`,
         // the picked edge once its control is on.
-        '[&:has(>[data-slot=field])]:w-full [&:has(>[data-slot=field])]:flex-col [&:has(>[data-slot=field])]:rounded-md [&:has(>[data-slot=field])]:inset-ring [&:has(>[data-slot=field])]:inset-ring-border [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-2 [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-accent [&>[data-slot=field]]:p-3',
+        '[&:has(>[data-slot=field])]:w-full [&:has(>[data-slot=field])]:flex-col [&:has(>[data-slot=field])]:rounded-md [&:has(>[data-slot=field])]:inset-ring [&:has(>[data-slot=field])]:inset-ring-border [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-2 [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-accent *:data-[slot=field]:p-3',
         className,
       )}
       {...props}

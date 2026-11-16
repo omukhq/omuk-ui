@@ -147,7 +147,7 @@ function AvatarStack({ className, ...props }: ComponentProps<'span'>) {
     <span
       data-slot="avatar-stack"
       className={cn(
-        'inline-flex items-center [&>[data-slot=avatar]]:outline-2 [&>[data-slot=avatar]]:outline-page [&>[data-slot=avatar]+[data-slot=avatar]]:-ml-1',
+        'inline-flex items-center *:data-[slot=avatar]:outline-2 *:data-[slot=avatar]:outline-page [&>[data-slot=avatar]+[data-slot=avatar]]:-ml-1',
         className,
       )}
       {...props}
