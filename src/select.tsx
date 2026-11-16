@@ -39,9 +39,9 @@ import { cn } from './utils';
 // option, Enter and Space choose it. On the closed button, the arrow keys,
 // Enter and Space open the list, and typing chooses the next match.
 //
-// As Base UI's, the list opens over its button by default
-// (alignItemWithTrigger), the chosen option's text on the button's text,
-// and falls back to opening below it when there is no room.
+// The list opens below its button. With alignItemWithTrigger (as Base
+// UI's default) it opens over the button instead, the chosen option's text
+// on the button's text, and falls back to below when there is no room.
 
 /** Base UI's `items`: `{ value, label }` pairs (flat or in groups), or a map. */
 type Items =
@@ -469,9 +469,9 @@ function SelectContent({
   children,
   side = 'bottom',
   sideOffset = 4,
-  align = 'center',
+  align = 'start',
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  alignItemWithTrigger = false,
   onScroll,
   ref,
   ...props
