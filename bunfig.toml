@@ -1,0 +1,4 @@
+[test]
+# The shared setup: env files from the repo root, the production-database
+# guard, the server-only stub (test/setup.ts).
+preload = ["../../test/setup.ts"]

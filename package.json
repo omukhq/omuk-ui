@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Omuk UI: the design system's React components (Markpad).",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit -p ."
+  },
   "sideEffects": false,
   "exports": {
     "./alert-dialog": "./src/alert-dialog.tsx",
@@ -51,9 +55,6 @@
     "./tooltip": "./src/tooltip.tsx",
     "./touch": "./src/touch.ts",
     "./utils": "./src/utils.ts"
-  },
-  "scripts": {
-    "test": "bun test"
   },
   "peerDependencies": {
     "react": "^19",
