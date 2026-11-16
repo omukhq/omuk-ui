@@ -78,23 +78,23 @@ export function place(positioner: HTMLElement, anchor: Box, at: Placement) {
   let side = at.side;
   let edge = physical(side);
   const vertical = edge === 'top' || edge === 'bottom';
-  function fit() {
-    style.setProperty(
-      '--available-height',
-      px(vertical ? space[edge] - at.sideOffset : height - 2 * EDGE),
-    );
+  function measure(available: number) {
+    style.setProperty('--available-height', px(available));
     return { w: positioner.offsetWidth, h: positioner.offsetHeight };
   }
-  let size = fit();
-  const need = (vertical ? size.h : size.w) + at.sideOffset;
+  // Its own size first, with the window's room: measured already squeezed
+  // into the asked side's room, a list always "fits" there (shrunk to a
+  // row or two) and never flips.
+  const natural = measure(height - 2 * EDGE);
+  const need = (vertical ? natural.h : natural.w) + at.sideOffset;
   const flipped = OPPOSITE[side];
+  // As floating-ui's flip: the other side, when this one is too small for
+  // it and that one has more room.
   if (need > space[edge] && space[physical(flipped)] > space[edge]) {
     side = flipped;
     edge = physical(side);
-    size = fit();
   }
-
-  const { w, h } = size;
+  const { w, h } = vertical ? measure(space[edge] - at.sideOffset) : natural;
   const inverted = at.align === 'end' ? -1 : 1;
   let top: number;
   let left: number;
