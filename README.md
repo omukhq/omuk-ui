@@ -2,7 +2,7 @@
 
 Omuk UI is the design system's React components. Markpad's beta app and site use them.
 
-The rules for the look are in the root `DESIGN.md`. The rules for each component are in `beta/docs/design-guide.md`.
+The rules for the look are in the root `DESIGN.md`. The rules for each component are in `apps/app/docs/design-guide.md`.
 
 ## Use
 
@@ -35,4 +35,4 @@ The app's Tailwind build must also scan the package's files, for example `@sourc
 
 ## Technical note
 
-The root `package.json` lists `packages/*` as Bun workspaces. `bun install` at the root links the package at `node_modules/@omuk/ui`. beta and site are not workspace members: they resolve `@omuk/ui/*` through their aliases (`beta/aliases.ts`, `site/aliases.ts`) and tsconfig paths. A `workspace:*` dependency in their own `package.json` does not resolve, because they are not members. A `file:` dependency installs a second copy of the package's dependencies, at other versions, in their `node_modules`. The root `bunfig.toml` keeps the hoisted install layout.
+The root `package.json` lists `packages/*` as Bun workspaces. `bun install` at the root links the package at `node_modules/@omuk/ui`. beta and site are not workspace members: they resolve `@omuk/ui/*` through their aliases (`apps/app/aliases.ts`, `apps/site/aliases.ts`) and tsconfig paths. A `workspace:*` dependency in their own `package.json` does not resolve, because they are not members. A `file:` dependency installs a second copy of the package's dependencies, at other versions, in their `node_modules`. The root `bunfig.toml` keeps the hoisted install layout.
