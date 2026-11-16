@@ -10,7 +10,7 @@ import { cn } from './utils';
 
 // Our toasts, in place of the `sonner` package, with its calls: shared code
 // imports `toast` from here and keeps `toast.success(…)`, and the app's
-// <Toaster> (src/components/layout/providers) its props. Only the parts the app uses: a title, a description, one
+// <Toaster> (packages/web/src/layout/providers) its props. Only the parts the app uses: a title, a description, one
 // action, a close button, an id to update a toast in place, and a timer that
 // waits while the pointer or the keyboard is on the toasts, or the tab is
 // hidden. DESIGN.md §9: plain toasts leave after the <Toaster>'s duration;

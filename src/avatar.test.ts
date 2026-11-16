@@ -7,7 +7,7 @@ import { describe, expect, test } from 'bun:test';
 import { avatarColorClass } from './avatar';
 
 const theme = await Bun.file(
-  new URL('../../../src/design/theme.css', import.meta.url),
+  new URL('./design/theme.css', import.meta.url),
 ).text();
 
 /** A `--color-<name>: #rrggbb` palette value from theme.css. */

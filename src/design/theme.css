@@ -1,0 +1,240 @@
+/*
+  Markpad design tokens — the only place a raw value may appear.  v3.13
+  Tailwind 4. In each app's main stylesheet:
+
+    @import "tailwindcss";
+    @import "../../packages/omuk-ui/src/design/theme.css";   (path to the kit)
+
+  Tailwind's default colours are replaced by Markpad's palette; its text sizes, radii and shadows by ours. Spacing and sizing are Tailwind's own.
+  Read DESIGN.md for what each token is for, and CHANGELOG.md for what changed.
+*/
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* static: always emit every variable, because the roles below point at palette shades with var() */
+@theme static {
+  /* 1 · Colour */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* 1a · Palette — 11 families × 11 shades (generated in OKLCH). bg-red-100, text-blue-600, border-gray-200 … */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f4f5f7; --color-gray-100: #e6e9ed; --color-gray-200: #cdd2d8; --color-gray-300: #aeb4bb; --color-gray-400: #8a9098; --color-gray-500: #6b727b; --color-gray-600: #5a5f66; --color-gray-700: #41474e; --color-gray-800: #2b3036; --color-gray-900: #1a1d21; --color-gray-950: #111315;
+  --color-red-50: #fff4f2; --color-red-100: #ffe4df; --color-red-200: #ffcbc1; --color-red-300: #ffa796; --color-red-400: #fa7661; --color-red-500: #e9523f; --color-red-600: #cf3223; --color-red-700: #b42318; --color-red-800: #941b14; --color-red-900: #781b14; --color-red-950: #4d0e0a;
+  --color-orange-50: #fff4f0; --color-orange-100: #ffe5da; --color-orange-200: #ffceb9; --color-orange-300: #fead8a; --color-orange-400: #f18556; --color-orange-500: #e0662e; --color-orange-600: #c34b09; --color-orange-700: #a53c02; --color-orange-800: #872f03; --color-orange-900: #702503; --color-orange-950: #471502;
+  --color-amber-50: #fff5e8; --color-amber-100: #fbe8ce; --color-amber-200: #ffddb1; --color-amber-300: #ffca86; --color-amber-400: #f8ae4b; --color-amber-500: #f09a0a; --color-amber-600: #c47b09; --color-amber-700: #9f620b; --color-amber-800: #7c4900; --color-amber-900: #5f3601; --color-amber-950: #3d1f00;
+  --color-yellow-50: #faf7e6; --color-yellow-100: #fcf5d1; --color-yellow-200: #faebac; --color-yellow-300: #f3da78; --color-yellow-400: #e8c10a; --color-yellow-500: #c29f08; --color-yellow-600: #9d7f0f; --color-yellow-700: #7f6400; --color-yellow-800: #614b03; --color-yellow-900: #523e03; --color-yellow-950: #342500;
+  --color-green-50: #edfbf3; --color-green-100: #d8f3e5; --color-green-200: #b7e5cd; --color-green-300: #8cd1ae; --color-green-400: #51b789; --color-green-500: #14a06c; --color-green-600: #097f54; --color-green-700: #057149; --color-green-800: #015d3b; --color-green-900: #044e30; --color-green-950: #00311c;
+  --color-teal-50: #edfaf8; --color-teal-100: #d8f2ed; --color-teal-200: #b7e5dd; --color-teal-300: #8dd3c8; --color-teal-400: #53bbac; --color-teal-500: #13a595; --color-teal-600: #06897b; --color-teal-700: #067266; --color-teal-800: #055d53; --color-teal-900: #034c44; --color-teal-950: #002f29;
+  --color-sky-50: #eff8ff; --color-sky-100: #d9effe; --color-sky-200: #b3dcf9; --color-sky-300: #86c3ed; --color-sky-400: #4ba3dc; --color-sky-500: #0b87c7; --color-sky-600: #0971a9; --color-sky-700: #066192; --color-sky-800: #05517b; --color-sky-900: #00456c; --color-sky-950: #012a45;
+  --color-blue-50: #f2f7ff; --color-blue-100: #e1ecff; --color-blue-200: #c6daff; --color-blue-300: #9abdff; --color-blue-400: #6597ff; --color-blue-500: #3f76f3; --color-blue-600: #2557d6; --color-blue-700: #1e48bc; --color-blue-800: #1a3d9d; --color-blue-900: #1a3683; --color-blue-950: #102356;
+  --color-violet-50: #f5f6ff; --color-violet-100: #e8e9ff; --color-violet-200: #d3d5ff; --color-violet-300: #b3b4fe; --color-violet-400: #8e89fd; --color-violet-500: #7361f6; --color-violet-600: #5b3fd9; --color-violet-700: #4e33bf; --color-violet-800: #412ca0; --color-violet-900: #382a85; --color-violet-950: #241b59;
+  --color-pink-50: #fff3f6; --color-pink-100: #ffe3ea; --color-pink-200: #fec8d8; --color-pink-300: #ff9fbe; --color-pink-400: #f26f9f; --color-pink-500: #dd4986; --color-pink-600: #c2266e; --color-pink-700: #a7165d; --color-pink-800: #8a124c; --color-pink-900: #721640; --color-pink-950: #490b27;
+
+  /* 1b · Roles — what components use. Each points at a palette shade and swaps in dark mode */
+
+  --color-page: var(--c-page);          /* the doc, sidebars, side panels, menus, popovers, dialogs */
+  --color-panel: var(--c-panel);        /* ground behind cards: dashboard grids, auth pages, code */
+  --color-raised: var(--c-raised);      /* above the ground: cards, popovers, chosen segment */
+  --color-hover: var(--c-hover);        /* pointer over a row or ghost button; a tint, works on any ground */
+  --color-selected: var(--c-selected);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
+  --color-border: var(--c-border);      /* lines, dividers, card and button edges */
+  --color-outline: var(--c-outline);    /* hover edge of fields, checkboxes, radios (3:1) */
+  --color-control: var(--c-control);    /* resting edge of fields, checkboxes, radios, 2px */
+  --color-foreground: var(--c-foreground);
+  --color-muted: var(--c-muted);
+  --color-primary: var(--c-primary);    /* primary buttons, tooltips, toasts */
+  --color-on-primary: var(--c-on-primary);
+  --color-accent: var(--c-accent);      /* links, caret, picked values, focus edge, chart series 1 */
+  --color-mark: var(--c-mark);          /* comment highlights, added text, focus ring, plan badges */
+  --color-found: var(--c-found);        /* the words a search found, in its results */
+  --color-danger: var(--c-danger);
+  --color-success: var(--c-success);
+  --color-warning: var(--c-warning);
+  --color-scrim: var(--c-scrim);        /* behind dialogs, drawers and sheets */
+  --color-chart-1: var(--c-chart-1);    /* chart series, in this order; max 3 per chart */
+  --color-chart-2: var(--c-chart-2);
+  --color-chart-3: var(--c-chart-3);
+
+  /* 2 · Space and size — Tailwind's own scale (--spacing 0.25rem = 4px): p-3 = 12px, h-8 = 32px.
+     Spacing steps: 0.5 1 2 3 4 6 8 12 16. Control heights: h-10 (40) h-8 (32) h-7 (28, formatting toolbar) h-6 (24, row actions). */
+  /* The read views' text column (boards 13 and 14): about 75 characters a line. max-w-reading */
+  --container-reading: 720px;
+
+  /* 3 · Type — six interface sizes, each with its line height */
+  --text-*: initial;
+  --text-2xs: 10px;
+  --text-2xs--line-height: 1;
+  --text-xs: 12px;
+  --text-xs--line-height: 1.5;
+  --text-sm: 14px;
+  --text-sm--line-height: 1.5;
+  --text-base: 16px;
+  --text-base--line-height: 1.5;
+  --text-lg: 20px;
+  --text-lg--line-height: 1.25;
+  --text-xl: 24px;
+  --text-xl--line-height: 1.25;
+  --text-2xl: 32px;
+  --text-2xl--line-height: 1.25;
+  /* Display: the public site (markpad.md) only, never the app */
+  --text-5xl: 48px;
+  --text-5xl--line-height: 1.1;
+  --text-5xl--letter-spacing: -0.02em;
+  --text-5xl--font-weight: 600;
+  --text-6xl: 64px;
+  --text-6xl--line-height: 1.05;
+  --text-6xl--letter-spacing: -0.025em;
+  --text-6xl--font-weight: 600;
+
+  --font-*: initial;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+  --font-readable: "Atkinson Hyperlegible", "IBM Plex Sans", system-ui, sans-serif; /* "Easy read", doc only */
+
+  --leading-*: initial;
+  --leading-tight: 1.25;   /* headings, two-line rows */
+  --leading-normal: 1.5;   /* interface (the default for every text size up to base) */
+  --leading-relaxed: 1.7;  /* body text in the doc */
+
+  /* 4 · Radius — outer = inner + padding */
+  --radius-*: initial;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 5 · Shadow — through variables so dark mode can swap them */
+  --shadow-*: initial;
+  --shadow-sm: var(--elevation-sm);   /* everything that floats */
+  --shadow-lg: var(--elevation-lg);   /* dialogs, toasts, drawers */
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+}
+
+:root {
+  --c-page: var(--color-white);
+  --c-panel: var(--color-gray-50);
+  --c-raised: var(--color-white);
+  --c-hover: rgb(17 19 21 / 0.04);   /* gray-950 at 4% */
+  --c-selected: rgb(17 19 21 / 0.08); /* gray-950 at 8% */
+  --c-border: var(--color-gray-100);
+  --c-outline: var(--color-gray-400);
+  --c-control: var(--color-gray-200);
+  --c-foreground: var(--color-gray-950);
+  --c-muted: var(--color-gray-600);
+  --c-primary: var(--color-gray-950);
+  --c-on-primary: var(--color-white);
+  --c-accent: var(--color-blue-600);
+  --c-mark: var(--color-blue-100);
+  --c-found: var(--color-yellow-200);
+  --c-danger: var(--color-red-600);
+  --c-success: var(--color-green-600);
+  --c-warning: var(--color-amber-700);
+  --c-scrim: rgb(0 0 0 / 0.32);
+  --c-chart-1: var(--color-blue-600);
+  --c-chart-2: var(--color-orange-500);
+  --c-chart-3: var(--color-teal-500);
+  --elevation-sm: 0 0 2px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.14);
+  --elevation-lg: 0 0 2px rgb(0 0 0 / 0.12), 0 8px 16px rgb(0 0 0 / 0.14);
+  --line: 1px;
+  --line-strong: 2px;
+  --ring: 3px;
+}
+
+/* Dark on screen only: a printed page (Download .pdf) is paper, so print
+   keeps the light colours above, whatever the theme. */
+@media not print {
+  [data-theme="dark"] {
+    --c-page: var(--color-gray-950);
+    --c-panel: var(--color-gray-900);
+    --c-raised: var(--color-gray-800);
+    --c-hover: rgb(255 255 255 / 0.045);
+    --c-selected: rgb(255 255 255 / 0.09);
+    --c-border: var(--color-gray-800);
+    --c-outline: var(--color-gray-500);
+    --c-control: var(--color-gray-700);
+    --c-foreground: var(--color-gray-100);
+    --c-muted: var(--color-gray-300);
+    --c-primary: var(--color-gray-100);
+    --c-on-primary: var(--color-gray-950);
+    --c-accent: var(--color-blue-300);
+    --c-mark: var(--color-blue-950);
+    --c-found: var(--color-yellow-800);
+    --c-danger: var(--color-red-400);
+    --c-success: var(--color-green-400);
+    --c-warning: var(--color-amber-400);
+    --c-scrim: rgb(0 0 0 / 0.6);
+    --c-chart-1: var(--color-blue-500);
+    --c-chart-2: var(--color-orange-500);
+    --c-chart-3: var(--color-teal-500);
+    --elevation-sm: 0 0 2px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.5);
+    --elevation-lg: 0 0 2px rgb(0 0 0 / 0.5), 0 8px 16px rgb(0 0 0 / 0.5);
+    color-scheme: dark;
+  }
+}
+
+/*
+  Edges are Tailwind's own inset rings: `inset-ring inset-ring-border` (1px, things you look at),
+  `inset-ring-2 inset-ring-control` (2px, things you click, type in or tick), `hover:inset-ring-outline`.
+  Rings, focus and shadows share one box-shadow, so `inset-ring shadow-sm focus-visible:focus-ring` all show together.
+  focus-ring is the one custom helper: every control, checkbox, radio and switch uses focus-visible:focus-ring.
+*/
+/* squircle: the whole square as one smooth curve (radius 50% + corner-shape), on square things only — icon
+  buttons, app and team tiles, icon tiles. Never on wide or round shapes: 50% makes a wide box a pill.
+  It is the element's radius: no rounded-* beside it (cn treats it as one, packages/shared/src/utils.ts). Browsers
+  without corner-shape get a plain quarter-side radius (50% alone would draw a circle). */
+@utility squircle {
+  border-radius: 25%;
+  @supports (corner-shape: squircle) {
+    border-radius: 50%;
+    corner-shape: squircle;
+  }
+}
+
+@utility focus-ring {
+  outline: none;
+  --tw-inset-ring-shadow: inset 0 0 0 var(--line-strong) var(--color-accent);
+  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-mark);
+  box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+@layer base {
+  /* The root stays at the browser's 16px so every rem (Tailwind, libraries, the editor) keeps its size.
+     The 14px interface size is set on body. */
+  html {
+    background: var(--color-page);
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    background: var(--color-page);
+    color: var(--color-foreground);
+  }
+  /* Dividers: border-t/b/l/r are 1px in the border colour by default */
+  *, ::before, ::after {
+    border-color: var(--color-border);
+  }
+  :focus-visible {
+    outline: none;
+  }
+  ::selection {
+    background: var(--color-mark);
+  }
+  /* iPhones zoom into fields under 16px: phones get 16, wider screens 14 */
+  input, textarea, select, [contenteditable="true"]:not(.cm-content) {
+    font-size: var(--text-base);
+  }
+  @media (min-width: 640px) {
+    input, textarea, select, [contenteditable="true"]:not(.cm-content) {
+      font-size: var(--text-sm);
+    }
+  }
+}

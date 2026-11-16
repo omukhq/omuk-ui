@@ -17,7 +17,7 @@ The package has no index file. Each component is a separate export (see `package
 
 ## Tokens
 
-The package does not include the tokens. The app that uses the package must load the root `src/design/theme.css` (the tokens) and `src/design/fonts.css` (the fonts). In Markpad, `src/styles/globals.css` imports both.
+The package does not include the tokens. The app that uses the package must load the root `packages/omuk-ui/src/design/theme.css` (the tokens) and `packages/omuk-ui/src/design/fonts.css` (the fonts). In Markpad, `packages/web/src/styles/globals.css` imports both.
 
 The app's Tailwind build must also scan the package's files, for example `@source "../../packages/omuk-ui/src";`.
 

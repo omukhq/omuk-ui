@@ -1,6 +1,6 @@
 // The values a design-system file must not write in place: every colour,
 // font, size, radius and spacing value comes from a token (the root
-// DESIGN.md, src/design/theme.css). A line marked `design-ok` is a
+// DESIGN.md, packages/omuk-ui/src/design/theme.css). A line marked `design-ok` is a
 // documented exception (as in check:design), like a team's colour, which is
 // data (decisions, R3). The kit's own test and beta's use it.
 
