@@ -35,4 +35,4 @@ The app's Tailwind build must also scan the package's files, for example `@sourc
 
 ## Technical note
 
-The root `package.json` lists `packages/*` as Bun workspaces. `bun install` at the root links the package at `node_modules/@omuk/ui`. beta and site are not workspace members: they resolve `@omuk/ui/*` through their aliases (`apps/app/aliases.ts`, `apps/site/aliases.ts`) and tsconfig paths. A `workspace:*` dependency in their own `package.json` does not resolve, because they are not members. A `file:` dependency installs a second copy of the package's dependencies, at other versions, in their `node_modules`. The root `bunfig.toml` keeps the hoisted install layout.
+The root `package.json` lists `packages/*` and `apps/*` as Bun workspaces. One `bun install` (at the root or in any member) installs them all and links the package at `node_modules/@omuk/ui`. The app and the site depend on it as `"@omuk/ui": "workspace:*"` and import `@omuk/ui/<component>` through its `exports`: a new component needs its line there. The root `bunfig.toml` keeps the hoisted install layout.
