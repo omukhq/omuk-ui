@@ -2,6 +2,16 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.3] - 2026-11-18
+
+### Added
+
+- `@omuk/ui/prompt`: `usePrompt()` (and `prompt` for code outside React) opens an alert, a modal or a drawer from any handler, and gives its answer as a promise; `<PromptProvider />` draws them. An alert gives `true` or `false`; its `onAction` keeps it open while the work runs, with the button's spinner, and shows a thrown error's message. A modal or a drawer gives what its `content` passes to `close`, or `null`. Prompts stack; a closed one leaves after its closing animation. Made after nextkit's `usePrompt`, with no store library: the store is `src/prompt-store.ts`, read with `useSyncExternalStore` as the toasts are.
+
+### Breaking
+
+- None.
+
 ## [1.0.0-alpha.2] - 2026-11-18
 
 ### Changed

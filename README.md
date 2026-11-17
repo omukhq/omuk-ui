@@ -26,6 +26,44 @@ import { toast } from '@omuk/ui/sonner';
 
 The package has no index file. Each component is a separate export (see `package.json`).
 
+### Prompts: alerts, modals and drawers from code
+
+`@omuk/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in the app, inside the providers that the prompts' content needs.
+
+```tsx
+import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
+
+const prompt = usePrompt();
+
+// An alert gives true (the action) or false (Cancel, Escape).
+const ok = await prompt.open({
+  type: 'alert',
+  title: 'Delete the team?',
+  description: 'It cannot be undone.',
+  actionLabel: 'Delete',
+  destructive: true,
+});
+
+// With onAction, the alert stays open while the work runs (the button keeps
+// its size and shows a spinner). A throw keeps it open with the message.
+await prompt.open({
+  type: 'alert',
+  title: 'Remove Ada?',
+  actionLabel: 'Remove',
+  loadingLabel: 'Removing',
+  onAction: () => removeMember(id),
+});
+
+// A modal or a drawer gives what its content passes to close(), or null.
+const name = await prompt.open<string>({
+  type: 'modal',
+  title: 'Rename the team',
+  content: (close) => <RenameForm onDone={close} />,
+});
+```
+
+`prompt.closeAll()` closes every open prompt. Outside a component, import `prompt` instead of the hook.
+
 The package ships TypeScript source with no build step. The app's bundler (Vite, Astro) compiles it.
 
 ## Tokens and fonts
