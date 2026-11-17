@@ -1,12 +1,13 @@
 /*
-  Markpad design tokens — the only place a raw value may appear.  v3.13
-  Tailwind 4. In each app's main stylesheet:
+  Omuk UI design tokens — the only place a raw value may appear.
+  The package version is the kit's version (package.json, CHANGELOG.md).
+  Tailwind 4. In each app's main stylesheet (the path is relative to that file):
 
     @import "tailwindcss";
-    @import "../../packages/omuk-ui/src/design/theme.css";   (path to the kit)
+    @import "<path to node_modules>/@omuk/ui/src/design/theme.css";
 
   Tailwind's default colours are replaced by Markpad's palette; its text sizes, radii and shadows by ours. Spacing and sizing are Tailwind's own.
-  Read DESIGN.md for what each token is for, and CHANGELOG.md for what changed.
+  Read docs/DESIGN.md for what each token is for, and CHANGELOG.md for what changed.
 */
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
