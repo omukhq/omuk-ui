@@ -43,7 +43,7 @@
   --color-selected: var(--c-selected);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
   --color-border: var(--c-border);      /* lines, dividers, card and button edges */
   --color-outline: var(--c-outline);    /* hover edge of fields, checkboxes, radios (3:1) */
-  --color-control: var(--c-control);    /* resting edge of fields, checkboxes, radios, 2px */
+  --color-control: var(--c-control);    /* resting edge: fields 1px, checkboxes and radios 2px */
   --color-foreground: var(--c-foreground);
   --color-muted: var(--c-muted);
   --color-primary: var(--c-primary);    /* primary buttons, tooltips, toasts */

@@ -34,7 +34,7 @@ Editor elements, App and onboarding — light and dark).
    Shadows never contain a border.
 7. **Edges are Tailwind inset rings; dividers are Tailwind borders.** Inset rings never change a control's size.
    Two weights: 1px `inset-ring inset-ring-border` for things you look at (cards, popovers, table frames);
-   2px `inset-ring-2 inset-ring-control` for anything you click, type in or tick (fields, outlined buttons, checkboxes, radios).
+   2px `inset-ring-2 inset-ring-control` for anything you click or tick (outlined buttons, checkboxes, radios); 1px `inset-ring inset-ring-control` for anything you type in (fields; owner, 18 Nov 2026).
    Change only the colour for states: `hover:inset-ring-outline`, `aria-invalid:inset-ring-danger`, picked `inset-ring-accent`.
    Dividers between areas and rows: `border-t` / `border-b` / `border-l` / `border-r` (1px, the border colour is the default).
    Never a full `border` or `border-2` around a control. Selected tab: `border-b-2 border-accent`.
@@ -79,7 +79,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 | `bg-selected` | Toggles that are on (Bold, side panel open, ghost pressed), applied filters and selected table rows. A neutral 8% tint — twice hover's 4% — so selection is grey, not violet; the ticked checkbox carries the accent. |
 | `bg-scrim` | Behind dialogs, drawers and sheets. One value: 32% black, 60% in dark. |
 | `border` | 1px lines: `inset-ring inset-ring-border` around cards, popovers and table frames; `border-t/b/l/r` for dividers (default colour) |
-| `control` (`inset-ring-2 inset-ring-control`) | Fields, checkboxes and radios at rest: a 2px light edge. |
+| `control` (`inset-ring inset-ring-control` on fields; `inset-ring-2` on checkboxes and radios) | At rest: a light edge, 1px on fields (owner, 18 Nov 2026), 2px on checkboxes and radios. |
 | `outline` (`hover:inset-ring-outline`) | The same 2px edge on hover, darker (3:1). |
 | `text-foreground` / `text-muted` | Main text / hints, meta, labels, timestamps |
 | `bg-primary text-on-primary` | Primary button, tooltip, toast |
@@ -163,9 +163,9 @@ Recipes are Tailwind classes; `{}` marks a variant.
   A starter fills this doc, saved as typing is; Undo returns to the empty doc.
 
 ### Field (input, select trigger, search)
-- Input: `h-9 px-3 rounded-md bg-page inset-ring-2 inset-ring-control hover:not-focus:not-aria-invalid:inset-ring-outline focus:focus-ring aria-invalid:inset-ring-danger`
+- Input: `h-9 px-3 rounded-md bg-page inset-ring inset-ring-control hover:not-focus:not-aria-invalid:inset-ring-outline focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger` (1px at rest; owner, 18 Nov 2026)
 - Wrapper fields (prefix, search with icon): the same on the wrapper, with `focus-within` and `has-aria-invalid`:
-  `inset-ring-2 inset-ring-control hover:not-focus-within:not-has-aria-invalid:inset-ring-outline focus-within:focus-ring has-aria-invalid:inset-ring-danger`
+  `inset-ring inset-ring-control hover:not-focus-within:not-has-aria-invalid:inset-ring-outline focus-within:focus-ring has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger`
 - Result (tested in Chromium): hover darkens the edge; focus wins over hover; an error stays red on hover,
   and when focused keeps the red edge and adds the mark ring. Mark errors with `aria-invalid="true"`, not a class.
 - Label above: `font-medium`, gap `1`. Hint below: `text-xs text-muted`. Error: `aria-invalid="true"` → `inset-ring-2 inset-ring-danger` (2px), hint `text-danger`.

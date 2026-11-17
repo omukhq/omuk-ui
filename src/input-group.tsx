@@ -16,9 +16,8 @@ import { cn } from './utils';
 // has focus, the button when the keyboard reaches it.
 
 // Sizes (R48, the Button's names): lg 36 (`h-9`, the default for a
-// field), default 32 (`h-8`, a sidebar's search). Edges: the
-// control edge (`inset-ring-2`), or `thin` (`inset-ring`), the sidebar's
-// (owner, 15 Nov 2026).
+// field), default 32 (`h-8`, a sidebar's search). Edges: every field is
+// thin since 1.0.0-alpha.2 (owner, 18 Nov 2026); `thin` stays so that callers keep working.
 const inputGroupVariants = cva('', {
   variants: {
     size: { default: 'h-8', lg: 'h-9' },
@@ -43,7 +42,7 @@ function InputGroup({
         inputGroupVariants({ size, edge }),
         // The search field at the top of a combobox list: the list is the
         // focus, so the field keeps its hover edge and takes no ring.
-        'in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-2 in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-outline in-data-[slot=combobox-content]:has-[input:focus-visible]:ring-0', // design-ok: selectors, not values
+        'in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-outline in-data-[slot=combobox-content]:has-[input:focus-visible]:ring-0', // design-ok: selectors, not values
         '[&:has(>[data-align=block-end])]:h-auto [&:has(>[data-align=block-end])]:flex-col [&:has(>[data-align=block-start])]:h-auto [&:has(>[data-align=block-start])]:flex-col [&:has(>textarea)]:h-auto',
         '[&:has(>[data-align=block-end])>input]:pt-3 [&:has(>[data-align=block-start])>input]:pb-3 [&:has(>[data-align=inline-end])>input]:pr-2 [&:has(>[data-align=inline-start])>input]:pl-2',
         className,

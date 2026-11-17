@@ -50,9 +50,9 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        // Each digit a field of its own (DESIGN.md, Field): the 2-wide control
-        // edge, the focus ring on the active one, danger when invalid.
-        'relative flex size-9 items-center justify-center rounded-md bg-page text-base inset-ring-2 inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
+        // Each digit a field of its own (DESIGN.md, Field): the 1-wide control
+        // edge, the focus ring on the active one, 2-wide danger when invalid.
+        'relative flex size-9 items-center justify-center rounded-md bg-page text-base inset-ring inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
         className,
       )}
       {...props}

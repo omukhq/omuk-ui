@@ -2,6 +2,17 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.2] - 2026-11-18
+
+### Changed
+
+- Every field has a 1-wide edge at rest: input, textarea, select, combobox, input group, OTP digits. The colour stays `control`, darker (`outline`) on hover; the focus ring is the same. An invalid field keeps its 2-wide danger edge. Checkboxes, radios, switches and outlined buttons keep their 2-wide edge. (`FIELD_EDGE`, `FIELD_WRAPPER_EDGE` in `src/recipes.ts`; DESIGN.md, section 3.)
+- `InputGroup`'s `edge="thin"` is now the same as the default. It stays, so callers keep working.
+
+### Breaking
+
+- None for code. Fields look thinner.
+
 ## [1.0.0-alpha.1] - 2026-11-17
 
 ### Changed
