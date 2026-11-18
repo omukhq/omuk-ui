@@ -14,6 +14,10 @@
 
 /* static: always emit every variable, because the roles below point at palette shades with var() */
 @theme static {
+  /* Motion: a sheet's curve, as a native one (Vaul's): quick, then a long
+     settle. ease-sheet. */
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+
   /* 1 · Colour. The palette is Tailwind's; Omuk adds only the roles (1b). Tailwind's
      families that Omuk does not use are off, so nobody reaches for bg-slate-100. */
   --color-slate-*: initial;
@@ -211,6 +215,29 @@
 }
 @utility animate-out {
   animation: exit var(--tw-duration, 150ms) var(--tw-ease, cubic-bezier(0.7, 0, 0.84, 0)) both;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+/* The scrim behind a sheet fades with it. */
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes scrim-out {
+  to {
+    opacity: 0;
+  }
+}
+@utility animate-scrim-in {
+  animation: scrim-in 400ms ease-out both;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+@utility animate-scrim-out {
+  animation: scrim-out 400ms ease-out both;
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }

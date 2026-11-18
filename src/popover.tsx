@@ -83,11 +83,12 @@ function PopoverTrigger({
 // scrim is the top-layer popover's own ::backdrop. A press on the scrim is
 // a press outside (popup.tsx).
 const SHEET_FRAME =
-  'max-sm:inset-x-0! max-sm:top-auto! max-sm:bottom-0! max-sm:w-auto! max-sm:backdrop:bg-scrim';
+  'max-sm:inset-x-0! max-sm:top-auto! max-sm:bottom-0! max-sm:w-auto! max-sm:backdrop:bg-scrim max-sm:backdrop:animate-scrim-in max-sm:has-data-closed:backdrop:animate-scrim-out';
 const SHEET = cn(
   'max-sm:w-full! max-sm:rounded-t-xl max-sm:rounded-b-none max-sm:pb-4 max-sm:shadow-lg',
-  // The sheet slides up and fades in, a little slower than a popover.
-  'max-sm:duration-300 max-sm:ease-out max-sm:data-open:zoom-in-100 max-sm:data-open:slide-in-from-bottom max-sm:data-closed:zoom-out-100 max-sm:data-closed:slide-out-to-bottom',
+  // The sheet slides up on a native sheet's curve, with no fade (the scrim
+  // fades instead), over 400 (owner, 18 Nov 2026: smoother).
+  'max-sm:duration-400 max-sm:ease-sheet max-sm:data-open:fade-in-100 max-sm:data-open:zoom-in-100 max-sm:data-open:slide-in-from-bottom max-sm:data-closed:fade-out-100 max-sm:data-closed:zoom-out-100 max-sm:data-closed:slide-out-to-bottom',
   'max-sm:before:mx-auto max-sm:before:mt-2 max-sm:before:h-1 max-sm:before:w-8 max-sm:before:shrink-0 max-sm:before:rounded-full max-sm:before:bg-border',
 );
 
