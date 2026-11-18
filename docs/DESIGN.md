@@ -25,7 +25,7 @@ Editor elements, App and onboarding — light and dark).
 4. **Type:** six sizes only (`text-xs sm base lg xl 2xl` = 12 14 16 20 24 32). Interface text is line height 1.5
    (built into xs, sm, base); lg and up are 1.25; doc body is `leading-relaxed` 1.7. Weights: 600 for titles,
    500 for controls, labels and the current item, 400 for body text. Nothing else.
-   Fields are 16 on phones and 14 from 640px up (in theme.css base), so iOS never zooms.
+   Fields are 14 (`text-sm`) at every width (owner, 18 Nov 2026; phones had 16). An iPhone zooms in when such a field takes the focus.
 5. **Icons:** Lucide only (`lucide-react` in the app, `lucide-preact` in Astro islands), `size-4`
    (16), `strokeWidth={1.5}`, `currentColor`. No unicode glyphs or hand-drawn SVG as icons.
    Keyboard shortcuts stay text: `⌘P`.

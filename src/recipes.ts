@@ -17,8 +17,8 @@ export const DISABLED =
 
 /**
  * A field's text, without its box: the input inside an input group. No
- * size here: theme.css gives fields 16 on phones (so iOS does not zoom in on
- * focus) and 14 from 640 up (decisions 6).
+ * size here: theme.css gives every field 14 (owner, 18 Nov 2026; phones had
+ * 16, which keeps an iPhone from zooming in on focus).
  */
 export const FIELD_TEXT =
   'w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:text-muted';
