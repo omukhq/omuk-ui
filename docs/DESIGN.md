@@ -59,9 +59,9 @@ take a darker shade than before for contrast: success is `green-700` (4.9:1; Tai
 edge is `gray-500` (4.8:1; `gray-400` is 2.6:1).
 
 **Roles** are what the app's chrome uses, and they point at palette shades (light → dark):
-page white → gray-900 · panel gray-50 → gray-950 · raised white → gray-800 · border gray-100 → gray-800 · control gray-200 → gray-700 ·
-outline gray-500 → gray-500 · foreground gray-950 → gray-100 · muted gray-600 → gray-300 · primary gray-950 → gray-100 ·
-accent blue-600 → blue-300 · mark blue-100 → blue-950 · danger red-600 → red-400 · success green-700 → green-400 ·
+page white → gray-800 · panel gray-50 → gray-900 · raised white → gray-700 · border gray-100 → white 10% · control gray-200 → white 16% ·
+outline gray-500 → gray-400 · foreground gray-950 → gray-100 · muted gray-600 → gray-300 · primary gray-950 → gray-100 ·
+accent blue-600 → blue-300 · mark blue-100 → blue-950 · danger red-600 → red-300 · success green-700 → green-400 ·
 warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dark: blue-500/orange-500/teal-500).
 
 - Surfaces, text, edges and states → roles (`bg-page`, `text-foreground`, `bg-accent`): they flip in dark mode by themselves.
@@ -85,7 +85,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 | `text-foreground` / `text-muted` | Main text / hints, meta, labels, timestamps |
 | `bg-primary text-on-primary` | Primary button, tooltip, toast |
 | `text-accent` | Links, caret, ticks, picked values, chart series 1 |
-| `bg-mark` | Comment highlights, added text in history, focus ring, plan badges |
+| `bg-mark` | Comment highlights, added text in history, plan badges |
 | `bg-found` | The words a search found, in its results (sidebar search): yellow, `yellow-200`, `yellow-800` in dark (owner, 16 Nov 2026) |
 | `text-danger / success / warning` | Delete and errors / done, live, connected / check this |
 
@@ -95,7 +95,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 - **Picked value** (checkbox, radio, select option, font card, tab) → accent: tick, fill, `inset-ring-2 inset-ring-accent` or a 2px underline.
 - **On toggle** → `bg-selected`.
 
-**Focus** is the same on every control: `focus-visible:focus-ring` (2px accent edge + 3px mark ring).
+**Focus** is the same on every control: `focus-visible:focus-ring` (1px `outline` edge + 3px `control` halo: grey, not the accent; owner, 18 Nov 2026).
 
 ## 3. Components (omuk-ui)
 
@@ -164,9 +164,9 @@ Recipes are Tailwind classes; `{}` marks a variant.
   A starter fills this doc, saved as typing is; Undo returns to the empty doc.
 
 ### Field (input, select trigger, search)
-- Input: `h-9 px-3 rounded-md bg-page inset-ring inset-ring-control hover:not-focus:not-aria-invalid:inset-ring-outline focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger` (1px at rest; owner, 18 Nov 2026)
+- Input: `h-9 px-3 rounded-md bg-page inset-ring inset-ring-control focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger` (1px; no hover edge; owner, 18 Nov 2026)
 - Wrapper fields (prefix, search with icon): the same on the wrapper, with `focus-within` and `has-aria-invalid`:
-  `inset-ring inset-ring-control hover:not-focus-within:not-has-aria-invalid:inset-ring-outline focus-within:focus-ring has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger`
+  `inset-ring inset-ring-control focus-within:focus-ring has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger`
 - Result (tested in Chromium): hover darkens the edge; focus wins over hover; an error stays red on hover,
   and when focused keeps the red edge and adds the mark ring. Mark errors with `aria-invalid="true"`, not a class.
 - Label above: `font-medium`, gap `1`. Hint below: `text-xs text-muted`. Error: `aria-invalid="true"` → `inset-ring-2 inset-ring-danger` (2px), hint `text-danger`.
@@ -186,7 +186,7 @@ Recipes are Tailwind classes; `{}` marks a variant.
 
 ### Checkbox · radio · switch
 - Box `size-4 rounded-sm bg-page inset-ring-2 inset-ring-control` (2px, light). Hover `hover:inset-ring-outline`.
-  Focus `focus-visible:focus-ring` (2px accent edge + 3px mark ring), like every other control.
+  Focus `focus-visible:focus-ring` (1px grey edge + 3px grey halo), like every other control.
 - Checked `bg-accent`, no edge, Lucide `check` (12px, stroke 3 on the 24 grid) in `text-on-primary`; some → `minus`.
 - Radio: same edges, `rounded-full`; selected = `bg-on-primary` with a 5px accent inset.
 - Disabled: `bg-hover inset-ring inset-ring-border` (1px border), label `text-muted`; checked-disabled keeps the tick in `text-muted`.

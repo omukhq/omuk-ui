@@ -2,6 +2,21 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.9] - 2026-11-18
+
+### Changed
+
+- Dark mode is a soft slate, not black: the page is `gray-800` (was `gray-900`), the panel `gray-900`, cards and popovers `gray-700` (owner, 18 Nov 2026).
+- In dark mode, lines (`border`) and field edges (`control`) are white tints (10% and 16%), not grey shades, so they show on the page and on a card alike.
+- The focus ring is grey, not blue: a 1px `outline` edge and a 3px `control` halo (`gray-500` and `gray-200` in light mode), on every control (owner, 18 Nov 2026).
+- Fields (input, textarea, select, combobox, input group, OTP) no longer darken their edge on hover (owner, 18 Nov 2026). The focus ring and the danger edge stay; outlined buttons keep their hover edge.
+- In dark mode the hover tint is white at 7% (was 4.5%) and the selected tint 12% (was 9%): on the slate page a badge's fill and a hovered row hardly showed.
+- In dark mode the hover edge is `gray-400` (5.6:1) and danger `red-300` (`red-400` is 3.6:1 on a card). Text, links and the other status colours stay at 5.7:1 or more.
+
+### Breaking
+
+- None for code. Dark mode looks lighter.
+
 ## [1.0.0-alpha.8] - 2026-11-18
 
 ### Changed

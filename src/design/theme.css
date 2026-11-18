@@ -45,13 +45,13 @@
   --color-hover: color-mix(in oklab, var(--color-gray-950) 4%, transparent);        /* pointer over a row or ghost button; a tint, works on any ground */
   --color-selected: color-mix(in oklab, var(--color-gray-950) 8%, transparent);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
   --color-border: var(--color-gray-100);      /* lines, dividers, card and button edges */
-  --color-outline: var(--color-gray-500);    /* hover edge of fields, checkboxes, radios (3:1; Tailwind's gray-400 is 2.6:1) */
+  --color-outline: var(--color-gray-500);    /* hover edge of buttons, checkboxes, radios (3:1; Tailwind's gray-400 is 2.6:1) */
   --color-control: var(--color-gray-200);    /* resting edge: fields 1px, checkboxes and radios 2px */
   --color-foreground: var(--color-gray-950);
   --color-muted: var(--color-gray-600);
   --color-primary: var(--color-gray-950);    /* primary buttons, tooltips, toasts */
   --color-on-primary: var(--color-white);
-  --color-accent: var(--color-blue-600);      /* links, caret, picked values, focus edge, chart series 1 */
+  --color-accent: var(--color-blue-600);      /* links, caret, picked values, chart series 1 */
   --color-mark: var(--color-blue-100);          /* comment highlights, added text, focus ring, plan badges */
   --color-found: var(--color-yellow-200);        /* the words a search found, in its results */
   --color-danger: var(--color-red-600);
@@ -127,14 +127,18 @@
    keeps the light colours above, whatever the theme. */
 @media not print {
   [data-theme="dark"] {
-    --color-page: var(--color-gray-900);   /* a soft black, not gray-950 (owner, 18 Nov 2026) */
-    --color-panel: var(--color-gray-950);  /* one step darker than the page, as in light mode */
-    --color-raised: var(--color-gray-800);
-    --color-hover: rgb(255 255 255 / 0.045);
-    --color-selected: rgb(255 255 255 / 0.09);
-    --color-border: var(--color-gray-800);
-    --color-outline: var(--color-gray-500);
-    --color-control: var(--color-gray-700);
+    --color-page: var(--color-gray-800);   /* a soft slate, not black (owner, 18 Nov 2026) */
+    --color-panel: var(--color-gray-900);  /* one step darker than the page, as in light mode */
+    --color-raised: var(--color-gray-700); /* cards: one step lighter */
+    /* Tints for the slate page: at 4.5% a badge's fill (the hover tint) and a
+       hovered row hardly showed. */
+    --color-hover: rgb(255 255 255 / 0.07);
+    --color-selected: rgb(255 255 255 / 0.12);
+    /* Lines and edges are tints, not shades: they show on the page and on a
+       card alike (a gray-700 line would vanish on a gray-700 card). */
+    --color-border: color-mix(in oklab, var(--color-white) 10%, transparent);
+    --color-outline: var(--color-gray-400);   /* 5.6:1 on the page */
+    --color-control: color-mix(in oklab, var(--color-white) 16%, transparent);
     --color-foreground: var(--color-gray-100);
     --color-muted: var(--color-gray-300);
     --color-primary: var(--color-gray-100);
@@ -142,7 +146,7 @@
     --color-accent: var(--color-blue-300);
     --color-mark: var(--color-blue-950);
     --color-found: var(--color-yellow-800);
-    --color-danger: var(--color-red-400);
+    --color-danger: var(--color-red-300);     /* red-400 is 3.6:1 on a card */
     --color-success: var(--color-green-400);
     --color-warning: var(--color-amber-400);
     --color-scrim: rgb(0 0 0 / 0.6);
@@ -176,10 +180,12 @@
   }
 }
 
+/* Focus: a 1px grey edge (outline) and a soft 3px grey halo (control), not
+   the accent (owner, 18 Nov 2026). Both are roles, so dark mode follows. */
 @utility focus-ring {
   outline: none;
-  --tw-inset-ring-shadow: inset 0 0 0 var(--line-strong) var(--color-accent);
-  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-mark);
+  --tw-inset-ring-shadow: inset 0 0 0 var(--line) var(--color-outline);
+  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-control);
   box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 

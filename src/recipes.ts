@@ -25,14 +25,12 @@ export const FIELD_TEXT =
 
 /**
  * A field's edge (DESIGN.md, section 3, Field; decisions R6, R10; 1-wide since 2026-11-18, owner): the
- * 1-wide `control` edge at rest, darker on hover, the focus ring on focus
- * (focus wins over hover), and the 2-wide danger edge for `aria-invalid`,
- * which stays red on hover and keeps the ring when focused. A disabled field
- * keeps its 1-wide `border` edge on hover (`enabled`: the hover rule
- * outweighs `disabled:`).
+ * 1-wide `control` edge, the same on hover (owner, 18 Nov 2026: no hover
+ * edge on fields), the focus ring on focus, and the 2-wide danger edge for
+ * `aria-invalid`, which keeps the ring when focused.
  */
 export const FIELD_EDGE =
-  'inset-ring inset-ring-control hover:not-focus:not-aria-invalid:enabled:inset-ring-outline focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger';
+  'inset-ring inset-ring-control focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -42,7 +40,7 @@ export const FIELD_EDGE =
  * Field with a trailing action).
  */
 export const FIELD_WRAPPER_EDGE = [
-  'inset-ring inset-ring-control hover:not-focus-within:not-has-aria-invalid:not-data-disabled:inset-ring-outline has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger',
+  'inset-ring inset-ring-control has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger',
   'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 
