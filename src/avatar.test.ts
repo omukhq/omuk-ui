@@ -6,17 +6,45 @@
 import { describe, expect, test } from 'bun:test';
 import { avatarColorClass } from './avatar';
 
-const theme = await Bun.file(
-  new URL('./design/theme.css', import.meta.url),
+// The palette is Tailwind's (theme.css): its values come from Tailwind's own
+// theme file, in OKLCH.
+const tailwindTheme = await Bun.file(
+  Bun.resolveSync('tailwindcss/theme.css', import.meta.dir),
 ).text();
 
-/** A `--color-<name>: #rrggbb` palette value from theme.css. */
+/** OKLCH (Tailwind's notation) → `rrggbb`, the CSS Color 4 formulas. */
+function oklchToHex(lightness: number, chroma: number, hue: number) {
+  const angle = (hue * Math.PI) / 180;
+  const a = chroma * Math.cos(angle);
+  const b = chroma * Math.sin(angle);
+  const l = (lightness + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (lightness - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (lightness - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  const linear = [
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ];
+  return linear
+    .map((c) => {
+      const srgb = c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+      const byte = Math.round(Math.min(1, Math.max(0, srgb)) * 255);
+      return byte.toString(16).padStart(2, '0');
+    })
+    .join('');
+}
+
+/** A `--color-<name>` palette value from Tailwind's theme, as `rrggbb`. */
 function token(name: string) {
-  const match = theme.match(
-    new RegExp(`--color-${name}:\\s*#([0-9a-fA-F]{6})\\b`),
+  const match = tailwindTheme.match(
+    new RegExp(
+      `--color-${name}:\\s*oklch\\(([\\d.]+)%\\s+([\\d.]+)\\s+([\\d.]+)\\)`,
+    ),
   );
-  if (!match?.[1]) throw new Error(`no hex token --color-${name}`);
-  return match[1];
+  if (!match?.[1] || !match[2] || !match[3]) {
+    throw new Error(`no OKLCH token --color-${name} in tailwindcss/theme.css`);
+  }
+  return oklchToHex(Number(match[1]) / 100, Number(match[2]), Number(match[3]));
 }
 
 /** WCAG relative luminance of `rrggbb`. */

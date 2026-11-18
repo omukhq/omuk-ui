@@ -53,14 +53,16 @@ Editor elements, App and onboarding — light and dark).
 
 Boards: `design/boards/0-Palette-*.png`.
 
-**Palette.** 11 families × 11 shades (50–950), generated in OKLCH so each family steps evenly and the same shade number has
-the same weight in every family: `gray red orange amber yellow green teal sky blue violet pink`, plus `white` and `black`.
-They work like Tailwind's: `bg-red-100`, `text-blue-600`, `border-gray-200`, `inset-ring-teal-500`. Tailwind's own palette is off.
+**Palette.** Tailwind's own (owner, 18 Nov 2026), 11 families × 11 shades (50–950): `gray red orange amber yellow green teal
+sky blue violet pink`, plus `white` and `black`: `bg-red-100`, `text-blue-600`, `border-gray-200`, `inset-ring-teal-500`.
+Tailwind's other families (slate, zinc, rose …) are off. Omuk defines no palette value: only the roles below. Two roles
+take a darker shade than before for contrast: success is `green-700` (4.9:1; Tailwind's `green-600` is 3.2:1), the hover
+edge is `gray-500` (4.8:1; `gray-400` is 2.6:1).
 
 **Roles** are what the app's chrome uses, and they point at palette shades (light → dark):
 page white → gray-950 · panel gray-50 → gray-900 · raised white → gray-800 · border gray-100 → gray-800 · control gray-200 → gray-700 ·
-outline gray-400 → gray-500 · foreground gray-950 → gray-100 · muted gray-600 → gray-300 · primary gray-950 → gray-100 ·
-accent blue-600 → blue-300 · mark blue-100 → blue-950 · danger red-600 → red-400 · success green-600 → green-400 ·
+outline gray-500 → gray-500 · foreground gray-950 → gray-100 · muted gray-600 → gray-300 · primary gray-950 → gray-100 ·
+accent blue-600 → blue-300 · mark blue-100 → blue-950 · danger red-600 → red-400 · success green-700 → green-400 ·
 warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dark: blue-500/orange-500/teal-500).
 
 - Surfaces, text, edges and states → roles (`bg-page`, `text-foreground`, `bg-accent`): they flip in dark mode by themselves.

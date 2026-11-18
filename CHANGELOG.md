@@ -2,6 +2,18 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.6] - 2026-11-18
+
+### Changed
+
+- The palette is Tailwind's own: `theme.css` defines no palette colour, only the roles. Every colour changes a little: greys are cooler, blues, reds and greens brighter. Tailwind's other families stay off.
+- Two roles moved one shade darker to keep their contrast: `success` is `green-700` in light mode (4.9:1 on white), the hover edge `outline` is `gray-500` (4.8:1). The hover and selected tints are 4% and 8% of `gray-950` through `color-mix`.
+- `tailwindcss` ^4 is a peer dependency: the components' classes and `theme.css` need it.
+
+### Breaking
+
+- Colours look different. Check any screen that pairs palette shades by hand (tags, avatars, charts): the avatar colours were checked (white text at 4.5:1 or more).
+
 ## [1.0.0-alpha.5] - 2026-11-18
 
 ### Changed
