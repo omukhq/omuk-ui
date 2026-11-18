@@ -252,8 +252,6 @@ function PickerShell({
               ref={calendarButton}
               variant="ghost"
               size="icon-xs"
-              // A small filled square, as React Spectrum's.
-              className="bg-hover text-foreground hover:bg-selected"
               aria-label="Open the calendar"
               aria-haspopup="dialog"
               aria-expanded={root.open}
