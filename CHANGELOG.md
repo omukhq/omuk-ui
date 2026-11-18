@@ -2,6 +2,16 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.5] - 2026-11-18
+
+### Changed
+
+- Colour roles have no middle layer: `--color-page` points at its palette shade (`--color-white`), and dark mode sets `--color-page` again, where it used to go `--color-page` → `--c-page` → `--color-white`. The classes are the same. Shadows keep `--elevation-*`, the one nesting kept on purpose: Tailwind copies a literal shadow into its class, so dark mode could not swap it.
+
+### Breaking
+
+- The `--c-*` variables are gone. Code that read them (`getComputedStyle(…).getPropertyValue('--c-page')`) reads `--color-page` instead.
+
 ## [1.0.0-alpha.4] - 2026-11-18
 
 ### Changed

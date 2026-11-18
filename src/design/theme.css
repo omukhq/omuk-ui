@@ -34,30 +34,31 @@
   --color-violet-50: #f5f6ff; --color-violet-100: #e8e9ff; --color-violet-200: #d3d5ff; --color-violet-300: #b3b4fe; --color-violet-400: #8e89fd; --color-violet-500: #7361f6; --color-violet-600: #5b3fd9; --color-violet-700: #4e33bf; --color-violet-800: #412ca0; --color-violet-900: #382a85; --color-violet-950: #241b59;
   --color-pink-50: #fff3f6; --color-pink-100: #ffe3ea; --color-pink-200: #fec8d8; --color-pink-300: #ff9fbe; --color-pink-400: #f26f9f; --color-pink-500: #dd4986; --color-pink-600: #c2266e; --color-pink-700: #a7165d; --color-pink-800: #8a124c; --color-pink-900: #721640; --color-pink-950: #490b27;
 
-  /* 1b · Roles — what components use. Each points at a palette shade and swaps in dark mode */
+  /* 1b · Roles — what components use. Each points at a palette shade; dark mode sets the same
+     names again ([data-theme="dark"] below). No middle layer: bg-page reads --color-page. */
 
-  --color-page: var(--c-page);          /* the doc, sidebars, side panels, menus, popovers, dialogs */
-  --color-panel: var(--c-panel);        /* ground behind cards: dashboard grids, auth pages, code */
-  --color-raised: var(--c-raised);      /* above the ground: cards, popovers, chosen segment */
-  --color-hover: var(--c-hover);        /* pointer over a row or ghost button; a tint, works on any ground */
-  --color-selected: var(--c-selected);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
-  --color-border: var(--c-border);      /* lines, dividers, card and button edges */
-  --color-outline: var(--c-outline);    /* hover edge of fields, checkboxes, radios (3:1) */
-  --color-control: var(--c-control);    /* resting edge: fields 1px, checkboxes and radios 2px */
-  --color-foreground: var(--c-foreground);
-  --color-muted: var(--c-muted);
-  --color-primary: var(--c-primary);    /* primary buttons, tooltips, toasts */
-  --color-on-primary: var(--c-on-primary);
-  --color-accent: var(--c-accent);      /* links, caret, picked values, focus edge, chart series 1 */
-  --color-mark: var(--c-mark);          /* comment highlights, added text, focus ring, plan badges */
-  --color-found: var(--c-found);        /* the words a search found, in its results */
-  --color-danger: var(--c-danger);
-  --color-success: var(--c-success);
-  --color-warning: var(--c-warning);
-  --color-scrim: var(--c-scrim);        /* behind dialogs, drawers and sheets */
-  --color-chart-1: var(--c-chart-1);    /* chart series, in this order; max 3 per chart */
-  --color-chart-2: var(--c-chart-2);
-  --color-chart-3: var(--c-chart-3);
+  --color-page: var(--color-white);          /* the doc, sidebars, side panels, menus, popovers, dialogs */
+  --color-panel: var(--color-gray-50);        /* ground behind cards: dashboard grids, auth pages, code */
+  --color-raised: var(--color-white);      /* above the ground: cards, popovers, chosen segment */
+  --color-hover: rgb(17 19 21 / 0.04);        /* pointer over a row or ghost button; a tint, works on any ground */
+  --color-selected: rgb(17 19 21 / 0.08);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
+  --color-border: var(--color-gray-100);      /* lines, dividers, card and button edges */
+  --color-outline: var(--color-gray-400);    /* hover edge of fields, checkboxes, radios (3:1) */
+  --color-control: var(--color-gray-200);    /* resting edge: fields 1px, checkboxes and radios 2px */
+  --color-foreground: var(--color-gray-950);
+  --color-muted: var(--color-gray-600);
+  --color-primary: var(--color-gray-950);    /* primary buttons, tooltips, toasts */
+  --color-on-primary: var(--color-white);
+  --color-accent: var(--color-blue-600);      /* links, caret, picked values, focus edge, chart series 1 */
+  --color-mark: var(--color-blue-100);          /* comment highlights, added text, focus ring, plan badges */
+  --color-found: var(--color-yellow-200);        /* the words a search found, in its results */
+  --color-danger: var(--color-red-600);
+  --color-success: var(--color-green-600);
+  --color-warning: var(--color-amber-700);
+  --color-scrim: rgb(0 0 0 / 0.32);        /* behind dialogs, drawers and sheets */
+  --color-chart-1: var(--color-blue-600);    /* chart series, in this order; max 3 per chart */
+  --color-chart-2: var(--color-orange-500);
+  --color-chart-3: var(--color-teal-500);
 
   /* 2 · Space and size — Tailwind's own scale (--spacing 0.25rem = 4px): p-3 = 12px, h-8 = 32px.
      Spacing steps: 0.5 1 2 3 4 6 8 12 16. Control heights: h-10 (40) h-8 (32) h-7 (28, formatting toolbar) h-6 (24, row actions). */
@@ -108,7 +109,8 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
 
-  /* 5 · Shadow — through variables so dark mode can swap them */
+  /* 5 · Shadow — through --elevation-*, the one nesting kept on purpose: Tailwind copies a literal
+     shadow into the shadow-* class, so dark mode could not swap it */
   --shadow-*: initial;
   --shadow-sm: var(--elevation-sm);   /* everything that floats */
   --shadow-lg: var(--elevation-lg);   /* dialogs, toasts, drawers */
@@ -118,28 +120,6 @@
 }
 
 :root {
-  --c-page: var(--color-white);
-  --c-panel: var(--color-gray-50);
-  --c-raised: var(--color-white);
-  --c-hover: rgb(17 19 21 / 0.04);   /* gray-950 at 4% */
-  --c-selected: rgb(17 19 21 / 0.08); /* gray-950 at 8% */
-  --c-border: var(--color-gray-100);
-  --c-outline: var(--color-gray-400);
-  --c-control: var(--color-gray-200);
-  --c-foreground: var(--color-gray-950);
-  --c-muted: var(--color-gray-600);
-  --c-primary: var(--color-gray-950);
-  --c-on-primary: var(--color-white);
-  --c-accent: var(--color-blue-600);
-  --c-mark: var(--color-blue-100);
-  --c-found: var(--color-yellow-200);
-  --c-danger: var(--color-red-600);
-  --c-success: var(--color-green-600);
-  --c-warning: var(--color-amber-700);
-  --c-scrim: rgb(0 0 0 / 0.32);
-  --c-chart-1: var(--color-blue-600);
-  --c-chart-2: var(--color-orange-500);
-  --c-chart-3: var(--color-teal-500);
   --elevation-sm: 0 0 2px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.14);
   --elevation-lg: 0 0 2px rgb(0 0 0 / 0.12), 0 8px 16px rgb(0 0 0 / 0.14);
   --line: 1px;
@@ -151,28 +131,28 @@
    keeps the light colours above, whatever the theme. */
 @media not print {
   [data-theme="dark"] {
-    --c-page: var(--color-gray-950);
-    --c-panel: var(--color-gray-900);
-    --c-raised: var(--color-gray-800);
-    --c-hover: rgb(255 255 255 / 0.045);
-    --c-selected: rgb(255 255 255 / 0.09);
-    --c-border: var(--color-gray-800);
-    --c-outline: var(--color-gray-500);
-    --c-control: var(--color-gray-700);
-    --c-foreground: var(--color-gray-100);
-    --c-muted: var(--color-gray-300);
-    --c-primary: var(--color-gray-100);
-    --c-on-primary: var(--color-gray-950);
-    --c-accent: var(--color-blue-300);
-    --c-mark: var(--color-blue-950);
-    --c-found: var(--color-yellow-800);
-    --c-danger: var(--color-red-400);
-    --c-success: var(--color-green-400);
-    --c-warning: var(--color-amber-400);
-    --c-scrim: rgb(0 0 0 / 0.6);
-    --c-chart-1: var(--color-blue-500);
-    --c-chart-2: var(--color-orange-500);
-    --c-chart-3: var(--color-teal-500);
+    --color-page: var(--color-gray-950);
+    --color-panel: var(--color-gray-900);
+    --color-raised: var(--color-gray-800);
+    --color-hover: rgb(255 255 255 / 0.045);
+    --color-selected: rgb(255 255 255 / 0.09);
+    --color-border: var(--color-gray-800);
+    --color-outline: var(--color-gray-500);
+    --color-control: var(--color-gray-700);
+    --color-foreground: var(--color-gray-100);
+    --color-muted: var(--color-gray-300);
+    --color-primary: var(--color-gray-100);
+    --color-on-primary: var(--color-gray-950);
+    --color-accent: var(--color-blue-300);
+    --color-mark: var(--color-blue-950);
+    --color-found: var(--color-yellow-800);
+    --color-danger: var(--color-red-400);
+    --color-success: var(--color-green-400);
+    --color-warning: var(--color-amber-400);
+    --color-scrim: rgb(0 0 0 / 0.6);
+    --color-chart-1: var(--color-blue-500);
+    --color-chart-2: var(--color-orange-500);
+    --color-chart-3: var(--color-teal-500);
     --elevation-sm: 0 0 2px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.5);
     --elevation-lg: 0 0 2px rgb(0 0 0 / 0.5), 0 8px 16px rgb(0 0 0 / 0.5);
     color-scheme: dark;
