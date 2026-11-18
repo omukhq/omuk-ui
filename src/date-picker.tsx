@@ -194,7 +194,7 @@ function PickerShell({
           'relative inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
           'inset-ring-2 inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
           base.size === 'default' ? 'h-8' : 'h-9',
-          root ? 'pr-0.5' : 'pr-3',
+          root ? 'pr-1' : 'pr-3',
           disabled && 'bg-hover text-muted inset-ring-border',
           base.className,
         )}
@@ -235,33 +235,35 @@ function PickerShell({
         >
           {fields}
         </div>
-        {base.showClear && hasValue && !disabled && !base.isReadOnly && (
-          <InputGroupButton
-            variant="ghost"
-            size="icon"
-            aria-label={`Clear ${label}`}
-            onClick={onClear}
-          >
-            <XIcon strokeWidth={1.5} />
-          </InputGroupButton>
-        )}
-        {root && (
-          <Button
-            ref={calendarButton}
-            variant="ghost"
-            size="icon"
-            aria-label="Open the calendar"
-            aria-haspopup="dialog"
-            aria-expanded={root.open}
-            disabled={disabled || base.isReadOnly}
-            className="shrink-0 rounded-sm text-muted hover:text-foreground"
-            onClick={(event) =>
-              root.setOpen(!root.open, 'trigger-press', event)
-            }
-          >
-            <CalendarIcon strokeWidth={1.5} />
-          </Button>
-        )}
+        {/* The clear and the calendar buttons, side by side (24 each). */}
+        <span className="flex shrink-0 items-center">
+          {base.showClear && hasValue && !disabled && !base.isReadOnly && (
+            <InputGroupButton
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Clear ${label}`}
+              onClick={onClear}
+            >
+              <XIcon strokeWidth={1.5} />
+            </InputGroupButton>
+          )}
+          {root && (
+            <InputGroupButton
+              ref={calendarButton}
+              variant="ghost"
+              size="icon-xs"
+              aria-label="Open the calendar"
+              aria-haspopup="dialog"
+              aria-expanded={root.open}
+              disabled={disabled || base.isReadOnly}
+              onClick={(event) =>
+                root.setOpen(!root.open, 'trigger-press', event)
+              }
+            >
+              <CalendarIcon strokeWidth={1.5} />
+            </InputGroupButton>
+          )}
+        </span>
         {hidden}
       </div>
       {error && (
