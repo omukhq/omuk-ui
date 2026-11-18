@@ -48,6 +48,8 @@ const AVATAR_COLORS = [
   'bg-avatar-2 text-on-avatar-2',
   'bg-avatar-3 text-on-avatar-3',
   'bg-avatar-4 text-on-avatar-4',
+  'bg-avatar-5 text-on-avatar-5',
+  'bg-avatar-6 text-on-avatar-6',
 ] as const;
 
 /**

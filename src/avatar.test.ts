@@ -91,11 +91,11 @@ describe('avatar colours', () => {
     const seen = new Set(
       Array.from({ length: 200 }, (_, at) => avatarColorClass(`user-${at}`)),
     );
-    expect(seen.size).toBe(4);
+    expect(seen.size).toBe(6);
   });
 
-  test('four colours, set for light mode and for dark mode', () => {
-    expect(AVATAR_PAIRS).toHaveLength(8);
+  test('six colours, set for light mode and for dark mode', () => {
+    expect(AVATAR_PAIRS).toHaveLength(12);
   });
 
   for (const { fill, text } of AVATAR_PAIRS) {
