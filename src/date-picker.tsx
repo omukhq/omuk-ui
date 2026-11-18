@@ -159,15 +159,15 @@ function PickerShell({
   const errorId = useId();
   const calendarButton = useRef<HTMLButtonElement | null>(null);
   const box = useRef<HTMLDivElement | null>(null);
-  const [focusWithin, setFocusWithin] = useState(false);
+  // A part has the focus (someone types). Not the calendar button, and not
+  // the open calendar: those keep the placeholder, so the field does not
+  // grow and shove its neighbours when the calendar opens (owner, 18 Nov
+  // 2026).
+  const [typing, setTyping] = useState(false);
   const disabled = base.isDisabled ?? false;
   const invalid = Boolean(base.isInvalid || error);
   const showPlaceholder =
-    Boolean(base.placeholder) &&
-    !hasValue &&
-    !touched &&
-    !focusWithin &&
-    !root?.open;
+    Boolean(base.placeholder) && !hasValue && !touched && !typing;
 
   function focusFirstPart() {
     box.current?.querySelector<HTMLElement>('[data-segment]')?.focus();
@@ -198,11 +198,11 @@ function PickerShell({
           disabled && 'bg-hover text-muted inset-ring-border',
           base.className,
         )}
-        onFocus={() => setFocusWithin(true)}
+        onFocus={(event) => {
+          if (isPart(event.target)) setTyping(true);
+        }}
         onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) {
-            setFocusWithin(false);
-          }
+          if (!isPart(event.relatedTarget)) setTyping(false);
         }}
         onPointerDown={(event) => {
           // A press on the box (not a button, not a part) goes to the first part.
@@ -315,6 +315,11 @@ function PickerShell({
       )}
     </div>
   );
+}
+
+/** One of the field's typed parts (a spinbutton). */
+function isPart(node: EventTarget | null): boolean {
+  return node instanceof Element && node.hasAttribute('data-segment');
 }
 
 // --- One value: a day, a day and a time, or a time ----------------------------
