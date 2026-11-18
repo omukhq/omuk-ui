@@ -31,7 +31,7 @@ export const FIELD_TEXT =
  * edge for `aria-invalid`, which keeps the ring when focused.
  */
 export const FIELD_EDGE =
-  'inset-ring-2 inset-ring-control focus:field-focus-ring aria-invalid:inset-ring-danger';
+  'inset-ring-2 inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -42,7 +42,7 @@ export const FIELD_EDGE =
  */
 export const FIELD_WRAPPER_EDGE = [
   'inset-ring-2 inset-ring-control has-aria-invalid:inset-ring-danger',
-  'has-[input:focus-visible,textarea:focus-visible]:field-focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
+  'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 
 /**

@@ -33,7 +33,7 @@ Editor elements, App and onboarding — light and dark).
    Shadows never contain a border.
 7. **Edges are Tailwind inset rings; dividers are Tailwind borders.** Inset rings never change a control's size.
    Two weights: 1px `inset-ring inset-ring-border` for things you look at (cards, popovers, table frames);
-   2px `inset-ring-2 inset-ring-control` for fields (as React Spectrum's, owner 18 Nov 2026; their focus is `field-focus-ring`, 2px in the outline colour) and for anything you tick (checkboxes, radios, the switch); 1px `inset-ring inset-ring-control` for outlined buttons.
+   2px `inset-ring-2 inset-ring-control` for fields (as React Spectrum's, owner 18 Nov 2026; their focus is `focus-ring`, 2px in the outline colour with the outer ring) for outlined buttons, and for anything you tick (checkboxes, radios, the switch).
    Change only the colour for states: `hover:inset-ring-outline`, `aria-invalid:inset-ring-danger`, picked `inset-ring-accent`.
    Dividers between areas and rows: `border-t` / `border-b` / `border-l` / `border-r` (1px, the border colour is the default).
    Never a full `border` or `border-2` around a control. Selected tab: `border-b-2 border-accent`.
@@ -80,7 +80,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 | `bg-selected` | Toggles that are on (Bold, side panel open, ghost pressed), applied filters and selected table rows. A neutral 8% tint — twice hover's 4% — so selection is grey, not violet; the ticked checkbox carries the accent. |
 | `bg-scrim` | Behind dialogs, drawers and sheets. One value: 32% black, 60% in dark. |
 | `border` | 1px lines: `inset-ring inset-ring-border` around cards, popovers and table frames; `border-t/b/l/r` for dividers (default colour) |
-| `control` (`inset-ring-2 inset-ring-control` on fields, checkboxes and radios; `inset-ring` on outlined buttons) | At rest: a light edge, 2px on fields (owner, 18 Nov 2026: React Spectrum's), checkboxes and radios, 1px on outlined buttons. |
+| `control` (`inset-ring-2 inset-ring-control`) | At rest: a light 2px edge on fields, outlined buttons (owner, 18 Nov 2026: React Spectrum's), checkboxes and radios. |
 | `outline` (`hover:inset-ring-outline`) | The same 2px edge on hover, darker (3:1). |
 | `text-foreground` / `text-muted` | Main text / hints, meta, labels, timestamps |
 | `bg-primary text-on-primary` | Primary button, tooltip, toast |
@@ -95,7 +95,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 - **Picked value** (checkbox, radio, select option, font card, tab) → accent: tick, fill, `inset-ring-2 inset-ring-accent` or a 2px underline.
 - **On toggle** → `bg-selected`.
 
-**Focus** is the same on every control: `focus-visible:focus-ring` (1px `outline` edge + 3px `control` halo: grey, not the accent; owner, 18 Nov 2026).
+**Focus** is the same on every control: `focus-visible:focus-ring` (2px `outline` edge + 3px `control` halo: grey, not the accent; owner, 18 Nov 2026).
 
 ## 3. Components (omuk-ui)
 
@@ -111,9 +111,9 @@ Recipes are Tailwind classes; `{}` marks a variant.
   With a leading icon, the left padding drops one step (`pl-3` / `pl-2`).
 - Variant:
   - primary `bg-primary text-on-primary` — one per surface
-  - secondary `bg-page inset-ring inset-ring-control hover:inset-ring-outline text-foreground` — dialogs and forms (1px edge)
+  - secondary `bg-page inset-ring-2 inset-ring-control hover:inset-ring-outline text-foreground` — dialogs and forms (2px edge)
   - ghost `bg-transparent text-foreground hover:bg-hover` — toolbars, headers, menus; pressed: `bg-selected` + `aria-pressed`
-  - danger `bg-page inset-ring inset-ring-control hover:inset-ring-outline text-danger` — destructive action offered (1px edge)
+  - danger `bg-page inset-ring-2 inset-ring-control hover:inset-ring-outline text-danger` — destructive action offered (2px edge)
   - danger-confirm `bg-danger text-on-primary` — only the last step of a destructive dialog
 - Disabled: primary, secondary and danger → `bg-hover inset-ring inset-ring-border text-muted`, never just faded.
   Ghost and icon buttons stay text-only → `text-muted`, no fill, no edge.

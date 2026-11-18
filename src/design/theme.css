@@ -182,21 +182,16 @@
 
 /* Focus: a 1px grey edge (outline) and a soft 3px grey halo (control), not
    the accent (owner, 18 Nov 2026). Both are roles, so dark mode follows. */
+/* The focus: a 2-wide edge in the outline colour (fields and outlined
+   buttons are 2-wide, React Spectrum's recipe, owner 18 Nov 2026) and the
+   outer ring. */
 @utility focus-ring {
-  outline: none;
-  --tw-inset-ring-shadow: inset 0 0 0 var(--line) var(--color-outline);
-  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-control);
-  box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-/* A field's focus: the same ring, with the field's 2-wide edge in the
-   outline colour (React Spectrum's field, owner 18 Nov 2026). */
-@utility field-focus-ring {
   outline: none;
   --tw-inset-ring-shadow: inset 0 0 0 var(--line-strong) var(--color-outline);
   --tw-ring-shadow: 0 0 0 var(--ring) var(--color-control);
   box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
+
 
 @layer base {
   /* The root stays at the browser's 16px so every rem (Tailwind, libraries, the editor) keeps its size.

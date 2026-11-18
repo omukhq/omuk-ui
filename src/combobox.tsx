@@ -804,7 +804,7 @@ function ComboboxButton({
           ? className
           : cn(
               FIELD,
-              "flex h-9 w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:field-focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              "flex h-9 w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
               className,
             ),
         onClick(event: React.MouseEvent) {
