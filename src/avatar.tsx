@@ -27,9 +27,12 @@ const avatarVariants = cva(
         team: 'squircle bg-primary text-on-primary',
       },
       size: {
+        // 16 · 24 · 32 · 40 · 48 (owner, 18 Nov 2026; lg was 48).
         sm: 'size-4 text-2xs',
         md: 'size-6 text-xs',
-        lg: 'size-12 text-lg',
+        lg: 'size-8 text-xs',
+        xl: 'size-10 text-sm',
+        '2xl': 'size-12 text-lg',
       },
     },
     defaultVariants: { kind: 'person', size: 'md' },
@@ -99,11 +102,19 @@ function Avatar({
     >
       {src ? (
         <img src={src} alt="" className="size-full object-cover" />
+      ) : size === 'sm' && typeof children === 'string' ? (
+        // 16 holds one letter: the first of the initials (owner, 18 Nov 2026).
+        firstLetter(children)
       ) : (
         children
       )}
     </span>
   );
+}
+
+/** The first letter (a whole character, accents and all). */
+function firstLetter(text: string): string {
+  return Array.from(text.trim())[0] ?? '';
 }
 
 /**
