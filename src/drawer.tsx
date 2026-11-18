@@ -131,8 +131,8 @@ const VIEWPORT_BY_DIRECTION: Record<Direction, string> = {
 // --drawer-swipe-movement-*.
 const POPUP_BY_DIRECTION: Record<Direction, string> = {
   right:
-    'h-full w-full max-w-sm rounded-l-xl translate-x-0 starting:translate-x-full data-closed:translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
-  left: 'h-full w-full max-w-sm rounded-r-xl translate-x-0 starting:-translate-x-full data-closed:-translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
+    'h-full w-3/4 max-w-sm rounded-l-xl translate-x-0 starting:translate-x-full data-closed:translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
+  left: 'h-full w-3/4 max-w-sm rounded-r-xl translate-x-0 starting:-translate-x-full data-closed:-translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
   top: 'h-full max-h-4/5 w-full rounded-b-xl translate-y-0 starting:-translate-y-full data-closed:-translate-y-full data-swiping:translate-y-(--drawer-swipe-movement-y)',
   bottom:
     'h-full max-h-4/5 w-full rounded-t-xl translate-y-0 starting:translate-y-full data-closed:translate-y-full data-swiping:translate-y-(--drawer-swipe-movement-y)',
