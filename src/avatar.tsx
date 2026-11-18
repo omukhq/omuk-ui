@@ -39,12 +39,15 @@ const avatarVariants = cva(
   },
 );
 
-/** The people avatar colours, by index: palette shades (theme.css). */
+/**
+ * The people avatar colours, by index: soft washes with their text, roles in
+ * theme.css (light and dark), so no dark: classes here.
+ */
 const AVATAR_COLORS = [
-  'bg-teal-700 text-white',
-  'bg-violet-600 text-white',
-  'bg-orange-700 text-white',
-  'bg-blue-700 text-white',
+  'bg-avatar-1 text-on-avatar-1',
+  'bg-avatar-2 text-on-avatar-2',
+  'bg-avatar-3 text-on-avatar-3',
+  'bg-avatar-4 text-on-avatar-4',
 ] as const;
 
 /**

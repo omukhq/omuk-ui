@@ -1,6 +1,6 @@
-// The avatar colours (decisions, R3 owner decision; palette shades since
-// v3.12): a person keeps the same colour on every render, and white text
-// stays readable on every colour.
+// The avatar colours (decisions, R3 owner decision; soft washes since
+// 18 Nov 2026): a person keeps the same colour on every render, and the text
+// stays readable on every wash, in light and dark mode.
 // Both fail silently: a colour that changes between pages, or a letter that
 // drops below 4.5:1 when someone edits a token.
 import { describe, expect, test } from 'bun:test';
@@ -61,15 +61,26 @@ function contrast(a: string, b: string) {
   return (hi + 0.05) / ((lo ?? 0) + 0.05);
 }
 
-/** The palette shades the avatar picks from (`bg-teal-700 text-white` → `teal-700`). */
-const AVATAR_COLOR_NAMES = [
-  ...new Set(
-    Array.from(
-      { length: 200 },
-      (_, at) => /bg-([a-z]+-\d+)/.exec(avatarColorClass(`user-${at}`))?.[1],
-    ),
-  ),
-].filter((name): name is string => name !== undefined);
+// The avatar roles, from Omuk UI's theme: each wash and its text, as set
+// for light mode (the first block) and for dark mode (the second).
+const kitTheme = await Bun.file(
+  new URL('./design/theme.css', import.meta.url),
+).text();
+
+function pairs(css: string) {
+  const fills = [
+    ...css.matchAll(/--color-avatar-(\d): var\(--color-([a-z]+-\d+)\)/g),
+  ];
+  const texts = [
+    ...css.matchAll(/--color-on-avatar-(\d): var\(--color-([a-z]+-\d+)\)/g),
+  ];
+  return fills.map((fill, at) => ({
+    fill: fill[2] ?? '',
+    text: texts[at]?.[2] ?? '',
+  }));
+}
+
+const AVATAR_PAIRS = pairs(kitTheme);
 
 describe('avatar colours', () => {
   test('the same user ID gives the same colour', () => {
@@ -83,11 +94,13 @@ describe('avatar colours', () => {
     expect(seen.size).toBe(4);
   });
 
-  // White is Tailwind's own (#fff): theme.css does not define it.
-  const WHITE = 'ffffff';
-  for (const name of AVATAR_COLOR_NAMES) {
-    test(`white text on ${name} is at least 4.5:1`, () => {
-      expect(contrast(token(name), WHITE)).toBeGreaterThanOrEqual(4.5);
+  test('four colours, set for light mode and for dark mode', () => {
+    expect(AVATAR_PAIRS).toHaveLength(8);
+  });
+
+  for (const { fill, text } of AVATAR_PAIRS) {
+    test(`${text} on ${fill} is at least 4.5:1`, () => {
+      expect(contrast(token(fill), token(text))).toBeGreaterThanOrEqual(4.5);
     });
   }
 });
