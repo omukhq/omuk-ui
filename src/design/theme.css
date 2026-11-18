@@ -127,8 +127,8 @@
    keeps the light colours above, whatever the theme. */
 @media not print {
   [data-theme="dark"] {
-    --color-page: var(--color-gray-950);
-    --color-panel: var(--color-gray-900);
+    --color-page: var(--color-gray-900);   /* a soft black, not gray-950 (owner, 18 Nov 2026) */
+    --color-panel: var(--color-gray-950);  /* one step darker than the page, as in light mode */
     --color-raised: var(--color-gray-800);
     --color-hover: rgb(255 255 255 / 0.045);
     --color-selected: rgb(255 255 255 / 0.09);
@@ -149,8 +149,11 @@
     --color-chart-1: var(--color-blue-500);
     --color-chart-2: var(--color-orange-500);
     --color-chart-3: var(--color-teal-500);
-    --elevation-sm: 0 0 2px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.5);
-    --elevation-lg: 0 0 2px rgb(0 0 0 / 0.5), 0 8px 16px rgb(0 0 0 / 0.5);
+    /* A black shadow hardly shows on a dark page: in dark mode a shadow
+       also draws a faint light outline, so shadow-sm alone works in both
+       modes (no dark: edge beside it). */
+    --elevation-sm: 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.5);
+    --elevation-lg: 0 0 0 1px rgb(255 255 255 / 0.08), 0 8px 16px rgb(0 0 0 / 0.5);
     color-scheme: dark;
   }
 }

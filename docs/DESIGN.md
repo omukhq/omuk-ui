@@ -59,7 +59,7 @@ take a darker shade than before for contrast: success is `green-700` (4.9:1; Tai
 edge is `gray-500` (4.8:1; `gray-400` is 2.6:1).
 
 **Roles** are what the app's chrome uses, and they point at palette shades (light → dark):
-page white → gray-950 · panel gray-50 → gray-900 · raised white → gray-800 · border gray-100 → gray-800 · control gray-200 → gray-700 ·
+page white → gray-900 · panel gray-50 → gray-950 · raised white → gray-800 · border gray-100 → gray-800 · control gray-200 → gray-700 ·
 outline gray-500 → gray-500 · foreground gray-950 → gray-100 · muted gray-600 → gray-300 · primary gray-950 → gray-100 ·
 accent blue-600 → blue-300 · mark blue-100 → blue-950 · danger red-600 → red-400 · success green-700 → green-400 ·
 warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dark: blue-500/orange-500/teal-500).

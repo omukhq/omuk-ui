@@ -2,6 +2,17 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.8] - 2026-11-18
+
+### Changed
+
+- In dark mode `shadow-sm` and `shadow-lg` also draw a faint light outline (white at 8%): a black shadow hardly shows on a dark page, so a shadow alone now marks a card, a popover or a dialog in both modes. No `dark:` edge beside it.
+- Dark mode is a softer black: the page is `gray-900` (was `gray-950`), and the panel behind cards is `gray-950` (was `gray-900`), one step darker than the page as in light mode. Text, links and status colours keep 4.5:1 or more on it; the hover edge 3.7:1.
+
+### Breaking
+
+- None for code. Dark mode looks lighter.
+
 ## [1.0.0-alpha.7] - 2026-11-18
 
 ### Changed
