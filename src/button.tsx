@@ -25,15 +25,16 @@ import { cn } from './utils';
 //
 // Disabled is never a fade: buttons with a fill or an edge take
 // `bg-hover inset-ring-2 inset-ring-border text-muted`; ghost and link buttons stay text only
-// (`text-muted`, no fill, no edge). A loading button keeps its look: the
-// label stays in the layout, hidden, under a spinner in the button's text
-// colour.
+// (`text-muted`, no fill, no edge). A loading button takes the disabled
+// look too (owner, 18 Nov 2026: a black button with a spinner looked as if
+// it could still be pressed): the label stays in the layout, hidden, under
+// a spinner in the muted colour, so the size never changes.
 
 // Disabled and loading are added only when the button is so (it knows):
 // a button at rest carries none of their classes. The hover ones override
 // the variant's hover, which cn drops.
 
-/** Disabled, for a button that has a fill or an edge (not while loading). */
+/** Disabled or loading, for a button that has a fill or an edge. */
 const OFF_FILLED =
   'cursor-not-allowed bg-hover text-muted inset-ring-2 inset-ring-border hover:bg-hover hover:inset-ring-border';
 
@@ -148,8 +149,7 @@ function Button({
       className: cn(
         buttonVariants({ variant, size }),
         isLoading && 'pointer-events-none',
-        !isLoading &&
-          (disabled || isTrue(props['aria-disabled'])) &&
+        (isLoading || disabled || isTrue(props['aria-disabled'])) &&
           (TEXT_ONLY.has(variant ?? 'default') ? OFF_TEXT : OFF_FILLED),
         className,
       ),

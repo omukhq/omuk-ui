@@ -2,6 +2,12 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [Unreleased]
+
+### Changed
+
+- A loading `Button` takes the disabled look (a grey fill and muted text, or muted text for ghost and link), with the spinner in the muted colour. A black button with a spinner looked as if it could still be pressed. Its size does not change.
+
 ## [1.0.0-alpha.13] - 2026-11-18
 
 ### Added
