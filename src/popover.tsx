@@ -87,7 +87,7 @@ const SHEET_FRAME =
 const SHEET = cn(
   'max-sm:w-full! max-sm:rounded-t-xl max-sm:rounded-b-none max-sm:pb-4 max-sm:shadow-lg',
   // The sheet slides up and fades in, a little slower than a popover.
-  'max-sm:duration-200 max-sm:ease-out max-sm:data-open:zoom-in-100 max-sm:data-open:slide-in-from-bottom max-sm:data-closed:zoom-out-100 max-sm:data-closed:slide-out-to-bottom',
+  'max-sm:duration-300 max-sm:ease-out max-sm:data-open:zoom-in-100 max-sm:data-open:slide-in-from-bottom max-sm:data-closed:zoom-out-100 max-sm:data-closed:slide-out-to-bottom',
   'max-sm:before:mx-auto max-sm:before:mt-2 max-sm:before:h-1 max-sm:before:w-8 max-sm:before:shrink-0 max-sm:before:rounded-full max-sm:before:bg-border',
 );
 
