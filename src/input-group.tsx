@@ -100,6 +100,10 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm', {
       // from the edge, the same muted icon.
       'icon-xs':
         'size-6 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
+      // A combobox's chevron and clear: 28, 4 from the 36 field's top,
+      // bottom and end (owner, 18 Nov 2026).
+      'icon-sm':
+        'size-7 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
       // The trailing action: 32 square, radius 4 (the field's 8 less the 4
       // around it), the icon muted until hovered, no fill when pressed.
       icon: 'size-8 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
