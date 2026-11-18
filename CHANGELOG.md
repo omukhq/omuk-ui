@@ -2,6 +2,34 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.11] - 2026-11-18
+
+### Added
+
+- Motion: the enter and exit animations (`animate-in`, `fade-*`, `zoom-*`, `slide-*`) are defined in theme.css. The kit used these names, but nothing defined them: popovers, menus, dialogs and sheets now animate. Reduced motion turns them off.
+- `PopoverClose`: a × that closes its popover.
+- The `no-scrollbar` utility, and the `ease-sheet` token (a native sheet's curve).
+- Avatar sizes `lg` 32, `xl` 40, `2xl` 48.
+- Avatar colour roles `avatar-1…6` and `on-avatar-1…6`, with dark-mode values.
+- `InputGroup` props `stacked` and `disabled`; recipes `FIELD_OFF` and `FIELD_TEXT_OFF`.
+
+### Changed
+
+- Avatar colours are soft washes of six hues (blue, teal, violet, amber, pink, green) with darker text, not saturated fills with white. `sm` shows one letter.
+- A popover's phone sheet slides on `ease-sheet` over 400, with a fading scrim, and keeps the usual control sizes (36, not 48).
+- A side drawer is three quarters of the width (at most 384).
+- Fields are 14 at every width (phones had 16).
+- Checkbox, radio and switch have no hover edge.
+- DatePicker: the placeholder stays while the calendar is open (the field no longer grows); its buttons sit at the field's end; the end padding is 4.
+- Components add a state's classes only when in that state (Button, InputGroup, Checkbox, Radio, Switch, Tabs, Segmented, the fields, calendar days): about a third fewer classes, the same look.
+
+### Breaking
+
+- Avatar `lg` is 32 (was 48): use `2xl` for 48.
+- `InputGroup`: a stacked layout (a `block-start` or `block-end` addon, a textarea) needs `stacked`.
+- `FIELD` and `FIELD_TEXT` no longer carry the disabled look: add `FIELD_OFF` or `FIELD_TEXT_OFF` when disabled.
+- A button disabled only by a `<fieldset disabled>` no longer looks disabled.
+
 ## [1.0.0-alpha.10] - 2026-11-18
 
 ### Added
