@@ -12,6 +12,13 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* The parts mark their direction with `data-orientation` (separator, tabs,
+   button group, field). `data-horizontal:` and `data-vertical:` read it:
+   without these, Tailwind looks for a `data-horizontal` attribute, which no
+   part sets, and the classes never apply (an invisible separator). */
+@custom-variant data-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-vertical (&[data-orientation="vertical"]);
+
 /* static: always emit every variable, because the roles below point at palette shades with var() */
 @theme static {
   /* Motion: a sheet's curve, as a native one (Vaul's): quick, then a long

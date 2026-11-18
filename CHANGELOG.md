@@ -2,6 +2,13 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [Unreleased]
+
+### Fixed
+
+- `data-horizontal:` and `data-vertical:` now apply. They read `data-orientation`, which the parts set; Tailwind looked for a `data-horizontal` attribute, which none set. A horizontal `Separator` was invisible (0 tall), a horizontal `Tabs` drew its panel beside the list, and the `line` tab list had no underline. `ButtonGroup` and `Field` are fixed too.
+- The `destructive` button's edge turns red on hover, not grey.
+
 ## [1.0.0-alpha.11] - 2026-11-18
 
 ### Added

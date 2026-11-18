@@ -52,7 +52,7 @@ const buttonVariants = cva(
         outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
         secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
         ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected`,
-        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-outline`,
+        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-danger`,
         'danger-confirm': `bg-danger text-on-primary hover:bg-danger/90`,
         link: `text-accent underline-offset-4 hover:underline`,
       },
