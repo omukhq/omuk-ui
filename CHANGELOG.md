@@ -10,6 +10,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 - The `destructive` button's edge turns red on hover, not grey.
 - A selected tab (`TabsList variant="default"`) and a chosen `Segmented` item keep their raised fill on hover. The grey hover fill covered it; now only the other items take it.
 - Toasts sit 16 up from the bottom edge, as from the sides. They touched the edge when no `offset` was given.
+- The toaster no longer throws `showPopover` on a node out of the page (a hidden subtree shown again), which crashed the page.
+- Tooltips inside a `TooltipProvider` are a group: one shows at a time. Opening one ends the last one at once, with no fade, and for 400 ms after one closes the next opens with no delay. A fast pointer across a row of icons left a trail of fading tooltips.
 
 ## [1.0.0-alpha.11] - 2026-11-18
 

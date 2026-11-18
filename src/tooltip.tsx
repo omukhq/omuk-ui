@@ -5,6 +5,7 @@ import {
   type ReactNode,
   use,
   useRef,
+  useState,
 } from 'react';
 import {
   PopupFrame,
@@ -20,16 +21,38 @@ import { cn } from './utils';
 
 // A name that shows on hover after a delay, at once on keyboard focus, and
 // goes on Escape, a press, or when the pointer or the focus leaves.
+//
+// Inside a TooltipProvider the tooltips are a group, as Base UI's: one shows
+// at a time. Opening one closes the group's open one at once, with no exit
+// animation, and for a short while after one closes the next opens with no
+// delay. So a pointer sliding along a row of icons leaves no trail of fading
+// names (owner, 18 Nov 2026).
 
 /** Base UI's default wait before a tooltip shows on hover. */
 const DELAY = 600;
 
-type Timing = { delay?: number; closeDelay?: number };
+/** After a group's tooltip closes, the next one opens with no delay for this long. */
+const GROUP_WINDOW = 400;
+
+/** One tooltip, as its group sees it. */
+type Member = { closeInstantly: () => void };
+
+/**
+ * A provider's group: the tooltip shown last (open, or still fading out),
+ * whether it is open, and when it closed.
+ */
+type Group = { last: Member | null; showing: boolean; closedAt: number };
+
+type Timing = { delay?: number; closeDelay?: number; group?: Group };
 
 const TimingContext = createContext<Timing | null>(null);
-const TooltipContext = createContext<ReturnType<typeof usePopupRoot> | null>(
-  null,
-);
+type TooltipState = ReturnType<typeof usePopupRoot> & {
+  /** Closing without its exit animation: another of the group opened. */
+  instant: boolean;
+  member: Member;
+};
+
+const TooltipContext = createContext<TooltipState | null>(null);
 
 function useTooltip() {
   const tooltip = use(TooltipContext);
@@ -41,9 +64,17 @@ function TooltipProvider({
   delay = 0,
   closeDelay,
   children,
-}: Timing & { timeout?: number; children?: ReactNode }) {
+}: Omit<Timing, 'group'> & { timeout?: number; children?: ReactNode }) {
+  // One object for the provider's life: the tooltips write to it.
+  const [group] = useState<Group>(() => ({
+    last: null,
+    showing: false,
+    closedAt: 0,
+  }));
   return (
-    <TimingContext value={{ delay, closeDelay }}>{children}</TimingContext>
+    <TimingContext value={{ delay, closeDelay, group }}>
+      {children}
+    </TimingContext>
   );
 }
 
@@ -53,10 +84,24 @@ function Tooltip({
   ...props
 }: PopupRootProps & { disabled?: boolean; children?: ReactNode }) {
   const root = usePopupRoot(props);
+  const [instant, setInstant] = useState(false);
   const open = root.open && !disabled;
+  // A stable handle, so the group can tell this tooltip from the others.
+  const [member] = useState<Member>(() => ({ closeInstantly() {} }));
+  member.closeInstantly = () => {
+    setInstant(true);
+    root.setOpen(false, 'group');
+  };
+  if (root.open && instant) setInstant(false);
   return (
     <TooltipContext
-      value={{ ...root, open, status: disabled ? 'closed' : root.status }}
+      value={{
+        ...root,
+        open,
+        status: disabled ? 'closed' : root.status,
+        instant,
+        member,
+      }}
     >
       {children}
     </TooltipContext>
@@ -91,14 +136,33 @@ function TooltipTrigger({
     if (ms > 0) timer.current = setTimeout(then, ms);
     else then();
   }
+  const group = timing?.group;
   function show(event: Event) {
     const trigger = event.currentTarget as HTMLElement | null;
     // Its own menu or popover is open: the name would cover it.
     if (trigger?.getAttribute('aria-expanded') === 'true') return;
+    if (group) {
+      // The one before, open or fading out, goes at once.
+      if (group.last && group.last !== tooltip.member) {
+        group.last.closeInstantly();
+      }
+      group.last = tooltip.member;
+      group.showing = true;
+    }
     tooltip.setOpen(true, 'trigger-hover', event);
   }
   function hide(event: Event, reason: string) {
+    if (group?.last === tooltip.member && group.showing) {
+      group.showing = false;
+      group.closedAt = Date.now();
+    }
     tooltip.setOpen(false, reason, event);
+  }
+  /** The wait before it shows: none while the group is warm. */
+  function openDelay() {
+    const warm =
+      group && (group.showing || Date.now() - group.closedAt < GROUP_WINDOW);
+    return warm ? 0 : (delay ?? timing?.delay ?? DELAY);
   }
 
   return useRender(
@@ -111,7 +175,7 @@ function TooltipTrigger({
         onPointerEnter(event: PointerEvent<HTMLElement>) {
           if (event.pointerType === 'touch' || pressed.current) return;
           const native = event.nativeEvent;
-          later(delay ?? timing?.delay ?? DELAY, () => show(native));
+          later(openDelay(), () => show(native));
         },
         onPointerLeave(event: PointerEvent<HTMLElement>) {
           pressed.current = false;
@@ -169,11 +233,12 @@ function TooltipContent({
         data-slot="tooltip-content"
         data-side={side}
         data-align={align}
+        data-instant={tooltip.instant ? '' : undefined}
         {...popupState(tooltip.open)}
         // DESIGN.md's tooltip (recipes.ts). No arrow.
         className={cn(
           TOOLTIP,
-          'z-50 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+          'z-50 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-instant:animate-none',
           className,
         )}
         {...props}

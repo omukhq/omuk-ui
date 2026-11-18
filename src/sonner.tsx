@@ -261,6 +261,9 @@ export function Toaster({
     }
     const toaster = node;
     function onTop() {
+      // React can attach the ref while the node is out of the page (a
+      // hidden subtree shown again): showPopover throws there.
+      if (!toaster.isConnected) return;
       if (toaster.matches(':popover-open')) toaster.hidePopover();
       toaster.showPopover();
     }
