@@ -184,6 +184,15 @@
 
 /* Focus: a 1px grey edge (outline) and a soft 3px grey halo (control), not
    the accent (owner, 18 Nov 2026). Both are roles, so dark mode follows. */
+/* Scrolls with no scrollbar drawn (a row of filters, a combobox's list):
+   touch, the wheel and the keyboard still scroll it. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* The focus: a 2-wide edge in the outline colour (fields and outlined
    buttons are 2-wide, React Spectrum's recipe, owner 18 Nov 2026) and the
    outer ring. */
