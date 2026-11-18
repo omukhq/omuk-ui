@@ -52,6 +52,7 @@
   --color-primary: var(--color-gray-950);    /* primary buttons, tooltips, toasts */
   --color-on-primary: var(--color-white);
   --color-accent: var(--color-blue-600);      /* links, caret, picked values, chart series 1 */
+  --color-on-accent: var(--color-white);      /* text on an accent fill: a focused date part */
   --color-mark: var(--color-blue-100);          /* comment highlights, added text, focus ring, plan badges */
   --color-found: var(--color-yellow-200);        /* the words a search found, in its results */
   --color-danger: var(--color-red-600);
@@ -144,6 +145,7 @@
     --color-primary: var(--color-gray-100);
     --color-on-primary: var(--color-gray-950);
     --color-accent: var(--color-blue-300);
+    --color-on-accent: var(--color-gray-950);
     --color-mark: var(--color-blue-950);
     --color-found: var(--color-yellow-800);
     --color-danger: var(--color-red-300);     /* red-400 is 3.6:1 on a card */

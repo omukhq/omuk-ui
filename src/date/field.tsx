@@ -292,7 +292,8 @@ export function DateSegments({
             aria-disabled={disabled || undefined}
             className={cn(
               'rounded-sm px-0.5 text-foreground caret-transparent outline-none select-none not-focus:data-placeholder:text-muted',
-              'focus:bg-primary focus:text-on-primary',
+              // The focused part: the accent fill, as React Spectrum's.
+              'focus:bg-accent focus:text-on-accent',
               disabled && 'text-muted',
             )}
             onFocus={() => {

@@ -194,7 +194,7 @@ function PickerShell({
           'relative inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
           'inset-ring-2 inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
           base.size === 'default' ? 'h-8' : 'h-9',
-          root ? 'pr-1' : 'pr-3',
+          root ? 'pr-2' : 'pr-3',
           disabled && 'bg-hover text-muted inset-ring-border',
           base.className,
         )}
@@ -252,6 +252,8 @@ function PickerShell({
               ref={calendarButton}
               variant="ghost"
               size="icon-xs"
+              // A small filled square, as React Spectrum's.
+              className="bg-hover text-foreground hover:bg-selected"
               aria-label="Open the calendar"
               aria-haspopup="dialog"
               aria-expanded={root.open}
