@@ -448,7 +448,7 @@ Boards: `5-SignIn`, `6-States`, `9-Phone`.
 - **Toasts:** bottom right on desktop, bottom centre on phones, 16 from the edges, max 400 wide, two lines then cut.
   Icons only for done (`circle-check`), working (`loader-circle`) and error (`circle-alert`). Plain toasts leave after 5 s (paused on hover/focus);
   errors stay until closed. Stack newest at the bottom, 3 visible, 8 apart.
-- **Phone width (< 640):** top bar 56 with `size-12` buttons; the sidebar is a drawer at 85% over the scrim; popovers become bottom sheets;
+- **Phone width (< 640):** top bar 56 with `size-12` buttons; the sidebar is a drawer at 85% over the scrim; popovers become bottom sheets, their controls at the usual 36 (owner, 18 Nov 2026);
   the format bar is fixed to the bottom and rides on the keyboard (visualViewport); tables scroll inside the page margins;
   dashboard: stat cards 2 × 2, one chart, tables become lists.
 

@@ -19,7 +19,6 @@ import {
 import type { Align, Side } from './position';
 import { POP, SURFACE } from './recipes';
 import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
-import { PHONE_TOUCH } from './touch';
 import { cn } from './utils';
 
 // A non-modal panel beside its button: a click outside or Escape closes it,
@@ -78,7 +77,8 @@ function PopoverTrigger({
 
 // On a phone (below 640, DESIGN.md §9, board 9-Phone) a popover is a bottom
 // sheet: the window's full width at its foot, over the scrim, a grip on top,
-// the same content with 48-tall controls. In CSS, so nothing has to know the
+// the same content at the same sizes (36; the 48-tall controls went on
+// 18 Nov 2026, owner: one size with the toolbar around it). In CSS, so nothing has to know the
 // width: `!` beats the place the frame writes inline (position.ts), and the
 // scrim is the top-layer popover's own ::backdrop. A press on the scrim is
 // a press outside (popup.tsx).
@@ -88,7 +88,6 @@ const SHEET = cn(
   'max-sm:w-full! max-sm:rounded-t-xl max-sm:rounded-b-none max-sm:pb-4 max-sm:shadow-lg',
   'max-sm:data-open:zoom-in-100 max-sm:data-open:slide-in-from-bottom max-sm:data-closed:zoom-out-100 max-sm:data-closed:slide-out-to-bottom',
   'max-sm:before:mx-auto max-sm:before:mt-2 max-sm:before:h-1 max-sm:before:w-8 max-sm:before:shrink-0 max-sm:before:rounded-full max-sm:before:bg-border',
-  PHONE_TOUCH,
 );
 
 /** Tab past either end of the panel closes it, the focus back on the button. */
