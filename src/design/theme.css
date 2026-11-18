@@ -14,14 +14,27 @@
 
 /* static: always emit every variable, because the roles below point at palette shades with var() */
 @theme static {
-  /* 1 · Colour */
-  --color-*: initial;
-  --color-transparent: transparent;
-  --color-current: currentColor;
+  /* 1 · Colour. What Tailwind already has comes from Tailwind: white, black, and the
+     built-in transparent and current. Its families that Omuk does not use are off, so
+     nobody reaches for bg-slate-100; the families below replace Tailwind's shade by shade. */
+  --color-slate-*: initial;
+  --color-zinc-*: initial;
+  --color-neutral-*: initial;
+  --color-stone-*: initial;
+  --color-mauve-*: initial;
+  --color-olive-*: initial;
+  --color-mist-*: initial;
+  --color-taupe-*: initial;
+  --color-lime-*: initial;
+  --color-emerald-*: initial;
+  --color-cyan-*: initial;
+  --color-indigo-*: initial;
+  --color-purple-*: initial;
+  --color-fuchsia-*: initial;
+  --color-rose-*: initial;
 
-  /* 1a · Palette — 11 families × 11 shades (generated in OKLCH). bg-red-100, text-blue-600, border-gray-200 … */
-  --color-white: #ffffff;
-  --color-black: #000000;
+  /* 1a · Palette — 11 families × 11 shades (generated in OKLCH), each shade in place of
+     Tailwind's of the same name. bg-red-100, text-blue-600, border-gray-200 … */
   --color-gray-50: #f4f5f7; --color-gray-100: #e6e9ed; --color-gray-200: #cdd2d8; --color-gray-300: #aeb4bb; --color-gray-400: #8a9098; --color-gray-500: #6b727b; --color-gray-600: #5a5f66; --color-gray-700: #41474e; --color-gray-800: #2b3036; --color-gray-900: #1a1d21; --color-gray-950: #111315;
   --color-red-50: #fff4f2; --color-red-100: #ffe4df; --color-red-200: #ffcbc1; --color-red-300: #ffa796; --color-red-400: #fa7661; --color-red-500: #e9523f; --color-red-600: #cf3223; --color-red-700: #b42318; --color-red-800: #941b14; --color-red-900: #781b14; --color-red-950: #4d0e0a;
   --color-orange-50: #fff4f0; --color-orange-100: #ffe5da; --color-orange-200: #ffceb9; --color-orange-300: #fead8a; --color-orange-400: #f18556; --color-orange-500: #e0662e; --color-orange-600: #c34b09; --color-orange-700: #a53c02; --color-orange-800: #872f03; --color-orange-900: #702503; --color-orange-950: #471502;

@@ -55,9 +55,11 @@ describe('avatar colours', () => {
     expect(seen.size).toBe(4);
   });
 
+  // White is Tailwind's own (#fff): theme.css does not define it.
+  const WHITE = 'ffffff';
   for (const name of AVATAR_COLOR_NAMES) {
     test(`white text on ${name} is at least 4.5:1`, () => {
-      expect(contrast(token(name), token('white'))).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(token(name), WHITE)).toBeGreaterThanOrEqual(4.5);
     });
   }
 });

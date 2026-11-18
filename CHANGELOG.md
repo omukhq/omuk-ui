@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ### Changed
 
+- What Tailwind already has comes from Tailwind: `white`, `black` (the same values), and the built-in `transparent` and `current`. `theme.css` no longer wipes all of Tailwind's colours (`--color-*: initial`); it switches off only the families Omuk does not use (slate, zinc, neutral, stone, mauve, olive, mist, taupe, lime, emerald, cyan, indigo, purple, fuchsia, rose). Omuk's eleven families still replace Tailwind's, shade by shade.
 - Colour roles have no middle layer: `--color-page` points at its palette shade (`--color-white`), and dark mode sets `--color-page` again, where it used to go `--color-page` → `--c-page` → `--color-white`. The classes are the same. Shadows keep `--elevation-*`, the one nesting kept on purpose: Tailwind copies a literal shadow into its class, so dark mode could not swap it.
 
 ### Breaking
