@@ -1,3 +1,4 @@
+import { XIcon } from 'lucide-react';
 import {
   type ComponentPropsWithRef,
   createContext,
@@ -6,6 +7,7 @@ import {
   use,
   useId,
 } from 'react';
+import { Button } from './button';
 import {
   type FinalFocus,
   PopupFrame,
@@ -218,8 +220,38 @@ function PopoverDescription({
   );
 }
 
+/**
+ * A × that closes its popover: beside the title in a header, or in a phone
+ * sheet. "Close" for screen readers; `children` replace the icon.
+ */
+function PopoverClose({
+  className,
+  children,
+  onClick,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const popover = usePopover();
+  return (
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      aria-label="Close"
+      data-slot="popover-close"
+      className={cn('text-muted hover:text-foreground', className)}
+      onClick={(event) => {
+        onClick?.(event);
+        popover.setOpen(false, 'close-press', event);
+      }}
+      {...props}
+    >
+      {children ?? <XIcon strokeWidth={1.5} />}
+    </Button>
+  );
+}
+
 export {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
