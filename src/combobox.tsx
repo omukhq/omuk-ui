@@ -604,8 +604,11 @@ function ComboboxInput({
   disabled = false,
   showTrigger,
   showClear = false,
+  size,
   ...props
-}: ComponentPropsWithRef<'input'> & {
+}: Omit<ComponentPropsWithRef<'input'>, 'size'> & {
+  /** The field's height, as InputGroup's: lg 36 (default), default 32. */
+  size?: React.ComponentProps<typeof InputGroup>['size'];
   /** The chevron. Default: shown, except in the list (a search field). */
   showTrigger?: boolean;
   showClear?: boolean;
@@ -614,7 +617,7 @@ function ComboboxInput({
   const inPopup = use(InPopupContext);
   const off = combobox.disabled || disabled;
   return (
-    <InputGroup className={cn('w-auto', className)}>
+    <InputGroup size={size} className={cn('w-auto', className)}>
       {inPopup && (
         <InputGroupAddon align="inline-start">
           <SearchIcon strokeWidth={1.5} aria-hidden className="text-muted" />
@@ -632,7 +635,15 @@ function ComboboxInput({
             disabled={off}
           />
         )}
-        {showClear && <ComboboxClear disabled={off} />}
+        {showClear && (
+          <ComboboxClear
+            disabled={off}
+            // "Clear Role": several fields side by side need their names.
+            {...(props['aria-label'] && {
+              'aria-label': `Clear ${props['aria-label']}`,
+            })}
+          />
+        )}
       </InputGroupAddon>
       {children}
     </InputGroup>
