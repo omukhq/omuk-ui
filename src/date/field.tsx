@@ -285,7 +285,7 @@ export function DateSegments({
             aria-readonly={readOnly || undefined}
             aria-disabled={disabled || undefined}
             className={cn(
-              'rounded-sm px-0.5 text-foreground caret-transparent outline-none select-none data-placeholder:text-muted',
+              'rounded-sm px-0.5 text-foreground caret-transparent outline-none select-none not-focus:data-placeholder:text-muted',
               'focus:bg-primary focus:text-on-primary',
               disabled && 'text-muted',
             )}
