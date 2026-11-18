@@ -1,10 +1,18 @@
-import { CircleAlertIcon, CircleCheckIcon, XIcon } from 'lucide-react';
+import {
+  CircleAlertIcon,
+  CircleCheckIcon,
+  InfoIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from 'lucide-react';
 import {
   type MouseEvent,
   type ReactNode,
   useRef,
+  useState,
   useSyncExternalStore,
 } from 'react';
+import { Spinner } from './spinner';
 import { TOAST } from './toast-recipe';
 import { cn } from './utils';
 
@@ -15,9 +23,14 @@ import { cn } from './utils';
 // waits while the pointer or the keyboard is on the toasts, or the tab is
 // hidden. DESIGN.md §9: plain toasts leave after the <Toaster>'s duration;
 // an error stays until it is closed, so only it has a close button.
-// Icons only for done and error (and working, which the app does not use).
+// Icons for every kind but the plain one.
+//
+// Owner, 18 Nov 2026 (dash-kit design/toasts.html): each kind in its own
+// colour; `warning`, `loading` and `promise`; the same toast twice shows
+// once; and the toasts stack as sonner's do, the newest in front and the
+// older ones peeking out above it, opening into a list on hover or a tap.
 
-type Kind = 'default' | 'success' | 'error' | 'info';
+type Kind = 'default' | 'success' | 'error' | 'info' | 'warning' | 'loading';
 
 type Action = {
   label: ReactNode;
@@ -79,13 +92,28 @@ const DEFAULT_VISIBLE = 3;
 /** How long the closing animation runs before the toast goes. */
 const EXIT_MS = 200;
 
+/** In a closed stack: how far each older toast peeks out, and shrinks. */
+const PEEK = 12;
+const SHRINK = 0.05;
+/** Between toasts in an open stack. */
+const GAP = 8;
+/** A one-line toast, until the real height is measured. */
+const FIRST_HEIGHT = 44;
+
 const ICONS: Partial<Record<Kind, ReactNode>> = {
   success: <CircleCheckIcon strokeWidth={1.5} />,
   error: <CircleAlertIcon strokeWidth={1.5} />,
+  info: <InfoIcon strokeWidth={1.5} />,
+  warning: <TriangleAlertIcon strokeWidth={1.5} />,
+  loading: <Spinner aria-hidden className="text-current" />,
 };
 
-/** How long a toast stays: until closed (Infinity) for an error. */
+/**
+ * How long a toast stays: until closed (Infinity) for an error, until its
+ * work ends for a loading toast.
+ */
 function lifetime(kind: Kind, duration: number | undefined) {
+  if (kind === 'loading') return Number.POSITIVE_INFINITY;
   return (
     duration ??
     (kind === 'error' ? Number.POSITIVE_INFINITY : settings.duration)
@@ -98,6 +126,15 @@ let toasts: Toast[] = [];
 const listeners = new Set<() => void>();
 const settings = { duration: DEFAULT_DURATION, visible: DEFAULT_VISIBLE };
 let nextId = 1;
+
+/**
+ * Each toast's ref callback that measures it, kept from render to render (a
+ * new one would unwatch and watch it again); dropped when the toast goes.
+ */
+const measurers = new Map<
+  Toast['id'],
+  (node: HTMLDivElement | null) => () => void
+>();
 
 /** Each open toast's timer: the time left, and the timeout while it runs. */
 const timers = new Map<
@@ -152,7 +189,15 @@ function setPaused(next: boolean) {
 }
 
 function show(kind: Kind, title: ReactNode, options: ExternalToast = {}) {
-  const id = options.id ?? nextId++;
+  // The same words of the same kind, still open: that toast again, not a
+  // second one (two "could not be saved" stacked).
+  const same =
+    options.id === undefined && typeof title === 'string'
+      ? toasts.find(
+          (open) => !open.closing && open.kind === kind && open.title === title,
+        )
+      : undefined;
+  const id = options.id ?? same?.id ?? nextId++;
   const toast: Toast = {
     id,
     kind,
@@ -190,18 +235,64 @@ function dismiss(id?: Toast['id']) {
     timers.delete(toast.id);
   }
   const closing = new Set(going.map((toast) => toast.id));
+  // The last one goes: nothing is left to hold the timers open.
+  if (toasts.every((toast) => toast.closing || closing.has(toast.id))) {
+    holds.pointer = false;
+    holds.focus = false;
+    setPaused(holds.hidden);
+  }
   toasts = toasts.map((toast) =>
     closing.has(toast.id) ? { ...toast, closing: true } : toast,
   );
   emit();
   setTimeout(() => {
     // Shown again under the same id meanwhile: that one stays.
+    for (const toast of toasts)
+      if (toast.closing && closing.has(toast.id)) measurers.delete(toast.id);
     toasts = toasts.filter(
       (toast) => !(toast.closing && closing.has(toast.id)),
     );
     emit();
   }, EXIT_MS);
   return id;
+}
+
+type PromiseMessages<T> = {
+  loading: ReactNode;
+  success: ReactNode | ((data: T) => ReactNode);
+  error: ReactNode | ((error: unknown) => ReactNode);
+};
+
+/**
+ * One toast for an action from start to end: a spinner while it runs, then
+ * the success or the error toast in place. Gives back the work's promise.
+ */
+function promise<T>(
+  work: Promise<T> | (() => Promise<T>),
+  messages: PromiseMessages<T>,
+  options: ExternalToast = {},
+): Promise<T> {
+  const id = show('loading', messages.loading, options);
+  const running = typeof work === 'function' ? work() : work;
+  running.then(
+    (data) =>
+      show(
+        'success',
+        typeof messages.success === 'function'
+          ? messages.success(data)
+          : messages.success,
+        { ...options, id },
+      ),
+    (error: unknown) =>
+      show(
+        'error',
+        typeof messages.error === 'function'
+          ? messages.error(error)
+          : messages.error,
+        { ...options, id },
+      ),
+  );
+  return running;
 }
 
 export const toast = Object.assign(
@@ -214,6 +305,12 @@ export const toast = Object.assign(
       show('error', title, options),
     info: (title: ReactNode, options?: ExternalToast) =>
       show('info', title, options),
+    warning: (title: ReactNode, options?: ExternalToast) =>
+      show('warning', title, options),
+    /** Stays until updated by its id (a success, an error) or dismissed. */
+    loading: (title: ReactNode, options?: ExternalToast) =>
+      show('loading', title, options),
+    promise,
     message: (title: ReactNode, options?: ExternalToast) =>
       show('default', title, options),
     dismiss,
@@ -223,14 +320,17 @@ export const toast = Object.assign(
 // ── The toaster ─────────────────────────────────────────────────────────
 
 /**
- * The toasts, newest at the bottom, up to `visibleToasts` (3) stacked 8
- * apart: bottom right from 640 up, bottom centre on phones, 16 from the
- * edges (`offset`), at most 400 wide, the text cut after two lines. Their
- * look is DESIGN.md's toast (TOAST, toast-recipe.ts); the `classNames` go on top,
- * as sonner's do.
+ * The toasts at the bottom of the window: at the right from 640 up, centred
+ * on phones, 16 from the edges (`offset`), up to 384 wide, the text cut
+ * after two lines. Up to `visibleToasts` (3) in a stack: the newest in
+ * front, the older ones peeking out 12 above it each, a little smaller.
+ * Pointing at the stack, focusing in it, or tapping it on a phone opens it
+ * into a list 8 apart, and holds the timers; leaving it, or a tap outside,
+ * closes it. Their look is DESIGN.md's toast (TOAST, toast-recipe.ts); the
+ * `classNames` go on top, as sonner's do.
  */
 export function Toaster({
-  closeButton,
+  closeButton = true,
   offset,
   duration = DEFAULT_DURATION,
   visibleToasts = DEFAULT_VISIBLE,
@@ -238,10 +338,49 @@ export function Toaster({
 }: ToasterProps) {
   const shown = useSyncExternalStore(subscribe, snapshot, snapshot);
   const classNames = toastOptions?.classNames ?? {};
+  const [open, setOpen] = useState(false);
+  // Each toast's own height, measured: the stack places the toasts by them.
+  const [heights, setHeights] = useState<ReadonlyMap<Toast['id'], number>>(
+    () => new Map(),
+  );
+  const list = useRef<HTMLOListElement>(null);
+
+  // Nothing left: the next toast starts in a closed stack.
+  if (open && shown.length === 0) setOpen(false);
+
+  function expand(on: boolean) {
+    setOpen(on);
+    hold('pointer', on);
+  }
+
+  /** Watches one toast's height while it is shown. */
+  function measure(id: Toast['id']) {
+    const kept = measurers.get(id);
+    if (kept) return kept;
+    const measurer = (node: HTMLDivElement | null) => {
+      if (!node) return () => {};
+      const observer = new ResizeObserver(([entry]) => {
+        const height = Math.round(
+          entry?.borderBoxSize[0]?.blockSize ?? node.offsetHeight,
+        );
+        setHeights((old) =>
+          old.get(id) === height ? old : new Map(old).set(id, height),
+        );
+      });
+      observer.observe(node);
+      // Only stop watching. React (StrictMode) runs a ref twice: dropping
+      // the kept callback or setting state here made a new ref each
+      // render, and a loop.
+      return () => observer.disconnect();
+    };
+    measurers.set(id, measurer);
+    return measurer;
+  }
 
   // Set up when the toaster mounts (a ref callback), taken down when it
   // goes: its settings, a hidden tab holding the timers, so a toast isn't
-  // missed, and its place in the top layer.
+  // missed, a tap outside closing an open stack, and its place in the top
+  // layer.
   //
   // A modal <dialog> (modal.tsx) sits in the browser's top layer, above
   // every z-index, its backdrop blurring the page. So the toaster is a
@@ -259,6 +398,12 @@ export function Toaster({
     function onVisibility() {
       hold('hidden', document.visibilityState === 'hidden');
     }
+    function onOutside(event: PointerEvent) {
+      const target = event.target;
+      if (target instanceof Node && list.current?.contains(target)) return;
+      setOpen(false);
+      hold('pointer', false);
+    }
     const toaster = node;
     function onTop() {
       // React can attach the ref while the node is out of the page (a
@@ -270,11 +415,22 @@ export function Toaster({
     onTop();
     document.addEventListener('visibilitychange', onVisibility);
     document.addEventListener('modalopen', onTop);
+    document.addEventListener('pointerdown', onOutside);
     cleanup.current = () => {
       document.removeEventListener('visibilitychange', onVisibility);
       document.removeEventListener('modalopen', onTop);
+      document.removeEventListener('pointerdown', onOutside);
     };
   }
+
+  // Newest first: the front of the stack.
+  const front = [...shown].reverse();
+  const heightOf = (each: Toast) => heights.get(each.id) ?? FIRST_HEIGHT;
+  const frontHeight = front[0] ? heightOf(front[0]) : FIRST_HEIGHT;
+  const listHeight = open
+    ? front.reduce((sum, each) => sum + heightOf(each), 0) +
+      GAP * Math.max(0, front.length - 1)
+    : frontHeight + PEEK * Math.max(0, front.length - 1);
 
   return (
     <section
@@ -293,82 +449,136 @@ export function Toaster({
     >
       {shown.length > 0 && (
         <ol
-          className="flex w-full max-w-100 flex-col items-center gap-2 sm:items-end"
-          onPointerEnter={() => hold('pointer', true)}
-          onPointerLeave={() => hold('pointer', false)}
-          onFocus={() => hold('focus', true)}
+          ref={list}
+          data-expanded={open ? '' : undefined}
+          className="pointer-events-auto relative w-full max-w-96 transition-all duration-300 ease-out motion-reduce:transition-none"
+          style={{ height: listHeight }}
+          onPointerEnter={(event) => {
+            if (event.pointerType !== 'touch') expand(true);
+          }}
+          onPointerLeave={(event) => {
+            if (event.pointerType !== 'touch') expand(false);
+          }}
+          onPointerDown={(event) => {
+            // A phone has no hover: a tap opens the stack.
+            if (event.pointerType === 'touch' && !open) expand(true);
+          }}
+          onFocus={() => {
+            setOpen(true);
+            hold('focus', true);
+          }}
           onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget))
-              hold('focus', false);
+            if (event.currentTarget.contains(event.relatedTarget)) return;
+            setOpen(false);
+            hold('focus', false);
           }}
         >
-          {shown.map((each) => {
+          {front.map((each, index) => {
             // Only a toast that stays until closed has a close button: the
-            // rest leave by themselves.
+            // rest leave by themselves, and a loading toast by its work.
             const closable =
               closeButton &&
+              each.kind !== 'loading' &&
               !Number.isFinite(lifetime(each.kind, each.duration));
+            const above = front
+              .slice(0, index)
+              .reduce((sum, other) => sum + heightOf(other) + GAP, 0);
+            // Behind the front toast in a closed stack: cut to its height,
+            // the words hidden, peeking out above it.
+            const tucked = !open && index > 0;
             return (
               <li
                 key={each.id}
                 data-type={each.kind}
                 data-closing={each.closing ? '' : undefined}
+                // Hidden from the keyboard and screen readers while tucked:
+                // only its edge shows.
+                inert={tucked}
+                aria-hidden={tucked || undefined}
                 className={cn(
-                  'pointer-events-auto duration-200 motion-reduce:animate-none',
-                  TOAST.toast,
-                  each.closing
-                    ? 'animate-out fade-out-0 slide-out-to-bottom-2'
-                    : 'animate-in fade-in-0 slide-in-from-bottom-2',
-                  classNames.toast,
-                  // After the Toaster's classes: they repeat TOAST.toast,
-                  // whose `p-2` undid this end padding (8 at the end, 16 at
-                  // the start).
-                  !each.action && !closable && TOAST.plain,
-                  classNames[each.kind],
+                  'absolute inset-x-0 bottom-0 origin-bottom rounded-lg transition-all duration-300 ease-out motion-reduce:transition-none',
+                  tucked && 'overflow-hidden *:*:opacity-0',
                 )}
+                style={{
+                  zIndex: front.length - index,
+                  translate: `0 ${-(open ? above : PEEK * index)}px`,
+                  scale: open ? 1 : 1 - SHRINK * index,
+                  height: tucked ? frontHeight : undefined,
+                }}
               >
-                {ICONS[each.kind] && (
-                  <div data-icon="" className={cn(TOAST.icon, classNames.icon)}>
-                    {ICONS[each.kind]}
-                  </div>
-                )}
-                <div className={cn(TOAST.content, classNames.content)}>
-                  <div
-                    data-title=""
-                    className={cn(TOAST.title, classNames.title)}
-                  >
-                    {each.title}
-                  </div>
-                  {each.description && (
+                <div
+                  ref={measure(each.id)}
+                  className={cn(
+                    'duration-200 motion-reduce:animate-none',
+                    TOAST.toast,
+                    TOAST.kind[each.kind],
+                    each.closing
+                      ? 'animate-out fade-out-0 slide-out-to-bottom-2'
+                      : 'animate-in fade-in-0 slide-in-from-bottom-2',
+                    classNames.toast,
+                    // After the Toaster's classes: they repeat TOAST.toast,
+                    // whose `px-2` undid this end padding (8 at the end, 16
+                    // at the start).
+                    !each.action && !closable && TOAST.plain,
+                    classNames[each.kind],
+                  )}
+                >
+                  {ICONS[each.kind] && (
                     <div
-                      className={cn(TOAST.description, classNames.description)}
+                      data-icon=""
+                      className={cn(
+                        TOAST.icon,
+                        TOAST.kindIcon[each.kind],
+                        classNames.icon,
+                      )}
                     >
-                      {each.description}
+                      {ICONS[each.kind]}
                     </div>
                   )}
+                  <div className={cn(TOAST.content, classNames.content)}>
+                    <div
+                      data-title=""
+                      className={cn(TOAST.title, classNames.title)}
+                    >
+                      {each.title}
+                    </div>
+                    {each.description && (
+                      <div
+                        className={cn(
+                          TOAST.description,
+                          classNames.description,
+                        )}
+                      >
+                        {each.description}
+                      </div>
+                    )}
+                  </div>
+                  {each.action && (
+                    <button
+                      type="button"
+                      className={cn(
+                        TOAST.actionButton,
+                        classNames.actionButton,
+                      )}
+                      onClick={(event) => {
+                        each.action?.onClick(event);
+                        if (!event.defaultPrevented) dismiss(each.id);
+                      }}
+                    >
+                      {each.action.label}
+                    </button>
+                  )}
+                  {closable && (
+                    <button
+                      type="button"
+                      aria-label="Close toast"
+                      className={cn(TOAST.closeButton, classNames.closeButton)}
+                      onClick={() => dismiss(each.id)}
+                    >
+                      <XIcon strokeWidth={1.5} />
+                    </button>
+                  )}
                 </div>
-                {each.action && (
-                  <button
-                    type="button"
-                    className={cn(TOAST.actionButton, classNames.actionButton)}
-                    onClick={(event) => {
-                      each.action?.onClick(event);
-                      if (!event.defaultPrevented) dismiss(each.id);
-                    }}
-                  >
-                    {each.action.label}
-                  </button>
-                )}
-                {closable && (
-                  <button
-                    type="button"
-                    aria-label="Close toast"
-                    className={cn(TOAST.closeButton, classNames.closeButton)}
-                    onClick={() => dismiss(each.id)}
-                  >
-                    <XIcon strokeWidth={1.5} />
-                  </button>
-                )}
               </li>
             );
           })}

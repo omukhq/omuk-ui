@@ -2,6 +2,20 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [Unreleased]
+
+### Added
+
+- Toasts in colour (dash-kit design/toasts.html): a plain toast is the raised surface; success, info, warning and error each take a soft fill of their colour with no edge, and the icon in the strong colour. Colour roles `info`, and `success-soft`, `info-soft`, `warning-soft`, `danger-soft` with their `on-*-soft` text, each with a dark value.
+- `toast.warning`, `toast.loading`, and `toast.promise(work, { loading, success, error })`: one toast with a spinner that turns into the success or the error toast in place. Info and warning have icons.
+- Toasts stack as sonner's: the newest in front, the older ones peeking out 12 above it each, a little smaller. Pointing at the stack, focusing in it, or tapping it on a phone opens it into a list 8 apart and holds the timers.
+
+### Changed
+
+- Every toast in the stack takes its width (up to 384), with 6 vertical padding; the action button is `text-xs` in the toast's own colour.
+- The same words of the same kind, still open, show once: a second identical toast updates the first.
+- `Toaster`'s `closeButton` is on by default: an error, which stays until closed, has its ×.
+
 ## [1.0.0-alpha.12] - 2026-11-18
 
 ### Fixed
