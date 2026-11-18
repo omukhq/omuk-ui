@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Button } from './button';
-import { FIELD_TEXT, FIELD_WRAPPER_EDGE } from './recipes';
+import { FIELD_TEXT, FIELD_TEXT_OFF, FIELD_WRAPPER_EDGE } from './recipes';
 import { cn } from './utils';
 
 // DESIGN.md, section 3, Field: the group is the field's box, and the input
@@ -172,7 +172,12 @@ function InputGroupInput({
   return (
     <input
       data-slot="input-group-control"
-      className={cn(FIELD_TEXT, 'h-full flex-1 rounded-none px-3', className)}
+      className={cn(
+        FIELD_TEXT,
+        'h-full flex-1 rounded-none px-3',
+        props.disabled && FIELD_TEXT_OFF,
+        className,
+      )}
       {...props}
     />
   );
@@ -188,6 +193,7 @@ function InputGroupTextarea({
       className={cn(
         FIELD_TEXT,
         'flex field-sizing-content min-h-16 flex-1 resize-none rounded-none px-3 py-2',
+        props.disabled && FIELD_TEXT_OFF,
         className,
       )}
       {...props}

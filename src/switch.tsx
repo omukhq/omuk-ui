@@ -104,9 +104,14 @@ function Switch({
                 : checked
                   ? 'bg-on-primary text-accent'
                   : 'bg-control',
+              // The knob's place and size for the state (the switch knows).
               size === 'sm'
-                ? 'm-0.5 size-3 data-checked:m-0 data-checked:size-4 data-checked:translate-x-4'
-                : 'm-0.5 size-4 data-checked:m-0 data-checked:size-5 data-checked:translate-x-5',
+                ? checked
+                  ? 'size-4 translate-x-4'
+                  : 'm-0.5 size-3'
+                : checked
+                  ? 'size-5 translate-x-5'
+                  : 'm-0.5 size-4',
             )}
           >
             {checked && (

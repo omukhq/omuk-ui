@@ -23,6 +23,7 @@ import {
 import { type Align, type Box, boxOf, type Side } from './position';
 import {
   FIELD,
+  FIELD_OFF,
   MENU_SEPARATOR,
   OPTION_ROW,
   POP,
@@ -387,6 +388,7 @@ function SelectTrigger({
         // it keeps the focus ring and the chevron points up.
         className: cn(
           FIELD,
+          disabled && FIELD_OFF,
           // A button, so the theme's field size (16 on phones) does not
           // reach it, and it does not need to: nothing is typed into it.
           "flex w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",

@@ -21,7 +21,10 @@ export const DISABLED =
  * 16, which keeps an iPhone from zooming in on focus).
  */
 export const FIELD_TEXT =
-  'w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:text-muted';
+  'w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-muted';
+
+/** A field's text when disabled: added only then, by the part that knows. */
+export const FIELD_TEXT_OFF = 'cursor-not-allowed text-muted';
 
 /**
  * A field's edge (DESIGN.md, section 3, Field; decisions R6, R10): the
@@ -50,7 +53,14 @@ export const FIELD_WRAPPER_EDGE = [
  * caller's (`h-9` for one line).
  */
 // Disabled keeps the field's 2-wide edge, in the border colour.
-export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD_EDGE} ${DISABLED} disabled:inset-ring-2`;
+export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD_EDGE}`;
+
+/**
+ * A field when disabled (the hover fill, the 2-wide border edge, muted
+ * text): added only then, by the part that knows (owner, 18 Nov 2026).
+ */
+export const FIELD_OFF =
+  'cursor-not-allowed bg-hover text-muted inset-ring-2 inset-ring-border';
 
 /** Popovers, menus and lists that float: page ground, small shadow. */
 export const SURFACE =

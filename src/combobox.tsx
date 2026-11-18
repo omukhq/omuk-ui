@@ -36,6 +36,7 @@ import type { Align, Side } from './position';
 import {
   CHIP,
   FIELD,
+  FIELD_OFF,
   FIELD_WRAPPER_EDGE,
   MENU_SEPARATOR,
   OPTION_ROW,
@@ -815,6 +816,7 @@ function ComboboxButton({
           ? className
           : cn(
               FIELD,
+              disabled && FIELD_OFF,
               "flex h-9 w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
               className,
             ),

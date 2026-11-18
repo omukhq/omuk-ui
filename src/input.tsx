@@ -1,4 +1,4 @@
-import { FIELD } from './recipes';
+import { FIELD, FIELD_OFF } from './recipes';
 import { cn } from './utils';
 
 // DESIGN.md, section 3, Field: 36 tall, the 2-wide control edge (the same
@@ -12,6 +12,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
       data-slot="input"
       className={cn(
         FIELD,
+        props.disabled && FIELD_OFF,
         'h-9 px-3 file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground',
         className,
       )}

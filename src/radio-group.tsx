@@ -117,8 +117,9 @@ function RadioGroupItem({
         'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-page inset-ring-2 inset-ring-control outline-none transition-colors before:absolute before:-inset-2',
         // No hover edge, as fields (owner, 18 Nov 2026).
         'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
-        'aria-checked:bg-accent aria-checked:inset-ring-2 aria-checked:inset-ring-accent aria-checked:focus-visible:focus-ring',
-        'disabled:cursor-not-allowed disabled:bg-hover disabled:inset-ring disabled:inset-ring-border aria-checked:disabled:bg-hover aria-checked:disabled:inset-ring aria-checked:disabled:inset-ring-border',
+        // Picked and disabled only when so (the radio knows).
+        checked && 'bg-accent inset-ring-accent',
+        disabled && 'cursor-not-allowed bg-hover inset-ring inset-ring-border',
         className,
       )}
       onClick={() => group.pick(value)}
@@ -127,7 +128,10 @@ function RadioGroupItem({
       {checked && (
         <span
           data-slot="radio-group-indicator"
-          className="size-1.5 rounded-full bg-on-primary [:disabled>&]:bg-muted"
+          className={cn(
+            'size-1.5 rounded-full',
+            disabled ? 'bg-muted' : 'bg-on-primary',
+          )}
         />
       )}
     </button>

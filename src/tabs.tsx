@@ -114,9 +114,14 @@ type ListVariant = NonNullable<
 const ListVariantContext = createContext<ListVariant>('default');
 
 const TRIGGER: Record<ListVariant, string> = {
-  default:
-    'h-full flex-1 rounded-md px-3 text-foreground hover:bg-hover data-active:bg-raised data-active:shadow-sm data-active:focus-visible:focus-ring',
-  line: 'h-9 -mb-px border-y-2 border-transparent px-3 hover:text-foreground data-active:border-b-accent data-active:text-foreground data-active:focus-visible:focus-ring',
+  default: 'h-full flex-1 rounded-md px-3 text-foreground hover:bg-hover',
+  line: 'h-9 -mb-px border-y-2 border-transparent px-3 hover:text-foreground',
+};
+
+/** The selected tab's look, added only to it (the tab knows). */
+const ACTIVE: Record<ListVariant, string> = {
+  default: 'bg-raised shadow-sm',
+  line: 'border-b-accent text-foreground',
 };
 
 /** The tab the key moves to, or none. */
@@ -222,8 +227,10 @@ function TabsTrigger({
         'data-active': active ? '' : undefined,
         'data-disabled': disabled ? '' : undefined,
         className: cn(
-          "relative inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:focus-ring disabled:pointer-events-none disabled:text-muted aria-disabled:pointer-events-none aria-disabled:text-muted group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          "relative inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:focus-ring group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           TRIGGER[variant],
+          active && ACTIVE[variant],
+          disabled && 'pointer-events-none text-muted',
           className,
         ),
         onClick(event: React.MouseEvent) {

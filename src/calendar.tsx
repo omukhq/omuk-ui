@@ -330,14 +330,17 @@ export function Calendar(props: CalendarProps) {
                           data-unavailable={unavailable ? '' : undefined}
                           className={cn(
                             'flex size-8 items-center justify-center rounded-md text-sm text-foreground tabular-nums outline-none hover:bg-hover focus-visible:focus-ring',
+                            // Each state's classes only on the days in it.
                             // Today: a light grey fill, no ring (owner, 18 Nov 2026).
-                            'data-today:bg-selected',
-                            'data-in-range:rounded-none data-in-range:bg-selected',
-                            'data-selected:bg-primary data-selected:text-on-primary data-selected:hover:bg-primary',
+                            isToday && 'bg-selected',
+                            selected && !isPoint && 'rounded-none bg-selected',
+                            isPoint &&
+                              'bg-primary text-on-primary hover:bg-primary',
                             isStart && !isEnd && 'rounded-r-none',
                             isEnd && !isStart && 'rounded-l-none',
-                            'data-unavailable:cursor-not-allowed data-unavailable:text-muted data-unavailable:line-through data-unavailable:hover:bg-transparent',
-                            'disabled:cursor-not-allowed disabled:text-muted',
+                            (unavailable || isDisabled) &&
+                              'cursor-not-allowed text-muted hover:bg-transparent',
+                            unavailable && 'line-through',
                           )}
                           onClick={() => choose(day)}
                           onKeyDown={onKeyDown}
