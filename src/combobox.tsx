@@ -398,7 +398,11 @@ function useInputProps(
       !node.closest('[data-slot=combobox-chips]') &&
       !node.closest('[data-slot=combobox-content]')
     ) {
-      combobox.setTrigger(node);
+      // The whole field, not the text box in it: the list lines up with
+      // the field's edge and width, also with a label before the text.
+      combobox.setTrigger(
+        node.closest<HTMLElement>('[data-slot=input-group]') ?? node,
+      );
     }
   });
 
