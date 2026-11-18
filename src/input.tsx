@@ -1,9 +1,9 @@
 import { FIELD } from './recipes';
 import { cn } from './utils';
 
-// DESIGN.md, section 3, Field: 36 tall, the 2-wide control edge (darker on
-// hover), the focus ring. Error: `aria-invalid` turns the edge to danger.
-// Disabled: hover fill and the 1-wide edge.
+// DESIGN.md, section 3, Field: 36 tall, the 2-wide control edge (the same
+// on hover), the field's focus ring. Error: `aria-invalid` turns the edge to
+// danger. Disabled: hover fill and the 2-wide border edge.
 
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
   return (

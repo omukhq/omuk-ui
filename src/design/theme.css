@@ -189,6 +189,15 @@
   box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
+/* A field's focus: the same ring, with the field's 2-wide edge in the
+   outline colour (React Spectrum's field, owner 18 Nov 2026). */
+@utility field-focus-ring {
+  outline: none;
+  --tw-inset-ring-shadow: inset 0 0 0 var(--line-strong) var(--color-outline);
+  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-control);
+  box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
 @layer base {
   /* The root stays at the browser's 16px so every rem (Tailwind, libraries, the editor) keeps its size.
      The 14px interface size is set on body. */

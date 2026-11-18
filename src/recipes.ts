@@ -24,13 +24,14 @@ export const FIELD_TEXT =
   'w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:text-muted';
 
 /**
- * A field's edge (DESIGN.md, section 3, Field; decisions R6, R10; 1-wide since 2026-11-18, owner): the
- * 1-wide `control` edge, the same on hover (owner, 18 Nov 2026: no hover
- * edge on fields), the focus ring on focus, and the 2-wide danger edge for
- * `aria-invalid`, which keeps the ring when focused.
+ * A field's edge (DESIGN.md, section 3, Field; decisions R6, R10): the
+ * 2-wide `control` edge, as React Spectrum's field (owner, 18 Nov 2026;
+ * 1-wide from alpha.2 to alpha.10), the same on hover (owner: no hover
+ * edge on fields), the field's focus ring on focus, and the 2-wide danger
+ * edge for `aria-invalid`, which keeps the ring when focused.
  */
 export const FIELD_EDGE =
-  'inset-ring inset-ring-control focus:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger';
+  'inset-ring-2 inset-ring-control focus:field-focus-ring aria-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -40,15 +41,16 @@ export const FIELD_EDGE =
  * Field with a trailing action).
  */
 export const FIELD_WRAPPER_EDGE = [
-  'inset-ring inset-ring-control has-aria-invalid:inset-ring-2 has-aria-invalid:inset-ring-danger',
-  'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
+  'inset-ring-2 inset-ring-control has-aria-invalid:inset-ring-danger',
+  'has-[input:focus-visible,textarea:focus-visible]:field-focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 
 /**
  * A field's box: input, textarea, select trigger. Its height is the
  * caller's (`h-9` for one line).
  */
-export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD_EDGE} ${DISABLED}`;
+// Disabled keeps the field's 2-wide edge, in the border colour.
+export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD_EDGE} ${DISABLED} disabled:inset-ring-2`;
 
 /** Popovers, menus and lists that float: page ground, small shadow. */
 export const SURFACE =

@@ -33,7 +33,7 @@ Editor elements, App and onboarding — light and dark).
    Shadows never contain a border.
 7. **Edges are Tailwind inset rings; dividers are Tailwind borders.** Inset rings never change a control's size.
    Two weights: 1px `inset-ring inset-ring-border` for things you look at (cards, popovers, table frames);
-   2px `inset-ring-2 inset-ring-control` for anything you tick (checkboxes, radios, the switch); 1px `inset-ring inset-ring-control` for fields and outlined buttons (owner, 18 Nov 2026).
+   2px `inset-ring-2 inset-ring-control` for fields (as React Spectrum's, owner 18 Nov 2026; their focus is `field-focus-ring`, 2px in the outline colour) and for anything you tick (checkboxes, radios, the switch); 1px `inset-ring inset-ring-control` for outlined buttons.
    Change only the colour for states: `hover:inset-ring-outline`, `aria-invalid:inset-ring-danger`, picked `inset-ring-accent`.
    Dividers between areas and rows: `border-t` / `border-b` / `border-l` / `border-r` (1px, the border colour is the default).
    Never a full `border` or `border-2` around a control. Selected tab: `border-b-2 border-accent`.
@@ -80,7 +80,7 @@ warning amber-700 → amber-400 · chart-1/2/3 blue-600/orange-500/teal-500 (dar
 | `bg-selected` | Toggles that are on (Bold, side panel open, ghost pressed), applied filters and selected table rows. A neutral 8% tint — twice hover's 4% — so selection is grey, not violet; the ticked checkbox carries the accent. |
 | `bg-scrim` | Behind dialogs, drawers and sheets. One value: 32% black, 60% in dark. |
 | `border` | 1px lines: `inset-ring inset-ring-border` around cards, popovers and table frames; `border-t/b/l/r` for dividers (default colour) |
-| `control` (`inset-ring inset-ring-control` on fields; `inset-ring-2` on checkboxes and radios) | At rest: a light edge, 1px on fields (owner, 18 Nov 2026), 2px on checkboxes and radios. |
+| `control` (`inset-ring-2 inset-ring-control` on fields, checkboxes and radios; `inset-ring` on outlined buttons) | At rest: a light edge, 2px on fields (owner, 18 Nov 2026: React Spectrum's), checkboxes and radios, 1px on outlined buttons. |
 | `outline` (`hover:inset-ring-outline`) | The same 2px edge on hover, darker (3:1). |
 | `text-foreground` / `text-muted` | Main text / hints, meta, labels, timestamps |
 | `bg-primary text-on-primary` | Primary button, tooltip, toast |
