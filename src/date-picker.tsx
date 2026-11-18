@@ -236,7 +236,7 @@ function PickerShell({
           {fields}
         </div>
         {/* The clear and the calendar buttons, side by side (24 each). */}
-        <span className="flex shrink-0 items-center">
+        <span className="ml-auto flex shrink-0 items-center">
           {base.showClear && hasValue && !disabled && !base.isReadOnly && (
             <InputGroupButton
               variant="ghost"
