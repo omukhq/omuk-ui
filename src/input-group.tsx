@@ -16,11 +16,11 @@ import { cn } from './utils';
 // has focus, the button when the keyboard reaches it.
 
 // Sizes (R48, the Button's names): lg 36 (`h-9`, the default for a
-// field), default 32 (`h-8`, a sidebar's search). Edges: 2-wide, as every
+// field), default 36 too (`h-9`; 32 until 18 Nov 2026, owner). Edges: 2-wide, as every
 // field (FIELD_WRAPPER_EDGE); `thin` gives the 1-wide edge.
 const inputGroupVariants = cva('', {
   variants: {
-    size: { default: 'h-8', lg: 'h-9' },
+    size: { default: 'h-9', lg: 'h-9' },
     edge: { default: '', thin: 'inset-ring' },
   },
   defaultVariants: { size: 'lg', edge: 'default' },

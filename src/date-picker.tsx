@@ -37,7 +37,7 @@ type PickerBase = {
   locale?: string;
   /** Where "today" is. Default: the browser's time zone. */
   timeZone?: string;
-  /** The field's height, as Input's: lg 36 (default), default 32. */
+  /** The field's height: 36 for both (owner, 18 Nov 2026); kept for callers. */
   size?: 'default' | 'lg';
   isDisabled?: boolean;
   isReadOnly?: boolean;
@@ -193,7 +193,7 @@ function PickerShell({
           // while a part has the focus, danger when invalid.
           'relative inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
           'inset-ring-2 inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
-          base.size === 'default' ? 'h-8' : 'h-9',
+          'h-9',
           root ? 'pr-2' : 'pr-3',
           disabled && 'bg-hover text-muted inset-ring-border',
           base.className,

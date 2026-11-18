@@ -17,8 +17,9 @@ Editor elements, App and onboarding — light and dark).
 3. **Heights:** Tailwind's own sizes, nothing custom: `h-9` 36 (default buttons, fields, menu rows, tabs, table headers; owner, 15 Nov 2026) · `h-8` 32 (small buttons,
    headers, filter rows, list rows) · `h-7` 28 (formatting toolbar) · `h-6` 24 (row actions and chips in dense lists and tables only).
    Square buttons use `size-*` with the same numbers. Components expose these as `size="lg|default|sm|xs"` (R48, shadcn's names:
-   36 / 32 / 28 / 24, icon-only `icon-lg|icon|icon-sm|icon-xs`); only the component maps name → class. A button's default is 32;
-   a field's (input group, select, segmented) is lg, 36.
+   36 / 36 / 28 / 24, icon-only `icon-lg|icon|icon-sm|icon-xs`); only the component maps name → class. Every control's default
+   is 36 (owner, 18 Nov 2026: buttons, square buttons, fields, select, segmented, the date picker); `lg` stays as a name for
+   callers. 32 stays for list rows and calendar days.
    Never a form or dialog button below md.
    On touch screens an `h-6` control keeps a 32 hit area (padding or a pseudo-element).
 4. **Type:** six sizes only (`text-xs sm base lg xl 2xl` = 12 14 16 20 24 32). Interface text is line height 1.5

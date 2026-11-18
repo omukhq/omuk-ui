@@ -19,7 +19,7 @@ import { cn } from './utils';
 // Outlined buttons take the 2-wide control edge, as fields do (React
 // Spectrum's recipe, owner 18 Nov 2026), darker on hover (R7). Sizes
 // (R48, shadcn's scale): xs 24 (`h-6`), sm 28 (`h-7`, the formatting
-// toolbar), default 32 (`h-8`), lg 36 (`h-9`, forms and dialogs); the icon
+// toolbar), default 36 (`h-9`; 32 until 18 Nov 2026, owner), lg 36 (`h-9`, forms and dialogs); the icon
 // sizes are the same squares. xs is only for row actions and chips inside
 // dense lists and tables; on a touch screen it keeps a 32 hit area.
 //
@@ -51,11 +51,11 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          'h-8 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
+          'h-9 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
         xs: 'h-6 gap-1 rounded-sm px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
         sm: 'h-7 gap-1 rounded-sm px-2',
         lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
-        icon: 'size-8 squircle',
+        icon: 'size-9 squircle',
         'icon-xs':
           'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
         'icon-sm': 'size-7 squircle',

@@ -19,7 +19,7 @@ const segmentedVariants = cva(
     variants: {
       size: {
         lg: 'h-9',
-        default: 'h-8',
+        default: 'h-9',
       },
     },
     defaultVariants: { size: 'lg' },
