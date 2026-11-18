@@ -959,12 +959,12 @@ function ComboboxItem({
         },
         children: (
           <>
-            <span className={TICK_SLOT}>
+            {children}
+            <span className={cn(TICK_SLOT, 'ml-auto')}>
               {selected && (
                 <CheckIcon strokeWidth={1.5} className="pointer-events-none" />
               )}
             </span>
-            {children}
           </>
         ),
       },

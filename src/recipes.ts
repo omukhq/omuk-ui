@@ -67,10 +67,10 @@ export const ROW =
   "relative flex min-h-9 w-full cursor-default items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground outline-none select-none focus:bg-hover data-highlighted:bg-hover data-disabled:pointer-events-none data-disabled:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 
 /**
- * A select or combobox option: a tick slot at the start (`TICK_SLOT`), so
- * the picked one and the others line up; one or two lines.
+ * A combobox option: the text first, the tick slot at the end (`TICK_SLOT`,
+ * kept when empty, so the rows line up); one or two lines.
  */
-export const OPTION_ROW = `${ROW} pl-2`;
+export const OPTION_ROW = ROW;
 
 /** An inset row lines its text up with the rows that have an icon. */
 export const INSET = 'before:size-4 before:shrink-0';
