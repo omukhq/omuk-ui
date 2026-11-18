@@ -30,7 +30,8 @@ import { cn } from './utils';
 // A month grid to choose a day, or a first and a last day (React Aria's
 // Calendar and RangeCalendar). Values are ISO days: "2026-11-18". The arrow
 // keys move a day or a week, Page Up and Page Down a month (with Shift, a
-// year), Home and End to the week's ends; Enter or Space chooses.
+// year), Home and End to the week's ends; Enter or Space chooses. Today has
+// a light grey fill; the focus ring shows for the keyboard only.
 
 export type DateRange = { start: string; end: string };
 
@@ -329,7 +330,8 @@ export function Calendar(props: CalendarProps) {
                           data-unavailable={unavailable ? '' : undefined}
                           className={cn(
                             'flex size-8 items-center justify-center rounded-md text-sm text-foreground tabular-nums outline-none hover:bg-hover focus-visible:focus-ring',
-                            'data-today:inset-ring-2 data-today:inset-ring-control',
+                            // Today: a light grey fill, no ring (owner, 18 Nov 2026).
+                            'data-today:bg-selected',
                             'data-in-range:rounded-none data-in-range:bg-selected',
                             'data-selected:bg-primary data-selected:text-on-primary data-selected:hover:bg-primary',
                             isStart && !isEnd && 'rounded-r-none',

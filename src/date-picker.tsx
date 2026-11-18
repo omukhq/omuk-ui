@@ -284,12 +284,14 @@ function PickerShell({
             alignOffset: 0,
           }}
           className="isolate z-50"
+          // The day takes the focus; its ring shows only when the calendar
+          // was opened from the keyboard (React Aria's).
           initialFocus={(popupEl) =>
             popupEl
               .querySelector<HTMLElement>(
                 '[data-slot=calendar] button[tabindex="0"]',
               )
-              ?.focus()
+              ?.focus({ focusVisible: root.how === 'keyboard' })
           }
           finalFocus={calendarButton}
           onDismiss={(reason, event) => {
