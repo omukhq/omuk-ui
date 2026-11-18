@@ -66,6 +66,25 @@ const name = await prompt.open<string>({
 
 The package ships TypeScript source with no build step. The app's bundler (Vite, Astro) compiles it.
 
+### Dates: `DatePicker` and `Calendar`
+
+One component for a day, a day and a time, a range or a time. The value is ISO text, and its type follows `mode`:
+
+```tsx
+import { DatePicker } from '@omuk/ui/date-picker';
+
+<DatePicker value={day} onChange={setDay} />                                 // "2026-11-18"
+<DatePicker granularity="minute" value={at} onChange={setAt} />              // "2026-11-18T14:30"
+<DatePicker mode="range" value={range} onChange={setRange} presets={…} />    // { start, end }
+<DatePicker mode="time" value={time} onChange={setTime} />                   // "14:30"
+```
+
+- The parts are typed (the language's order, from `Intl`); the arrows step them. The calendar button in the field opens a `Calendar`.
+- Options: `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `firstDayOfWeek`, `timeZone` (for "today"), `locale`, `hourCycle`, `validate`, `name` (`startName`, `endName` for a range), `size`.
+- For a filter: `placeholder` (shown until the field is used), `prefix` ("Updated:") and `showClear`.
+- `@omuk/ui/calendar` is the calendar alone, for one day or a range.
+- Gregorian only; no time zone in the value; no seconds.
+
 ## Tokens and fonts
 
 The app must load the tokens and the fonts in its main stylesheet, and its Tailwind build must scan the package's files. The paths are relative to the stylesheet:
