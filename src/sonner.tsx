@@ -283,8 +283,9 @@ export function Toaster({
       popover="manual"
       // A popover's own box (the browser's: centred, bordered, Canvas
       // coloured) undone: a band along the bottom of the window, its toasts
-      // centred on phones and at the right from 640 up.
-      className="pointer-events-none fixed inset-x-0 top-auto m-0 flex h-auto w-auto max-w-none justify-center overflow-visible border-none bg-transparent px-4 py-0 text-inherit sm:justify-end"
+      // centred on phones and at the right from 640 up. 16 up from the
+      // bottom edge, as from the sides, unless `offset` moves it.
+      className="pointer-events-none fixed inset-x-0 top-auto bottom-4 m-0 flex h-auto w-auto max-w-none justify-center overflow-visible border-none bg-transparent px-4 py-0 text-inherit sm:justify-end"
       style={{ bottom: offset?.bottom }}
     >
       {shown.length > 0 && (
