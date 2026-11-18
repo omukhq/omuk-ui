@@ -67,31 +67,28 @@
   /* The read views' text column (boards 13 and 14): about 75 characters a line. max-w-reading */
   --container-reading: 720px;
 
-  /* 3 · Type — six interface sizes, each with its line height */
-  --text-*: initial;
+  /* 3 · Type — seven interface sizes, each with its line height. text-base is Tailwind's own
+     (16px, 1.5); the others differ from Tailwind's and are set here. Tailwind's larger sizes
+     (3xl and up) are off. */
+  --text-3xl: initial;
+  --text-4xl: initial;
+  --text-5xl: initial;
+  --text-6xl: initial;
+  --text-7xl: initial;
+  --text-8xl: initial;
+  --text-9xl: initial;
   --text-2xs: 10px;
   --text-2xs--line-height: 1;
   --text-xs: 12px;
   --text-xs--line-height: 1.5;
   --text-sm: 14px;
   --text-sm--line-height: 1.5;
-  --text-base: 16px;
-  --text-base--line-height: 1.5;
   --text-lg: 20px;
   --text-lg--line-height: 1.25;
   --text-xl: 24px;
   --text-xl--line-height: 1.25;
   --text-2xl: 32px;
   --text-2xl--line-height: 1.25;
-  /* Display: the public site (markpad.md) only, never the app */
-  --text-5xl: 48px;
-  --text-5xl--line-height: 1.1;
-  --text-5xl--letter-spacing: -0.02em;
-  --text-5xl--font-weight: 600;
-  --text-6xl: 64px;
-  --text-6xl--line-height: 1.05;
-  --text-6xl--letter-spacing: -0.025em;
-  --text-6xl--font-weight: 600;
 
   --font-*: initial;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -99,17 +96,14 @@
   --font-serif: "IBM Plex Serif", Georgia, serif;
   --font-readable: "Atkinson Hyperlegible", "IBM Plex Sans", system-ui, sans-serif; /* "Easy read", doc only */
 
-  --leading-*: initial;
-  --leading-tight: 1.25;   /* headings, two-line rows */
-  --leading-normal: 1.5;   /* interface (the default for every text size up to base) */
+  /* Line heights: Tailwind's leading-tight (1.25, headings, two-line rows) and leading-normal
+     (1.5, the interface). Only relaxed differs; snug and loose are off. */
+  --leading-snug: initial;
+  --leading-loose: initial;
   --leading-relaxed: 1.7;  /* body text in the doc */
 
-  /* 4 · Radius — outer = inner + padding */
-  --radius-*: initial;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* 4 · Radius — Tailwind's own: rounded-sm 4, rounded-md 6, rounded-lg 8, rounded-xl 12.
+     Outer = inner + padding. */
 
   /* 5 · Shadow — through --elevation-*, the one nesting kept on purpose: Tailwind copies a literal
      shadow into the shadow-* class, so dark mode could not swap it */

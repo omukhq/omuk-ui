@@ -2,6 +2,19 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.7] - 2026-11-18
+
+### Changed
+
+- Radius is Tailwind's own scale; `theme.css` sets none. The class names stay, the corners get one step smaller: `rounded-sm` 4, `rounded-md` 6 (was 8: buttons, fields, rows), `rounded-lg` 8 (was 12: menus, popovers, cards), `rounded-xl` 12 (was 16: dialogs, drawers) (owner, 18 Nov 2026).
+- `text-base`, `leading-tight` and `leading-normal` are Tailwind's (the same values). The other interface sizes stay (`2xs` 10, `xs` 12 and `sm` 14 at 1.5, `lg` 20, `xl` 24, `2xl` 32); Tailwind's `3xl` and up, `leading-snug` and `leading-loose` are off.
+- The display sizes `text-5xl` and `text-6xl` are gone: nothing used them.
+
+### Breaking
+
+- No class changes name. Corners are smaller.
+- `text-5xl` and `text-6xl` draw nothing.
+
 ## [1.0.0-alpha.6] - 2026-11-18
 
 ### Changed

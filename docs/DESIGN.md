@@ -25,7 +25,6 @@ Editor elements, App and onboarding — light and dark).
    (built into xs, sm, base); lg and up are 1.25; doc body is `leading-relaxed` 1.7. Weights: 600 for titles,
    500 for controls, labels and the current item, 400 for body text. Nothing else.
    Fields are 16 on phones and 14 from 640px up (in theme.css base), so iOS never zooms.
-   The public site may also use `text-5xl` (48) and `text-6xl` (64) for headlines. The app never does.
 5. **Icons:** Lucide only (`lucide-react` in the app, `lucide-preact` in Astro islands), `size-4`
    (16), `strokeWidth={1.5}`, `currentColor`. No unicode glyphs or hand-drawn SVG as icons.
    Keyboard shortcuts stay text: `⌘P`.
@@ -38,7 +37,7 @@ Editor elements, App and onboarding — light and dark).
    Change only the colour for states: `hover:inset-ring-outline`, `aria-invalid:inset-ring-danger`, picked `inset-ring-accent`.
    Dividers between areas and rows: `border-t` / `border-b` / `border-l` / `border-r` (1px, the border colour is the default).
    Never a full `border` or `border-2` around a control. Selected tab: `border-b-2 border-accent`.
-8. **Radius nests:** outer = inner + padding. Row `rounded-md` (8) in a menu with `p-1` → menu `rounded-lg` (12).
+8. **Radius nests:** the outer corner is one size rounder than the inner one. Row `rounded-md` (6) in a menu with `p-1` → menu `rounded-lg` (8). Tailwind's scale: `sm` 4, `md` 6, `lg` 8, `xl` 12 (owner, 18 Nov 2026).
    Card `rounded-lg` in a dialog → dialog `rounded-xl` (16).
 9. **Dark mode** is `data-theme="dark"` on `<html>`. App chrome never writes `dark:` colour pairs: roles swap by themselves.
    The one exception is palette colours in tag, badge, label, avatar and chart components, which write both modes
