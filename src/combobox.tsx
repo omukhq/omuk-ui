@@ -621,7 +621,18 @@ function ComboboxInput({
   const inPopup = use(InPopupContext);
   const off = combobox.disabled || disabled;
   return (
-    <InputGroup size={size} className={cn('w-auto', className)}>
+    <InputGroup
+      size={size}
+      disabled={off}
+      className={cn(
+        'w-auto',
+        // The search at the top of the list: the list is the focus, so the
+        // field keeps the outline edge and takes no ring.
+        inPopup &&
+          'has-[input:focus-visible]:inset-ring-2 has-[input:focus-visible]:inset-ring-outline has-[input:focus-visible]:ring-0',
+        className,
+      )}
+    >
       {inPopup && (
         <InputGroupAddon align="inline-start">
           <SearchIcon strokeWidth={1.5} aria-hidden className="text-muted" />

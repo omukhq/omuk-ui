@@ -30,21 +30,34 @@ function InputGroup({
   className,
   size,
   edge,
+  stacked = false,
+  disabled = false,
   ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof inputGroupVariants>) {
+}: React.ComponentProps<'div'> &
+  VariantProps<typeof inputGroupVariants> & {
+    /**
+     * A label above or below the input (an addon `block-start` or
+     * `block-end`), or a textarea: the group grows in height. Off, a
+     * one-line field carries none of these classes.
+     */
+    stacked?: boolean;
+    /** The hover fill, the border edge and muted text. */
+    disabled?: boolean;
+  }) {
   return (
     <div
       data-slot="input-group"
+      data-disabled={disabled ? '' : undefined}
       role="group"
       className={cn(
-        'group/input-group relative flex w-full min-w-0 items-center rounded-md bg-page text-sm text-foreground transition-shadow outline-none data-disabled:bg-hover data-disabled:text-muted data-disabled:inset-ring-2 data-disabled:inset-ring-border',
+        'group/input-group relative flex w-full min-w-0 items-center rounded-md bg-page text-sm text-foreground transition-shadow outline-none',
         FIELD_WRAPPER_EDGE,
         inputGroupVariants({ size, edge }),
-        // The search field at the top of a combobox list: the list is the
-        // focus, so the field keeps its hover edge and takes no ring.
-        'in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-2 in-data-[slot=combobox-content]:has-[input:focus-visible]:inset-ring-outline in-data-[slot=combobox-content]:has-[input:focus-visible]:ring-0', // design-ok: selectors, not values
-        '[&:has(>[data-align=block-end])]:h-auto [&:has(>[data-align=block-end])]:flex-col [&:has(>[data-align=block-start])]:h-auto [&:has(>[data-align=block-start])]:flex-col [&:has(>textarea)]:h-auto',
-        '[&:has(>[data-align=block-end])>input]:pt-3 [&:has(>[data-align=block-start])>input]:pb-3 [&:has(>[data-align=inline-end])>input]:pr-2 [&:has(>[data-align=inline-start])>input]:pl-2',
+        '[&:has(>[data-align=inline-end])>input]:pr-2 [&:has(>[data-align=inline-start])>input]:pl-2',
+        // Only when so (the group knows): a field at rest carries none.
+        stacked &&
+          'h-auto flex-col [&:has(>[data-align=block-end])>input]:pt-3 [&:has(>[data-align=block-start])>input]:pb-3',
+        disabled && 'bg-hover text-muted inset-ring-2 inset-ring-border',
         className,
       )}
       {...props}

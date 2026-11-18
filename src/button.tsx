@@ -29,25 +29,32 @@ import { cn } from './utils';
 // label stays in the layout, hidden, under a spinner in the button's text
 // colour.
 
-/** Disabled for a button that has a fill or an edge (not while loading). */
-const DISABLED_FILLED =
-  'not-data-loading:disabled:bg-hover not-data-loading:disabled:inset-ring-2 not-data-loading:disabled:inset-ring-border not-data-loading:aria-disabled:bg-hover not-data-loading:aria-disabled:inset-ring-2 not-data-loading:aria-disabled:inset-ring-border';
+// Disabled and loading are added only when the button is so (it knows):
+// a button at rest carries none of their classes. The hover ones override
+// the variant's hover, which cn drops.
 
-/** Disabled for a text-only button: no fill on hover either. */
-const DISABLED_TEXT = 'disabled:bg-transparent aria-disabled:bg-transparent';
+/** Disabled, for a button that has a fill or an edge (not while loading). */
+const OFF_FILLED =
+  'cursor-not-allowed bg-hover text-muted inset-ring-2 inset-ring-border hover:bg-hover hover:inset-ring-border';
+
+/** Disabled, for a text-only button: no fill on hover either. */
+const OFF_TEXT =
+  'cursor-not-allowed bg-transparent text-muted hover:bg-transparent';
+
+const TEXT_ONLY = new Set(['ghost', 'link']);
 
 const buttonVariants = cva(
-  `group/button relative inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors select-none ${FOCUS} data-loading:pointer-events-none not-data-loading:disabled:cursor-not-allowed not-data-loading:disabled:text-muted not-data-loading:aria-disabled:text-muted aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
+  `group/button relative inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors select-none ${FOCUS} aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
   {
     variants: {
       variant: {
-        default: `bg-primary text-on-primary hover:bg-primary/90 ${DISABLED_FILLED}`,
-        outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
-        secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
-        ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected ${DISABLED_TEXT}`,
-        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-outline ${DISABLED_FILLED}`,
-        'danger-confirm': `bg-danger text-on-primary hover:bg-danger/90 ${DISABLED_FILLED}`,
-        link: `text-accent underline-offset-4 hover:underline ${DISABLED_TEXT}`,
+        default: `bg-primary text-on-primary hover:bg-primary/90`,
+        outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
+        secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
+        ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected`,
+        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-outline`,
+        'danger-confirm': `bg-danger text-on-primary hover:bg-danger/90`,
+        link: `text-accent underline-offset-4 hover:underline`,
       },
       size: {
         default:
@@ -138,7 +145,14 @@ function Button({
             onKeyDown?.(event as KeyboardEvent<HTMLButtonElement>);
             if (!off) pressOnKey(event);
           },
-      className: cn(buttonVariants({ variant, size, className })),
+      className: cn(
+        buttonVariants({ variant, size }),
+        isLoading && 'pointer-events-none',
+        !isLoading &&
+          (disabled || isTrue(props['aria-disabled'])) &&
+          (TEXT_ONLY.has(variant ?? 'default') ? OFF_TEXT : OFF_FILLED),
+        className,
+      ),
       ...props,
       // The label stays in the layout, hidden, so the button keeps its size;
       // the spinner sits over it, centred.
@@ -156,6 +170,11 @@ function Button({
     },
     render,
   );
+}
+
+/** aria-disabled from a caller: true or "true". */
+function isTrue(value: unknown): boolean {
+  return value === true || value === 'true';
 }
 
 export type { ButtonProps };

@@ -20,13 +20,16 @@ import { cn } from './utils';
 const BOX =
   'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-page text-on-primary inset-ring-2 inset-ring-control outline-none transition-colors after:absolute after:-inset-x-3 after:-inset-y-2';
 
-const STATES = [
-  // No hover edge, as fields (owner, 18 Nov 2026).
-  'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
-  'aria-checked:bg-accent aria-checked:inset-ring-2 aria-checked:inset-ring-accent aria-checked:focus-visible:focus-ring',
-  'data-indeterminate:bg-accent data-indeterminate:inset-ring-2 data-indeterminate:inset-ring-accent data-indeterminate:focus-visible:focus-ring',
-  'disabled:cursor-not-allowed disabled:bg-hover disabled:text-muted disabled:inset-ring disabled:inset-ring-border aria-checked:disabled:bg-hover aria-checked:disabled:inset-ring aria-checked:disabled:inset-ring-border data-indeterminate:disabled:bg-hover data-indeterminate:disabled:inset-ring data-indeterminate:disabled:inset-ring-border',
-].join(' ');
+/** Focus and invalid: state the browser and a form set, so always on. */
+const STATES =
+  'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger';
+
+// Checked (or some checked) and disabled are added only when so: the box
+// knows its own state, and a box at rest carries none of their classes.
+// No hover edge, as fields (owner, 18 Nov 2026).
+const ON = 'bg-accent inset-ring-accent';
+const OFF =
+  'cursor-not-allowed bg-hover text-muted inset-ring inset-ring-border';
 
 /** Base UI's `eventDetails` for a change, the parts callers read. */
 type CheckedChangeDetails = { reason: string; event: Event };
@@ -90,7 +93,13 @@ function Checkbox({
         'data-disabled': disabled ? '' : undefined,
         'data-readonly': readOnly ? '' : undefined,
         'data-required': required ? '' : undefined,
-        className: cn(BOX, STATES, className),
+        className: cn(
+          BOX,
+          STATES,
+          (checked || indeterminate) && ON,
+          disabled && OFF,
+          className,
+        ),
         onKeyDown(event: KeyboardEvent) {
           // Enter would press the <button>; a checkbox takes Space only.
           if (event.key === 'Enter') event.preventDefault();
