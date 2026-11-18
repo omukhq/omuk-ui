@@ -589,7 +589,7 @@ function ComboboxClear({
   return (
     <InputGroupButton
       variant="ghost"
-      size="icon-sm"
+      size="icon-xs"
       data-slot="combobox-clear"
       aria-label="Clear"
       className={cn(className)}
@@ -631,7 +631,7 @@ function ComboboxInput({
       <InputGroupAddon align="inline-end">
         {(showTrigger ?? !inPopup) && (
           <InputGroupButton
-            size="icon-sm"
+            size="icon-xs"
             variant="ghost"
             render={<ComboboxTrigger />}
             data-slot="input-group-button"

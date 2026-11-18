@@ -96,21 +96,15 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm', {
     size: {
       xs: 'h-6 gap-1 rounded-sm px-2',
       default: '',
-      // The trailing action in a 32 field (a table's search): 24, still 4
-      // from the edge, the same muted icon.
+      // Every icon button in a field is 24 (owner, 18 Nov 2026): the
+      // combobox's chevron and clear, the date picker's, a search's. `icon`
+      // stays as a name for callers.
       'icon-xs':
         'size-6 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
-      // A combobox's chevron and clear: 28, 4 from the 36 field's top,
-      // bottom and end (owner, 18 Nov 2026).
-      'icon-sm':
-        'size-7 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
-      // The trailing action: 32 square, radius 4 (the field's 8 less the 4
-      // around it), the icon muted until hovered, no fill when pressed.
-      icon: 'size-8 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
+      icon: 'size-6 rounded-sm p-0 text-muted hover:text-foreground aria-pressed:bg-transparent aria-pressed:hover:bg-hover',
     },
   },
-  // A button in a field is 32 (default): xs (24) is only for dense lists
-  // and tables (DESIGN.md rule 3).
+  // A text button in a field takes its own size; an icon button is 24.
   defaultVariants: {
     size: 'default',
   },
