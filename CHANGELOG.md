@@ -2,6 +2,16 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.4] - 2026-11-18
+
+### Changed
+
+- Outlined buttons (`outline`, `secondary`, `destructive`) have the 1-wide edge, the same as fields: filter buttons, pagination, select triggers and fields now match. Checkboxes, radios and the switch keep the 2-wide edge, so a small box stays easy to see. (`src/button.tsx`; DESIGN.md, section 3.)
+
+### Breaking
+
+- None for code. Outlined buttons look thinner.
+
 ## [1.0.0-alpha.3] - 2026-11-18
 
 ### Added

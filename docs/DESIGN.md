@@ -34,7 +34,7 @@ Editor elements, App and onboarding — light and dark).
    Shadows never contain a border.
 7. **Edges are Tailwind inset rings; dividers are Tailwind borders.** Inset rings never change a control's size.
    Two weights: 1px `inset-ring inset-ring-border` for things you look at (cards, popovers, table frames);
-   2px `inset-ring-2 inset-ring-control` for anything you click or tick (outlined buttons, checkboxes, radios); 1px `inset-ring inset-ring-control` for anything you type in (fields; owner, 18 Nov 2026).
+   2px `inset-ring-2 inset-ring-control` for anything you tick (checkboxes, radios, the switch); 1px `inset-ring inset-ring-control` for fields and outlined buttons (owner, 18 Nov 2026).
    Change only the colour for states: `hover:inset-ring-outline`, `aria-invalid:inset-ring-danger`, picked `inset-ring-accent`.
    Dividers between areas and rows: `border-t` / `border-b` / `border-l` / `border-r` (1px, the border colour is the default).
    Never a full `border` or `border-2` around a control. Selected tab: `border-b-2 border-accent`.
@@ -110,9 +110,9 @@ Recipes are Tailwind classes; `{}` marks a variant.
   With a leading icon, the left padding drops one step (`pl-3` / `pl-2`).
 - Variant:
   - primary `bg-primary text-on-primary` — one per surface
-  - secondary `bg-page inset-ring-2 inset-ring-control hover:inset-ring-outline text-foreground` — dialogs and forms (2px edge)
+  - secondary `bg-page inset-ring inset-ring-control hover:inset-ring-outline text-foreground` — dialogs and forms (1px edge)
   - ghost `bg-transparent text-foreground hover:bg-hover` — toolbars, headers, menus; pressed: `bg-selected` + `aria-pressed`
-  - danger `bg-page inset-ring-2 inset-ring-control hover:inset-ring-outline text-danger` — destructive action offered (2px edge)
+  - danger `bg-page inset-ring inset-ring-control hover:inset-ring-outline text-danger` — destructive action offered (1px edge)
   - danger-confirm `bg-danger text-on-primary` — only the last step of a destructive dialog
 - Disabled: primary, secondary and danger → `bg-hover inset-ring inset-ring-border text-muted`, never just faded.
   Ghost and icon buttons stay text-only → `text-muted`, no fill, no edge.

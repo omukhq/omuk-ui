@@ -9,14 +9,15 @@ import { cn } from './utils';
 // shared code passes; each draws a design-system recipe:
 //
 //   default      primary          `bg-primary text-on-primary`, one per surface
-//   outline      secondary        `bg-page inset-ring-2 inset-ring-control`, dialogs and forms
+//   outline      secondary        `bg-page inset-ring inset-ring-control`, dialogs and forms
 //   secondary    secondary        (the same; the root's grey fill has no role)
 //   ghost        ghost            toolbars, headers, menus; pressed `bg-selected`
-//   destructive  danger           `bg-page inset-ring-2 inset-ring-control text-danger`
+//   destructive  danger           `bg-page inset-ring inset-ring-control text-danger`
 //   danger-confirm                `bg-danger`, the last step of a delete only
 //   link                          `text-accent`
 //
-// Outlined buttons take the 2-wide control edge, darker on hover (R7). Sizes
+// Outlined buttons take the 1-wide control edge, as fields do, darker on
+// hover (R7; owner, 18 Nov 2026). Sizes
 // (R48, shadcn's scale): xs 24 (`h-6`), sm 28 (`h-7`, the formatting
 // toolbar), default 32 (`h-8`), lg 36 (`h-9`, forms and dialogs); the icon
 // sizes are the same squares. xs is only for row actions and chips inside
@@ -41,10 +42,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: `bg-primary text-on-primary hover:bg-primary/90 ${DISABLED_FILLED}`,
-        outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
-        secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
+        outline: `bg-page text-foreground inset-ring inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
+        secondary: `bg-page text-foreground inset-ring inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline ${DISABLED_FILLED}`,
         ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected ${DISABLED_TEXT}`,
-        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-outline ${DISABLED_FILLED}`,
+        destructive: `bg-page text-danger inset-ring inset-ring-control hover:inset-ring-outline ${DISABLED_FILLED}`,
         'danger-confirm': `bg-danger text-on-primary hover:bg-danger/90 ${DISABLED_FILLED}`,
         link: `text-accent underline-offset-4 hover:underline ${DISABLED_TEXT}`,
       },
