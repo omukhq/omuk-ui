@@ -2,6 +2,26 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [1.0.0-alpha.10] - 2026-11-18
+
+### Added
+
+- `DatePicker` (`@omuk/ui/date-picker`): one component with a `mode`: `date` (with `granularity="minute"`, a day and a time), `range` (with `presets`) or `time`. The value is ISO text and its type follows the mode. Our own code, no package: React Aria's typed parts (the language's order from `Intl`, digits, arrows, Page Up/Down, Home/End, Backspace, a/p), the calendar button in the field, `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `validate`, hidden inputs; `placeholder`, `prefix` and `showClear` for filters. Gregorian only.
+- `Calendar` (`@omuk/ui/calendar`): one day or a range, the grid keys, today as a light grey fill, the range band and its preview, screen reader names.
+- Combobox: `ComboboxButton` (the field as a button, the search in the list), `ComboboxStatus` (a polite live message), `ComboboxChipsMore` ("+3 more"), a `placeholder` on `ComboboxValue`, a `size` on `ComboboxInput`.
+- The `on-accent` colour token: text on an accent fill.
+
+### Changed
+
+- Fields and outlined buttons have a 2px edge (React Spectrum's recipe; 1px since alpha.2), and the focus ring's inner edge is 2px (owner, 18 Nov 2026).
+- Every control's default size is 36 (buttons were 32); `lg` stays as a name.
+- Every icon button in a field is 24 (the combobox's chevron and clear, the date picker's).
+- Combobox: the list sits under the whole field (a label before the text no longer pushes it right); the tick is at the end of the option; the clear button is "Clear <label>".
+
+### Breaking
+
+- None for code. Buttons and fields look heavier and taller.
+
 ## [1.0.0-alpha.9] - 2026-11-18
 
 ### Changed
