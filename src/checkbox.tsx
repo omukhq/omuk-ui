@@ -12,7 +12,7 @@ import { cn } from './utils';
 // button's own click); Enter does not, as the pattern asks. With a `name`, a
 // hidden native checkbox beside it takes part in the form, as Base UI's does.
 //
-// DESIGN.md, section 3: a 16 box with the 2-wide control edge, darker on hover;
+// DESIGN.md, section 3: a 16 box with the 2-wide control edge, the same on hover;
 // checked, the accent fill and a 12 tick (stroke 3) in the on-primary
 // colour; some checked, a dash. Focus: the one focus ring. Disabled: the
 // hover fill and the plain 1-wide `inset-ring inset-ring-border`, the tick muted.
@@ -21,7 +21,8 @@ const BOX =
   'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-page text-on-primary inset-ring-2 inset-ring-control outline-none transition-colors after:absolute after:-inset-x-3 after:-inset-y-2';
 
 const STATES = [
-  'hover:inset-ring-2 hover:inset-ring-outline focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
+  // No hover edge, as fields (owner, 18 Nov 2026).
+  'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
   'aria-checked:bg-accent aria-checked:inset-ring-2 aria-checked:inset-ring-accent aria-checked:focus-visible:focus-ring',
   'data-indeterminate:bg-accent data-indeterminate:inset-ring-2 data-indeterminate:inset-ring-accent data-indeterminate:focus-visible:focus-ring',
   'disabled:cursor-not-allowed disabled:bg-hover disabled:text-muted disabled:inset-ring disabled:inset-ring-border aria-checked:disabled:bg-hover aria-checked:disabled:inset-ring aria-checked:disabled:inset-ring-border data-indeterminate:disabled:bg-hover data-indeterminate:disabled:inset-ring data-indeterminate:disabled:inset-ring-border',

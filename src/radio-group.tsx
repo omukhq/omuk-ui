@@ -12,7 +12,7 @@ import { cn } from './utils';
 // shadcn's (RadioGroup, RadioGroupItem) so a later root one can match.
 //
 // DESIGN.md, section 3: the checkbox's box, round: the 2-wide control edge,
-// darker on hover. Picked: an on-primary centre in a 5-wide accent ring.
+// the same on hover. Picked: an on-primary centre in a 5-wide accent ring.
 // Focus: the one focus ring. Disabled: the hover fill and the plain `inset-ring inset-ring-border`.
 
 type RadioGroupState = {
@@ -115,7 +115,8 @@ function RadioGroupItem({
       data-unchecked={checked ? undefined : ''}
       className={cn(
         'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-page inset-ring-2 inset-ring-control outline-none transition-colors before:absolute before:-inset-2',
-        'hover:inset-ring-2 hover:inset-ring-outline focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
+        // No hover edge, as fields (owner, 18 Nov 2026).
+        'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
         'aria-checked:bg-accent aria-checked:inset-ring-2 aria-checked:inset-ring-accent aria-checked:focus-visible:focus-ring',
         'disabled:cursor-not-allowed disabled:bg-hover disabled:inset-ring disabled:inset-ring-border aria-checked:disabled:bg-hover aria-checked:disabled:inset-ring aria-checked:disabled:inset-ring-border',
         className,

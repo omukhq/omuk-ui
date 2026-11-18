@@ -9,7 +9,7 @@ import { cn } from './utils';
 //
 // DESIGN.md, section 3: a 44 × 24 track. Off: it reads like an empty
 // checkbox (decisions, R13) — the page fill and the 2-wide control edge,
-// darker on hover, with a 16 knob in the control grey (R28). On: the accent
+// the same on hover, with a 16 knob in the control grey (R28). On: the accent
 // with a 20 knob that holds an accent check (12, stroke 3.5). The knob grows
 // and slides. Disabled: the hover fill and the plain `inset-ring inset-ring-border`, the knob in the
 // border colour, the check muted. Focus: the one focus ring. `sm` is a step
@@ -83,7 +83,7 @@ function Switch({
             ? 'cursor-not-allowed bg-hover inset-ring inset-ring-border'
             : checked
               ? 'bg-accent'
-              : 'bg-page inset-ring-2 inset-ring-control hover:not-focus-visible:not-aria-invalid:inset-ring-outline',
+              : 'bg-page inset-ring-2 inset-ring-control',
           size === 'sm' ? 'h-5 w-9' : 'h-6 w-11',
           className,
         ),
