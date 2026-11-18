@@ -83,10 +83,13 @@ export function DateSegments({
     fromValue(value, kind, hourCycle),
   );
   // The value changed from outside (a calendar pick, a reset): show it.
+  // Our own change (null while a part is emptied or a year is typed) keeps
+  // the parts typed so far.
+  const emitted = useRef<string | null | undefined>(undefined);
   const [seen, setSeen] = useState(value);
   if (value !== seen) {
     setSeen(value);
-    if (value !== toValue(segments, kind, hourCycle)) {
+    if (value !== emitted.current) {
       setSegments(fromValue(value, kind, hourCycle));
     }
   }
@@ -102,7 +105,10 @@ export function DateSegments({
     const nextValue = typingYear.current
       ? null
       : toValue(next, kind, hourCycle);
-    if (nextValue !== value) onChange(nextValue);
+    if (nextValue !== value) {
+      emitted.current = nextValue;
+      onChange(nextValue);
+    }
   }
 
   /** A year left half typed: it is final now. */
