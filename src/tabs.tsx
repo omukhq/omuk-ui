@@ -114,8 +114,17 @@ type ListVariant = NonNullable<
 const ListVariantContext = createContext<ListVariant>('default');
 
 const TRIGGER: Record<ListVariant, string> = {
-  default: 'h-full flex-1 rounded-md px-3 text-foreground hover:bg-hover',
-  line: 'h-9 -mb-px border-y-2 border-transparent px-3 hover:text-foreground',
+  default: 'h-full flex-1 rounded-md px-3 text-foreground',
+  line: 'h-9 -mb-px border-y-2 border-transparent px-3',
+};
+
+/**
+ * An unselected tab's hover, added only to it: on the selected tab the
+ * grey fill would cover its raised one (owner, 18 Nov 2026).
+ */
+const IDLE: Record<ListVariant, string> = {
+  default: 'hover:bg-hover',
+  line: 'hover:text-foreground',
 };
 
 /** The selected tab's look, added only to it (the tab knows). */
@@ -229,7 +238,7 @@ function TabsTrigger({
         className: cn(
           "relative inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:focus-ring group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           TRIGGER[variant],
-          active && ACTIVE[variant],
+          active ? ACTIVE[variant] : IDLE[variant],
           disabled && 'pointer-events-none text-muted',
           className,
         ),

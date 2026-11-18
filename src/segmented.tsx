@@ -87,9 +87,10 @@ function SegmentedItem({
       tabIndex={chosen || segmented.value === null ? 0 : -1}
       data-slot="segmented-item"
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm font-medium whitespace-nowrap text-foreground outline-none transition-colors hover:bg-hover focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm font-medium whitespace-nowrap text-foreground outline-none transition-colors focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Chosen and disabled only when so (the item knows).
-        chosen && 'bg-raised shadow-sm',
+        // The hover fill only on the others: it would cover the raised one.
+        chosen ? 'bg-raised shadow-sm' : 'hover:bg-hover',
         props.disabled && 'cursor-not-allowed text-muted',
         className,
       )}
