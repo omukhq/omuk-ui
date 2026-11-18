@@ -1,4 +1,10 @@
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, XIcon } from 'lucide-react';
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  SearchIcon,
+  XIcon,
+} from 'lucide-react';
 import {
   type ComponentPropsWithRef,
   createContext,
@@ -29,6 +35,7 @@ import {
 import type { Align, Side } from './position';
 import {
   CHIP,
+  FIELD,
   FIELD_WRAPPER_EDGE,
   MENU_SEPARATOR,
   OPTION_ROW,
@@ -45,6 +52,8 @@ import { cn } from './utils';
 // the highlighted option is `aria-activedescendant`. The arrow keys move
 // the highlight and open the list, Enter chooses, Escape closes, typing
 // filters. With `multiple`, the chosen options are chips beside the field.
+// With ComboboxButton, the field is a button that shows the value, and the
+// search field sits in the list (Base UI's "input inside popup").
 
 export type ChangeDetails = Omit<OpenChangeDetails, 'trigger'>;
 
@@ -116,9 +125,14 @@ type ComboboxState = PopupRoot & {
   pending: RefObject<'first' | 'last' | 'selected' | 'chosen' | null>;
   input: RefObject<HTMLInputElement | null>;
   list: RefObject<HTMLDivElement | null>;
+  /** A ComboboxButton is the field: the search sits in the list. */
+  searchInPopup: RefObject<boolean>;
 };
 
 const ComboboxContext = createContext<ComboboxState | null>(null);
+
+/** True inside ComboboxContent: a ComboboxInput there is the list's search. */
+const InPopupContext = createContext(false);
 
 function useCombobox() {
   const combobox = use(ComboboxContext);
@@ -228,6 +242,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const pending = useRef<'first' | 'last' | 'selected' | 'chosen' | null>(null);
   const input = useRef<HTMLInputElement | null>(null);
   const list = useRef<HTMLDivElement | null>(null);
+  const searchInPopup = useRef(false);
 
   function type(
     text: string,
@@ -244,8 +259,13 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
       onOpenChange?.(next, change);
       if (next || change.isCanceled) return;
       // Closed without choosing: the field shows the value again.
+      // A search in the list starts empty each time.
       if (change.reason !== 'item-press') {
-        type(many ? '' : chosenLabel, change.event, change.reason);
+        type(
+          many || searchInPopup.current ? '' : chosenLabel,
+          change.event,
+          change.reason,
+        );
       }
     },
   });
@@ -268,7 +288,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
       return;
     }
     if (!equal(item, value) && !commit(item, event)) return;
-    type(labelOf(item), event, 'item-press');
+    type(searchInPopup.current ? '' : labelOf(item), event, 'item-press');
     root.setOpen(false, 'item-press', event);
   }
 
@@ -322,6 +342,7 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
         pending,
         input,
         list,
+        searchInPopup,
       }}
     >
       {children}
@@ -370,8 +391,13 @@ function useInputProps(
   const disabled = combobox.disabled || ownDisabled;
   const register = useMergedRef(ref, (node: HTMLInputElement | null) => {
     combobox.input.current = node;
-    // In chips, the chips box is what the list sits under.
-    if (node && !node.closest('[data-slot=combobox-chips]')) {
+    // In chips, the chips box is what the list sits under; in the list, the
+    // ComboboxButton is.
+    if (
+      node &&
+      !node.closest('[data-slot=combobox-chips]') &&
+      !node.closest('[data-slot=combobox-content]')
+    ) {
       combobox.setTrigger(node);
     }
   });
@@ -473,13 +499,17 @@ function useInputProps(
 
 function ComboboxValue({
   children,
+  placeholder,
 }: {
   // biome-ignore lint/suspicious/noExplicitAny: Base UI's signature; callers type the value.
   children?: ReactNode | ((value: any) => ReactNode);
+  /** Shown while nothing is chosen (without `children`). */
+  placeholder?: ReactNode;
 }) {
   const combobox = useCombobox();
   if (typeof children === 'function') return children(combobox.value);
   if (children != null) return children;
+  if (!combobox.selected.length && placeholder != null) return placeholder;
   return combobox.selected.map(combobox.labelOf).join(', ');
 }
 
@@ -572,20 +602,27 @@ function ComboboxInput({
   className,
   children,
   disabled = false,
-  showTrigger = true,
+  showTrigger,
   showClear = false,
   ...props
 }: ComponentPropsWithRef<'input'> & {
+  /** The chevron. Default: shown, except in the list (a search field). */
   showTrigger?: boolean;
   showClear?: boolean;
 }) {
   const combobox = useCombobox();
+  const inPopup = use(InPopupContext);
   const off = combobox.disabled || disabled;
   return (
     <InputGroup className={cn('w-auto', className)}>
+      {inPopup && (
+        <InputGroupAddon align="inline-start">
+          <SearchIcon strokeWidth={1.5} aria-hidden className="text-muted" />
+        </InputGroupAddon>
+      )}
       <InputGroupInput {...useInputProps(combobox, { disabled, ...props })} />
       <InputGroupAddon align="inline-end">
-        {showTrigger && (
+        {(showTrigger ?? !inPopup) && (
           <InputGroupButton
             size="icon"
             variant="ghost"
@@ -641,6 +678,12 @@ function ComboboxContent({
               ? chosen
               : undefined;
     chosen?.scrollIntoView({ block: 'nearest' });
+    // The search in the list takes the focus; the field keeps it otherwise.
+    if (combobox.searchInPopup.current) {
+      positioner
+        .querySelector<HTMLInputElement>('input[role=combobox]')
+        ?.focus({ preventScroll: true });
+    }
     show(combobox, target);
   }
 
@@ -661,7 +704,8 @@ function ComboboxContent({
       placement={{ side, align, sideOffset, alignOffset }}
       className="isolate z-50"
       initialFocus={highlightIn}
-      finalFocus={false}
+      // Back to the ComboboxButton; a field never lost the focus.
+      finalFocus={() => combobox.searchInPopup.current}
       onDismiss={dismiss}
     >
       <div
@@ -680,8 +724,134 @@ function ComboboxContent({
           className,
         )}
         {...props}
-      />
+      >
+        <InPopupContext value={true}>{props.children}</InPopupContext>
+      </div>
     </PopupFrame>
+  );
+}
+
+/**
+ * The field as a button that shows the value; the search sits in the list
+ * (a ComboboxInput inside ComboboxContent). Base UI's "input inside popup":
+ * a select whose options can be searched. Looks like a Select's trigger;
+ * `render` gives it another look (a filter's outlined button).
+ *
+ *   <Combobox items={roles}>
+ *     <ComboboxButton><ComboboxValue placeholder="Role" /></ComboboxButton>
+ *     <ComboboxContent>
+ *       <ComboboxInput placeholder="Search" />
+ *       <ComboboxEmpty>No match.</ComboboxEmpty>
+ *       <ComboboxList>{(role) => <ComboboxItem …>}</ComboboxList>
+ *     </ComboboxContent>
+ *   </Combobox>
+ */
+function ComboboxButton({
+  className,
+  children,
+  render,
+  ref,
+  disabled: ownDisabled,
+  ...props
+}: ComponentPropsWithRef<'button'> & { render?: RenderProp }) {
+  const combobox = useCombobox();
+  const merged = useMergedRef(ref, (node: HTMLButtonElement | null) => {
+    combobox.searchInPopup.current = node !== null;
+    if (node) combobox.setTrigger(node);
+  });
+  const disabled = combobox.disabled || ownDisabled;
+
+  function open(
+    event: React.SyntheticEvent,
+    at: ComboboxState['pending']['current'],
+  ) {
+    if (combobox.readOnly) return;
+    if (combobox.inputValue) combobox.type('', event.nativeEvent);
+    combobox.pending.current = at;
+    combobox.setOpen(true, 'trigger-press', event);
+  }
+
+  return useRender(
+    'button',
+    mergeProps(
+      {
+        ref: merged,
+        type: 'button',
+        'aria-haspopup': 'listbox',
+        'aria-expanded': combobox.open,
+        'aria-controls': combobox.open ? `${combobox.id}-list` : undefined,
+        'data-slot': 'combobox-button',
+        'data-placeholder': combobox.selected.length ? undefined : '',
+        disabled,
+        ...triggerState(combobox.open),
+        // A Select's look; with `render`, the rendered element's own.
+        className: render
+          ? className
+          : cn(
+              FIELD,
+              "flex h-9 w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              className,
+            ),
+        onClick(event: React.MouseEvent) {
+          if (combobox.open) combobox.setOpen(false, 'trigger-press', event);
+          else open(event, 'chosen');
+        },
+        onKeyDown(event: KeyboardEvent) {
+          if (combobox.open) return;
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            open(event, event.key === 'ArrowUp' ? 'last' : 'selected');
+          }
+        },
+        children: (
+          <>
+            {children ?? <ComboboxValue />}
+            {combobox.open ? (
+              <ChevronUpIcon
+                aria-hidden
+                strokeWidth={1.5}
+                className="pointer-events-none size-4 text-muted"
+              />
+            ) : (
+              <ChevronDownIcon
+                aria-hidden
+                strokeWidth={1.5}
+                className="pointer-events-none size-4 text-muted"
+              />
+            )}
+          </>
+        ),
+      },
+      props,
+    ),
+    render,
+  );
+}
+
+/**
+ * A message that screen readers read out when it changes: "Loading…",
+ * "12 results". Put it in ComboboxContent; it takes no room while empty.
+ * Base UI's Status. Use `className="sr-only"` to only announce it.
+ */
+function ComboboxStatus({
+  className,
+  render,
+  ...props
+}: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  return useRender(
+    'div',
+    {
+      role: 'status',
+      'aria-live': 'polite',
+      'aria-atomic': true,
+      'data-slot': 'combobox-status',
+      className: cn(
+        'flex items-center gap-2 px-3 py-2 text-sm text-muted empty:hidden [&_svg]:size-4',
+        className,
+      ),
+      ...props,
+    },
+    render,
   );
 }
 
@@ -983,6 +1153,40 @@ function ComboboxChip({
   );
 }
 
+/**
+ * After the first `limit` chips: "+3 more", so the chips stay on one line.
+ * Draw only the first `limit` chips yourself:
+ *
+ *   <ComboboxValue>
+ *     {(values) => values.slice(0, 2).map((v) => <ComboboxChip …>)}
+ *   </ComboboxValue>
+ *   <ComboboxChipsMore limit={2} />
+ *
+ * The hidden values stay chosen (ticked in the list); Backspace removes the
+ * last one.
+ */
+function ComboboxChipsMore({
+  limit,
+  className,
+  ...props
+}: ComponentPropsWithRef<'span'> & { limit: number }) {
+  const combobox = useCombobox();
+  const hidden = combobox.selected.slice(limit);
+  if (!hidden.length) return null;
+  const names = hidden.map(combobox.labelOf).join(', ');
+  return (
+    <span
+      data-slot="combobox-chips-more"
+      title={names}
+      className={cn(CHIP, 'text-muted', className)}
+      {...props}
+    >
+      +{hidden.length} more
+      <span className="sr-only">: {names}</span>
+    </span>
+  );
+}
+
 function ComboboxChipsInput({
   className,
   ...props
@@ -1006,9 +1210,11 @@ function useComboboxAnchor() {
 
 export {
   Combobox,
+  ComboboxButton,
   ComboboxChip,
   ComboboxChips,
   ComboboxChipsInput,
+  ComboboxChipsMore,
   ComboboxCollection,
   ComboboxContent,
   ComboboxEmpty,
@@ -1018,6 +1224,7 @@ export {
   ComboboxLabel,
   ComboboxList,
   ComboboxSeparator,
+  ComboboxStatus,
   ComboboxTrigger,
   ComboboxValue,
   useComboboxAnchor,
