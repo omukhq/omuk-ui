@@ -4,6 +4,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.15] - 2026-11-19
+
 ### Added
 
 - `Sortable`, `SortableItem` and `SortableHandle` (`@omuk/ui/sortable`): a list the person puts in order, by drag (mouse or touch, through the handle) or by Up and Down on the focused handle, with a live-region announcement. `value` is the items' ids in order; `onValueChange` gets the new order. No dependency. The ordering arithmetic is `sortable-order.ts`, tested.
