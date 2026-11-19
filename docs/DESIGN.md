@@ -257,6 +257,12 @@ Board: Design system → Editor → Image popover (also on "Image and link editi
 - Children indent by `4` per level, on a 1px `border` guide line (the library sidebar's own rule is below).
 - AI author mark: 16 app avatar at the end of the row (logo in the slot).
 
+### Sortable (owner, 19 Nov 2026)
+- A list the person puts in order: `Sortable`, `SortableItem` (with a `label`), `SortableHandle`. Short lists in one direction; no drag between lists, no tree, no scroll while dragging.
+- The handle: a `size-7` button, `text-muted`, grip icon at 16; hover `bg-hover`; `cursor-grab`, `cursor-grabbing` while dragging; `touch-none`, so the list still scrolls by touch outside it.
+- Dragged item: follows the pointer, `bg-raised shadow-md rounded-md`, above the rest. The items it passes slide aside, `duration-200 ease-sheet`; reduced motion turns the slide off. The drop draws the new order at once, with no slide.
+- Keyboard: with the handle in focus, Up and Down move the item; the focus stays on the handle. Escape ends a drag. A live region says where the item went ("Email moved to position 3 of 8").
+
 ### Library sidebar (R50: the designer's update after v3.13)
 - `bg-page` with `border-r`, 288 wide (resizable). Header `h-14 border-b`: the logo, then ghost icon buttons New doc
   (`square-pen`) and Hide sidebar (`panel-left`; `x` in the phone drawer).

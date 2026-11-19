@@ -49,6 +49,7 @@
     "./select": "./src/select.tsx",
     "./separator": "./src/separator.tsx",
     "./skeleton": "./src/skeleton.tsx",
+    "./sortable": "./src/sortable.tsx",
     "./sonner": "./src/sonner.tsx",
     "./spinner": "./src/spinner.tsx",
     "./status": "./src/status.tsx",

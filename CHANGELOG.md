@@ -2,6 +2,12 @@
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, any alpha can break the API.
 
+## [Unreleased]
+
+### Added
+
+- `Sortable`, `SortableItem` and `SortableHandle` (`@omuk/ui/sortable`): a list the person puts in order, by drag (mouse or touch, through the handle) or by Up and Down on the focused handle, with a live-region announcement. `value` is the items' ids in order; `onValueChange` gets the new order. No dependency. The ordering arithmetic is `sortable-order.ts`, tested.
+
 ## [1.0.0-alpha.14] - 2026-11-18
 
 ### Changed
