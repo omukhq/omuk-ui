@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.17] - 2026-11-19
+
+### Added
+
+- `DatePicker` takes `align`: `start` (default) lines the calendar up with the field's left edge, `end` with its right edge. A field near the right edge of the page (a toolbar's date filter) uses `end`, so the calendar opens under it.
+
 ## [1.0.0-alpha.16] - 2026-11-19
 
 ### Changed

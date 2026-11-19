@@ -53,6 +53,11 @@ type PickerBase = {
   prefix?: ReactNode;
   /** A clear button while there is a value. */
   showClear?: boolean;
+  /**
+   * Which edge the calendar lines up with: the field's left (`start`, the
+   * default) or its right (`end`, for a field near the right edge).
+   */
+  align?: 'start' | 'end';
   'aria-label'?: string;
   id?: string;
   /**
@@ -280,7 +285,7 @@ function PickerShell({
           kind="popover"
           placement={{
             side: 'bottom',
-            align: 'start',
+            align: base.align ?? 'start',
             sideOffset: 6,
             alignOffset: 0,
           }}
