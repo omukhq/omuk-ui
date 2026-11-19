@@ -107,7 +107,7 @@ Recipes are Tailwind classes; `{}` marks a variant.
 
 ### Button
 - Base: `inline-flex items-center gap-2 rounded-md font-medium focus-visible:focus-ring`
-- Size prop → classes: lg `h-9 px-4` · default `h-8 px-3` · sm `h-7 px-2 rounded-sm` · xs `h-6 px-2 text-xs`. Icon-only: `icon-lg/icon/icon-sm/icon-xs`,
+- Size prop → classes: lg `h-9 px-4` · default `h-8 px-3` · sm `h-7 px-2 rounded-sm text-xs` (owner, 20 Nov 2026) · xs `h-6 px-2 text-xs`. Icon-only: `icon-lg/icon/icon-sm/icon-xs`,
   `size-9/8/7/6 p-0`, so the 16 icon stays 16. The formatting toolbar's controls are `sm` / `icon-sm` (no class of their own).
   With a leading icon, the left padding drops one step (`pl-3` / `pl-2`).
 - Variant:
