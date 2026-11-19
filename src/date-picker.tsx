@@ -55,6 +55,10 @@ type PickerBase = {
   showClear?: boolean;
   'aria-label'?: string;
   id?: string;
+  /**
+   * On the picker's outer box. It fills the width it gets, like Input; pass
+   * a width to narrow it (`w-fit` sizes it to its value, as in a toolbar).
+   */
   className?: string;
 };
 
@@ -174,7 +178,7 @@ function PickerShell({
   }
 
   return (
-    <div className="inline-flex flex-col gap-1">
+    <div className={cn('flex w-full min-w-0 flex-col gap-1', base.className)}>
       <div
         ref={(node) => {
           box.current = node;
@@ -191,12 +195,11 @@ function PickerShell({
         className={cn(
           // A field's box (DESIGN.md, Field): the 2-wide edge, the focus ring
           // while a part has the focus, danger when invalid.
-          'relative inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
+          'relative flex w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
           'inset-ring-2 inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
           'h-9',
           root ? 'pr-1' : 'pr-3',
           disabled && 'bg-hover text-muted inset-ring-border',
-          base.className,
         )}
         onFocus={(event) => {
           if (isPart(event.target)) setTyping(true);

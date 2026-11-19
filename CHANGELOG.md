@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.16] - 2026-11-19
+
+### Changed
+
+- **Breaking:** `DatePicker` fills the width it gets, like `Input`; it was as wide as its value. `className` now goes on the picker's outer box, so it sets the width. To keep the old look (in a toolbar, say), pass `className="w-fit"`.
+
 ## [1.0.0-alpha.15] - 2026-11-19
 
 ### Added
