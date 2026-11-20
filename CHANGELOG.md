@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.18] - 2026-11-20
+
+### Changed
+
+- `Button` with `size="sm"` writes its label in `text-xs` and `font-normal`; it was `text-sm` and `font-medium`. A small button in a table row or a card header (Record payment, Turn all off) is smaller and lighter now.
+
 ## [1.0.0-alpha.17] - 2026-11-19
 
 ### Added
