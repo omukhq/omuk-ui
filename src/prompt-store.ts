@@ -174,11 +174,7 @@ const PROMPT = { open: openPrompt, closeAll: closeAllPrompts };
  * `open(options)` shows an alert (gives `true` or `false`), a modal or a
  * drawer (gives what its content passes to `close`, or `null`).
  * `closeAll()` closes every open prompt. The same object outside React:
- * `prompt`.
- *
- * Here, not in ./prompt.tsx, so code that only opens prompts does not load
- * the dialogs and drawers: an app can load <PromptProvider /> when the
- * first prompt opens (`subscribe`, `snapshot`). ./prompt.tsx re-exports both.
+ * `prompt`. Apps import both from `@omuk/ui/prompt`, which re-exports them.
  */
 export function usePrompt() {
   return PROMPT;

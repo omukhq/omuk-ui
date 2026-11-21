@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.21] - 2026-11-21
+
+### Removed
+
+- The `@omuk/ui/prompt-store` entry (added in alpha.19). Since alpha.20, `@omuk/ui/prompt` holds no dialog code, so the second entry has no use. To update: import `usePrompt` and `prompt` from `@omuk/ui/prompt`.
+
 ## [1.0.0-alpha.20] - 2026-11-21
 
 ### Changed
