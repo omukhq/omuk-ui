@@ -26,8 +26,6 @@ import {
 import {
   type AlertEntry,
   type ContentEntry,
-  closeAllPrompts,
-  openPrompt,
   removePrompt,
   snapshot,
   subscribe,
@@ -57,20 +55,9 @@ export type {
   PromptOptions,
 } from './prompt-store';
 
-const PROMPT = { open: openPrompt, closeAll: closeAllPrompts };
-
-/**
- * `open(options)` shows an alert (gives `true` or `false`), a modal or a
- * drawer (gives what its content passes to `close`, or `null`).
- * `closeAll()` closes every open prompt. The same object outside React:
- * `prompt`.
- */
-export function usePrompt() {
-  return PROMPT;
-}
-
-/** `usePrompt()` for code outside a component. */
-export const prompt = PROMPT;
+// `usePrompt` and `prompt` live in ./prompt-store.ts (no dialog code), and
+// are re-exported here, so `@omuk/ui/prompt` keeps working as before.
+export { prompt, usePrompt } from './prompt-store';
 
 /** Draws the open prompts. One in the app. */
 export function PromptProvider() {

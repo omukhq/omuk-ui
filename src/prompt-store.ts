@@ -167,3 +167,22 @@ export function openPrompt<TResult>(
 export function closeAllPrompts() {
   for (const entry of entries) if (entry.open) entry.dismiss();
 }
+
+const PROMPT = { open: openPrompt, closeAll: closeAllPrompts };
+
+/**
+ * `open(options)` shows an alert (gives `true` or `false`), a modal or a
+ * drawer (gives what its content passes to `close`, or `null`).
+ * `closeAll()` closes every open prompt. The same object outside React:
+ * `prompt`.
+ *
+ * Here, not in ./prompt.tsx, so code that only opens prompts does not load
+ * the dialogs and drawers: an app can load <PromptProvider /> when the
+ * first prompt opens (`subscribe`, `snapshot`). ./prompt.tsx re-exports both.
+ */
+export function usePrompt() {
+  return PROMPT;
+}
+
+/** `usePrompt()` for code outside a component. */
+export const prompt = PROMPT;

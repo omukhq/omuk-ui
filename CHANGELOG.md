@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.19] - 2026-11-21
+
+### Added
+
+- `@omuk/ui/prompt-store` exports `usePrompt` and `prompt` (and `subscribe`, `snapshot`), without the dialog and drawer code. Code that only opens prompts can import from it, and an app can load `<PromptProvider />` when the first prompt opens (`subscribe` tells it). `@omuk/ui/prompt` re-exports `usePrompt` and `prompt` as before: nothing to update.
+
 ## [1.0.0-alpha.18] - 2026-11-20
 
 ### Changed

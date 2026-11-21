@@ -1,6 +1,6 @@
 {
   "name": "@omuk/ui",
-  "version": "1.0.0-alpha.18",
+  "version": "1.0.0-alpha.19",
   "private": true,
   "type": "module",
   "description": "Omuk UI: the design system's React components, tokens and fonts.",
@@ -42,6 +42,7 @@
     "./popup": "./src/popup.tsx",
     "./position": "./src/position.ts",
     "./prompt": "./src/prompt.tsx",
+    "./prompt-store": "./src/prompt-store.ts",
     "./radio-group": "./src/radio-group.tsx",
     "./recipes": "./src/recipes.ts",
     "./render": "./src/render.tsx",
