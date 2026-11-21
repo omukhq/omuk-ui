@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.20] - 2026-11-21
+
+### Changed
+
+- `PromptProvider` loads the alert, dialog and drawer code itself when the first prompt opens, so `@omuk/ui/prompt` carries none of it: import `usePrompt` and `PromptProvider` from `@omuk/ui/prompt`, as before alpha.19. A page that never opens a prompt never loads the dialogs. Nothing to update; `@omuk/ui/prompt-store` still exports `usePrompt` and `prompt`, but `@omuk/ui/prompt` is the import to use.
+
 ## [1.0.0-alpha.19] - 2026-11-21
 
 ### Added
