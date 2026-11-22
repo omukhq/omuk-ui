@@ -67,6 +67,7 @@ export const DOCS: DocEntry[] = [
     name: 'Button group',
     group: 'Actions',
     file: 'button-group',
+    load: () => import('./pages/button-group'),
     description:
       'Buttons joined into one control, with shared edges, for actions that belong together.',
   },
@@ -75,6 +76,8 @@ export const DOCS: DocEntry[] = [
     name: 'Segmented control',
     group: 'Actions',
     file: 'segmented',
+    imports: 'Segmented, SegmentedItem',
+    load: () => import('./pages/segmented'),
     description:
       'One choice out of a few, side by side: a view, a period, a theme.',
   },
@@ -83,6 +86,7 @@ export const DOCS: DocEntry[] = [
     name: 'Chip',
     group: 'Actions',
     file: 'chip',
+    load: () => import('./pages/chip'),
     description:
       'A small removable token: a filter that is on, an email in a list of invites.',
   },
@@ -197,6 +201,7 @@ export const DOCS: DocEntry[] = [
     name: 'Date picker',
     group: 'Dates',
     file: 'date-picker',
+    load: () => import('./pages/date-picker'),
     description:
       'One field for a day, a day and a time, a range or a time. The parts are typed in the language’s order; a calendar opens from the field.',
   },
@@ -205,6 +210,7 @@ export const DOCS: DocEntry[] = [
     name: 'Calendar',
     group: 'Dates',
     file: 'calendar',
+    load: () => import('./pages/calendar'),
     description:
       'A month grid to pick a day or a range, with the keyboard or the pointer.',
   },
@@ -325,6 +331,8 @@ export const DOCS: DocEntry[] = [
     name: 'Table',
     group: 'Data',
     file: 'table',
+    imports: 'Table, TableBody, TableCell, TableHead, TableHeader, TableRow',
+    load: () => import('./pages/table'),
     description:
       'Rows and columns with the right edges, heights and number alignment.',
   },
@@ -333,6 +341,8 @@ export const DOCS: DocEntry[] = [
     name: 'Pagination',
     group: 'Data',
     file: 'pagination',
+    imports: 'Pagination, PaginationContent, PaginationItem, PaginationLink',
+    load: () => import('./pages/pagination'),
     description:
       'Previous, next and the pages around the current one, as links.',
   },
@@ -341,6 +351,8 @@ export const DOCS: DocEntry[] = [
     name: 'List row',
     group: 'Data',
     file: 'list-row',
+    imports: 'ListRow, ListRowMeta',
+    load: () => import('./pages/list-row'),
     description:
       'A row in a sidebar or a list: an icon, a name, a count, and the current page marked.',
   },
@@ -349,6 +361,8 @@ export const DOCS: DocEntry[] = [
     name: 'Sortable list',
     group: 'Data',
     file: 'sortable',
+    imports: 'Sortable, SortableHandle, SortableItem',
+    load: () => import('./pages/sortable'),
     description:
       'A short list that the person puts in order, by dragging a handle or with the arrow keys.',
   },
@@ -357,6 +371,7 @@ export const DOCS: DocEntry[] = [
     name: 'Badge',
     group: 'Data',
     file: 'badge',
+    load: () => import('./pages/badge'),
     description: 'A short label on a row or a title: a type, a plan, a count.',
   },
   {
@@ -364,6 +379,8 @@ export const DOCS: DocEntry[] = [
     name: 'Avatar',
     group: 'Data',
     file: 'avatar',
+    imports: 'Avatar, AvatarCount, AvatarStack',
+    load: () => import('./pages/avatar'),
     description:
       'A person, an app or a team as a picture or initials, alone or in a stack.',
   },
@@ -373,6 +390,8 @@ export const DOCS: DocEntry[] = [
     name: 'Card',
     group: 'Layout',
     file: 'card',
+    imports: 'Card, CardContent, CardFooter, CardHeader, CardTitle',
+    load: () => import('./pages/card'),
     description:
       'A raised surface with a header, content and a footer: settings groups, dashboard tiles.',
   },
@@ -381,6 +400,8 @@ export const DOCS: DocEntry[] = [
     name: 'Tabs',
     group: 'Layout',
     file: 'tabs',
+    imports: 'Tabs, TabsContent, TabsList, TabsTrigger',
+    load: () => import('./pages/tabs'),
     description:
       'Views of one thing, one at a time. Arrow keys move between the tabs.',
   },
@@ -389,6 +410,7 @@ export const DOCS: DocEntry[] = [
     name: 'Separator',
     group: 'Layout',
     file: 'separator',
+    load: () => import('./pages/separator'),
     description: 'A line between groups of content, across or down.',
   },
 ];

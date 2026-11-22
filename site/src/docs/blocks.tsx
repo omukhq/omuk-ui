@@ -123,7 +123,8 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.name} className="align-top">
+            // Two parts can share a prop's name: the type tells them apart.
+            <TableRow key={`${row.name}:${row.type}`} className="align-top">
               <TableCell className="py-3 pl-5 font-mono text-xs text-foreground">
                 {row.name}
               </TableCell>
