@@ -1,19 +1,66 @@
-# Omuk UI (`@omuk/ui`)
+<div align="center">
 
-Omuk UI is the design system's React components, tokens and fonts. Markpad and the dashboard boilerplate use it.
+# Omuk UI
 
-The rules for the look are in `docs/DESIGN.md`. The rules for each component are in `docs/design-guide.md`. Both came from Markpad, so some paths in them point to Markpad's files.
+**The button that doesn't jump.**
+
+React 19 components, design tokens and fonts for Tailwind CSS 4. Forms, dialogs, menus, tables, date pickers and
+toasts, in light and dark mode, each one its own import.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-source-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+
+[Website](https://ui.omuk.dev) · [Why we built it](#why-we-built-it) · [Install](#install) · [Components](#components) ·
+[Tokens and fonts](#tokens-and-fonts) · [Changelog](CHANGELOG.md)
+
+</div>
+
+---
+
+## Why we built it
+
+You press **Save**. The label turns into "Saving…", the button gets wider, and the row next to it shifts by a few
+pixels. Nobody files a bug about it. But you feel it, every time.
+
+We kept finding small moments like that in our own apps ([Markpad](https://markpad.md), a secrets manager, a few
+dashboards). Each one was easy to fix once. The trouble was fixing it again in the next app, and the next. So we
+stopped fixing apps and built one place where the fix lives. That place is Omuk UI.
+
+It follows five promises. Every component keeps them, and a test checks most of them.
+
+1. **Nothing jumps.** A loading button keeps its exact size: the spinner sits where the label was. A dialog stays
+   open while its action runs, and shows the error there if it fails.
+2. **No number by hand.** Every colour, size, radius and space is a named token. A test fails the moment a component
+   writes `13px` or `#eee`. Dark mode, or a new brand colour, is one file.
+3. **A page pays only for what it shows.** There is no index file. `@omuk/ui/button` is the button and nothing else,
+   so a sign-in page never downloads a date picker.
+4. **Ours all the way down.** No headless library underneath and no second layer of class names. We started on
+   wrappers around one, and every fix waited on code we did not own. Now, when something is wrong, it is our bug, and
+   we can fix it the same day.
+5. **Your build, not ours.** The package is TypeScript source. Your bundler (Vite, Astro, Next.js) compiles it with
+   your app. There is no second build to keep in step, and you can read every line you ship.
+
+It runs our apps in production. We made it public, under the MIT license, so that your buttons stop jumping too.
 
 ## Install
 
-The repository is private. Install it from GitHub with an exact tag:
+Install from GitHub with an exact tag:
 
-```json
-"@omuk/ui": "git+ssh://git@github.com/omukhq/omuk-ui.git#v1.0.0-alpha.1"
+```bash
+bun add github:omukhq/omuk-ui#v1.0.0-alpha.17
 ```
 
-- A developer needs an SSH key and membership of the `omukhq` GitHub organization.
-- Never install `@omuk/ui` by name from npm. The `@omuk` npm scope is not ours.
+```json
+"@omuk/ui": "github:omukhq/omuk-ui#v1.0.0-alpha.17"
+```
+
+- Use a tag, never a branch: a tag never moves. See [Versions](#versions).
+- Do not install `@omuk/ui` by name from npm. The `@omuk` scope on npm is not ours.
+- Peer dependencies: `react` 19, `react-dom` 19 and `tailwindcss` 4.
+
+Then load the tokens and fonts in your stylesheet ([Tokens and fonts](#tokens-and-fonts)).
 
 ## Use
 
@@ -22,13 +69,30 @@ Import each component from its own path:
 ```tsx
 import { Button } from '@omuk/ui/button';
 import { toast } from '@omuk/ui/sonner';
+
+<Button isLoading={saving} loadingLabel="Saving" onClick={save}>
+  Save
+</Button>;
 ```
 
-The package has no index file. Each component is a separate export (see `package.json`).
+There is no index file. Each component is a separate export (see `package.json`).
+
+## Components
+
+| Group | Components |
+|---|---|
+| Actions | Button, Button group, Segmented control, Chip |
+| Forms | Field, Input, Input group, Textarea, Select, Combobox, Checkbox, Radio group, Switch, One-time code input, Label |
+| Dates | Date picker (a day, a day and a time, a range, a time), Calendar |
+| Overlays | Dialog, Alert dialog, Modal, Drawer, Popover, Tooltip, Dropdown menu, Context menu, Prompt |
+| Feedback | Toast (Sonner), Spinner, Skeleton, Status |
+| Data | Table, Pagination, List row, Sortable list, Badge, Avatar |
+| Layout | Card, Tabs, Separator |
 
 ### Prompts: alerts, modals and drawers from code
 
-`@omuk/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in the app, inside the providers that the prompts' content needs.
+`@omuk/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in
+the app, inside the providers that the prompts' content needs.
 
 ```tsx
 import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
@@ -64,8 +128,6 @@ const name = await prompt.open<string>({
 
 `prompt.closeAll()` closes every open prompt. Outside a component, import `prompt` instead of the hook.
 
-The package ships TypeScript source with no build step. The app's bundler (Vite, Astro) compiles it.
-
 ### Dates: `DatePicker` and `Calendar`
 
 One component for a day, a day and a time, a range or a time. The value is ISO text, and its type follows `mode`:
@@ -79,15 +141,18 @@ import { DatePicker } from '@omuk/ui/date-picker';
 <DatePicker mode="time" value={time} onChange={setTime} />                   // "14:30"
 ```
 
-- The parts are typed (the language's order, from `Intl`); the arrows step them. The calendar button in the field opens a `Calendar`.
-- Options: `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `firstDayOfWeek`, `timeZone` (for "today"), `locale`, `hourCycle`, `validate`, `name` (`startName`, `endName` for a range), `size`.
+- The parts are typed (the language's order, from `Intl`); the arrows step them. The calendar button in the field
+  opens a `Calendar`.
+- Options: `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `firstDayOfWeek`, `timeZone` (for "today"),
+  `locale`, `hourCycle`, `validate`, `name` (`startName`, `endName` for a range), `size`.
 - For a filter: `placeholder` (shown until the field is used), `prefix` ("Updated:") and `showClear`.
 - `@omuk/ui/calendar` is the calendar alone, for one day or a range.
 - Gregorian only; no time zone in the value; no seconds.
 
 ## Tokens and fonts
 
-The app must load the tokens and the fonts in its main stylesheet, and its Tailwind build must scan the package's files. The paths are relative to the stylesheet:
+Load the tokens and the fonts in your app's main stylesheet, and let Tailwind scan the package's files. The paths are
+relative to the stylesheet:
 
 ```css
 @import "tailwindcss";
@@ -96,10 +161,19 @@ The app must load the tokens and the fonts in its main stylesheet, and its Tailw
 @source "../node_modules/@omuk/ui/src";
 ```
 
-## Rules
+- `theme.css` holds every token: colours for light and dark mode, sizes, radii, shadows.
+- `fonts.css` loads IBM Plex Sans, Mono and Serif, and Atkinson Hyperlegible, from your own domain (Latin only). A
+  browser downloads a face only when text on the page uses it.
 
-- A file in the package must not import from an app or from a Markpad package (`biome.json` enforces it). The package has its own helpers (`utils.ts` for `cn`, `touch.ts`, `toast-recipe.ts`).
-- Every colour, size, radius and spacing value must come from a token. The test `src/tokens.test.ts` fails on a literal value. A line marked `design-ok` is a documented exception.
+The look and the rules for each component are in [`docs/DESIGN.md`](docs/DESIGN.md) and
+[`docs/design-guide.md`](docs/design-guide.md).
+
+## Rules for contributors
+
+- A file in the package must not import from an app (`biome.json` enforces it). The package has its own helpers
+  (`utils.ts` for `cn`, `touch.ts`, `toast-recipe.ts`).
+- Every colour, size, radius and spacing value must come from a token. The test `src/tokens.test.ts` fails on a
+  literal value. A line marked `design-ok` is a documented exception.
 - Imports inside the package are relative (`./button`).
 - A new component needs its line in the `exports` of `package.json`.
 
@@ -132,3 +206,7 @@ To release:
 | `bun test` | Runs the tests, including the token check. |
 | `bun run typecheck` | Checks the types. |
 | `bun run lint` | Runs Biome. |
+
+## License
+
+[MIT](LICENSE) © Omuk

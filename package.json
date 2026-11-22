@@ -4,7 +4,27 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Omuk UI: the design system's React components, tokens and fonts.",
+  "description": "React 19 components, design tokens and fonts for Tailwind CSS 4. Accessible, themeable, light and dark mode, one import per component.",
+  "homepage": "https://ui.omuk.dev",
+  "bugs": "https://github.com/omukhq/omuk-ui/issues",
+  "author": "Omuk",
+  "keywords": [
+    "react",
+    "react-19",
+    "ui",
+    "components",
+    "component-library",
+    "design-system",
+    "design-tokens",
+    "tailwindcss",
+    "tailwind-v4",
+    "typescript",
+    "accessibility",
+    "dark-mode",
+    "date-picker",
+    "dialog",
+    "toast"
+  ],
   "scripts": {
     "test": "bun test",
     "typecheck": "tsc --noEmit -p .",
@@ -82,7 +102,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/omukhq/omuk-ui.git"
+    "url": "git+https://github.com/omukhq/omuk-ui.git"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
