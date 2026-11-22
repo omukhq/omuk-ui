@@ -2,10 +2,10 @@
 
 # Omuk UI
 
-**The button that doesn't jump.**
+**React 19 components and design tokens for Tailwind CSS 4.**
 
-React 19 components, design tokens and fonts for Tailwind CSS 4. Forms, dialogs, menus, tables, date pickers and
-toasts, in light and dark mode, each one its own import.
+Forms, dialogs, menus, tables, date pickers and toasts, in light and dark mode. Each component is its own import, so
+your app loads only what it uses.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev)
@@ -43,6 +43,7 @@ It follows five promises. Every component keeps them, and a test checks most of 
    your app. There is no second build to keep in step, and you can read every line you ship.
 
 It runs our apps in production. We made it public, under the MIT license, so that your buttons stop jumping too.
+
 
 ## Install
 
