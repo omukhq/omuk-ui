@@ -4,6 +4,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+### Changed
+
+- The repository is public, under the MIT license (`LICENSE`). Install it from GitHub with no SSH key:
+  `"@omuk/ui": "github:omukhq/omuk-ui#<tag>"`.
+- `docs/DESIGN.md` is the Omuk UI design system, no longer Markpad's: the rules for Markpad's own screens (the editor
+  toolbar, the document, the library sidebar, reading fonts) are gone, and the field recipe matches the code (2px edge).
+- `docs/design-guide.md` is the component guide, no longer the migration notes from Markpad.
+
 ## [1.0.0-alpha.21] - 2026-11-21
 
 ### Removed
