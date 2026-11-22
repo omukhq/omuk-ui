@@ -1,0 +1,30 @@
+/* The site's one stylesheet. Every value comes from Omuk UI's tokens
+   (../../src/design/theme.css): this file adds none. Paths are relative
+   to this file. */
+@import "tailwindcss";
+@import "../../src/design/theme.css";
+@import "../../src/design/fonts.css";
+@source "../../src";
+@source "./";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--spacing) * 16);
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /* theme.ts sets this for one frame while the theme switches: no colour
+     fades. It must beat every component's own transition. */
+  [data-switching] *,
+  [data-switching] *::before,
+  [data-switching] *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: it must win over each component's transition for one frame */
+    transition: none !important;
+  }
+}
