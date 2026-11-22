@@ -1,9 +1,10 @@
 /* The site's one stylesheet. Every value comes from Omuk UI's tokens
-   (../../src/design/theme.css): this file adds none. Paths are relative
-   to this file. */
+   (../../src/design/theme.css) and the site's own (./tokens.css): this file
+   adds none. Paths are relative to this file. */
 @import "tailwindcss";
 @import "../../src/design/theme.css";
 @import "../../src/design/fonts.css";
+@import "./tokens.css";
 @source "../../src";
 @source "./";
 

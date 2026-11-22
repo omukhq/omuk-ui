@@ -1,19 +1,19 @@
 import { Skeleton } from '@omuk/ui/skeleton';
 import { lazy, Suspense } from 'react';
+import { ComponentsIndex } from './components-index';
 import { Footer } from './footer';
 import { Header } from './header';
 import { Hero } from './hero';
 import { Install } from './install';
 import { Section } from './section';
-import { TokensSection } from './tokens-section';
 import { Why } from './why';
 
-// The page. The first screen (header, hero, the story and its live Save
-// button) is in the main bundle. The gallery is below the fold, with most
-// of the components: it is a chunk of its own, fetched as soon as the page
-// runs, so it never holds up the first paint.
+// The page. The first screen (header, headline, the spec drawing) is in the
+// main bundle. The live app screen is below the fold, with most of the
+// components: it is a chunk of its own, fetched as soon as the page runs,
+// so it never holds up the first paint.
 
-const Gallery = lazy(() => import('./gallery/gallery'));
+const AppScreen = lazy(() => import('./gallery/app-screen'));
 
 export function App() {
   return (
@@ -29,15 +29,21 @@ export function App() {
         <Hero />
         <Why />
         <Section
-          id="components"
-          title="Components"
-          description="Everything here is live: the real components from the repository, in the theme you see. Switch to dark mode at the top to see every role change."
+          id="in-use"
+          title="In use"
+          description="A screen from my secrets manager, rebuilt here from Omuk UI’s parts only. It all works: search, filter, open a row’s menu, delete a secret. Switch to dark mode at the top."
         >
-          <Suspense fallback={<GallerySkeleton />}>
-            <Gallery />
+          <Suspense fallback={<ScreenSkeleton />}>
+            <AppScreen />
           </Suspense>
         </Section>
-        <TokensSection />
+        <Section
+          id="components"
+          title="Components"
+          description="Every part, each its own import. Each name opens its source: the file is the documentation."
+        >
+          <ComponentsIndex />
+        </Section>
         <Install />
       </main>
       <Footer />
@@ -45,13 +51,18 @@ export function App() {
   );
 }
 
-/** The gallery's place while its code loads. */
-function GallerySkeleton() {
+/** The app screen's place while its code loads: the same frame and rows. */
+function ScreenSkeleton() {
   return (
-    <div className="flex flex-col gap-6 border-t py-8" aria-hidden>
-      <Skeleton className="h-5 w-32" />
-      <Skeleton className="h-9 w-full max-w-lg" />
+    <div
+      className="flex flex-col gap-4 rounded-xl p-6 inset-ring inset-ring-border"
+      aria-hidden
+    >
+      <Skeleton className="h-7 w-32" />
       <Skeleton className="h-9 w-full max-w-md" />
+      {[0, 1, 2, 3, 4, 5].map((index) => (
+        <Skeleton key={index} className="h-8 w-full" />
+      ))}
     </div>
   );
 }

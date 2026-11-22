@@ -10,10 +10,15 @@ export const CHANGELOG_URL = `${REPO_URL}/blob/main/CHANGELOG.md`;
 export const DESIGN_URL = `${REPO_URL}/blob/main/docs/DESIGN.md`;
 export const INSTALL_LINE = `bun add github:omukhq/omuk-ui#${TAG}`;
 
-/** The page's sections, in order: the header links to each. */
+/** A component's source file on GitHub. */
+export function sourceUrl(file: string) {
+  return `${REPO_URL}/blob/main/src/${file}`;
+}
+
+/** The page's parts, in order: the header links to each. */
 export const SECTIONS = [
   { id: 'why', label: 'Why' },
+  { id: 'in-use', label: 'In use' },
   { id: 'components', label: 'Components' },
-  { id: 'tokens', label: 'Tokens' },
   { id: 'install', label: 'Install' },
 ] as const;

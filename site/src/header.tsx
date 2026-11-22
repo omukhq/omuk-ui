@@ -9,7 +9,7 @@ export function Header() {
   const next = theme === 'dark' ? 'light' : 'dark';
   return (
     <header className="sticky top-0 z-40 border-b bg-page">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-site items-center gap-2 px-gutter">
         <a
           href="#top"
           className="mr-auto rounded-md text-sm font-semibold text-foreground focus-visible:focus-ring"
@@ -46,7 +46,7 @@ export function Header() {
           render={<a href={REPO_URL} />}
           nativeButton={false}
         >
-          GitHub
+          Source
         </Button>
       </div>
     </header>

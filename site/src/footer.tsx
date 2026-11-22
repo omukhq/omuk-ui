@@ -1,19 +1,29 @@
-import { CHANGELOG_URL, LICENSE_URL, REPO_URL, VERSION } from './links';
+import {
+  CHANGELOG_URL,
+  DESIGN_URL,
+  LICENSE_URL,
+  REPO_URL,
+  VERSION,
+} from './links';
 
 const LINKS = [
-  { label: 'GitHub', href: REPO_URL },
+  { label: 'Source', href: REPO_URL },
+  { label: 'Design rules', href: DESIGN_URL },
   { label: 'Changelog', href: CHANGELOG_URL },
   { label: 'MIT license', href: LICENSE_URL },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t bg-panel">
-      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-sm text-muted">
-          Omuk UI {VERSION}. Free to use under the MIT license.
-        </p>
-        <nav aria-label="Links" className="flex flex-wrap gap-4">
+    <footer className="border-t">
+      <div className="mx-auto flex max-w-site flex-col gap-6 px-gutter py-12 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-1">
+          <p className="font-semibold text-foreground">Omuk UI</p>
+          <p className="text-sm text-muted">
+            A personal project. Version {VERSION}, free under the MIT license.
+          </p>
+        </div>
+        <nav aria-label="Links" className="flex flex-wrap gap-x-6 gap-y-2">
           {LINKS.map((link) => (
             <a
               key={link.label}

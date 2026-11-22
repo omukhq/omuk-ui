@@ -1,127 +1,139 @@
 import { Button } from '@omuk/ui/button';
-import { Switch } from '@omuk/ui/switch';
-import { useCallback, useId, useRef, useState } from 'react';
+import { cn } from '@omuk/ui/utils';
+import { useCallback, useRef, useState } from 'react';
 
-// Promise 1, live: the same Save button twice. The first swaps its label
-// for "Saving…", as most buttons do, and grows; the button beside it moves.
-// The second is Omuk UI's Button with `isLoading`: the label stays in the
-// layout, hidden, and the spinner sits over it. Each shows its width.
+// The hero's spec drawing: two Save buttons, shown twice their size, each
+// with a dimension line over it. Press either: both load for a moment. The
+// first swaps its label for "Saving…", as most buttons do: its line
+// stretches and turns red, and Cancel is pushed aside. The second is Omuk
+// UI's Button with `isLoading`: the label stays in the layout, hidden, and
+// the line holds. The widths are measured live, in CSS pixels.
 
 /** How long a press of Save loads. */
-const PRESS_MS = 1800;
+const PRESS_MS = 2400;
 
-/** A node's width in whole pixels, kept up to date (a ResizeObserver). */
-function useWidth() {
+/**
+ * A node's width in whole CSS pixels, kept up to date, and its width the
+ * last time it was at rest (no `data-loading` on the node).
+ */
+function useWidths() {
   const [width, setWidth] = useState(0);
+  const [rest, setRest] = useState(0);
   const ref = useCallback((node: HTMLElement | null) => {
     if (!node) return;
-    const observer = new ResizeObserver(() =>
-      setWidth(Math.round(node.getBoundingClientRect().width)),
-    );
+    const observer = new ResizeObserver(() => {
+      const next = node.offsetWidth;
+      setWidth(next);
+      if (node.dataset.loading !== 'true') setRest(next);
+    });
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
-  return [ref, width] as const;
+  return { ref, width, rest };
 }
 
 export function SizeDemo() {
   const [loading, setLoading] = useState(false);
-  const [rest, setRest] = useState({ swap: 0, kit: 0 });
-  const [swapRef, swapWidth] = useWidth();
-  const [kitRef, kitWidth] = useWidth();
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const switchId = useId();
-
-  function hold(on: boolean) {
-    clearTimeout(timer.current);
-    // The widths at rest, read before the change, to compare against.
-    if (on && !loading) setRest({ swap: swapWidth, kit: kitWidth });
-    setLoading(on);
-  }
 
   function press() {
-    hold(true);
+    clearTimeout(timer.current);
+    setLoading(true);
     timer.current = setTimeout(() => setLoading(false), PRESS_MS);
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl bg-panel p-4 sm:p-6">
-      <Row
-        title="A label that changes"
-        note="Most buttons swap the text. The button grows, and Cancel moves."
-        width={swapWidth}
-        rest={loading ? rest.swap : null}
-      >
-        <Button ref={swapRef} disabled={loading} onClick={press}>
-          {loading ? 'Saving…' : 'Save'}
-        </Button>
-        <Button variant="ghost">Cancel</Button>
-      </Row>
-      <Row
-        title="Omuk UI"
-        note="The label stays in place, hidden, and the spinner sits over it."
-        width={kitWidth}
-        rest={loading ? rest.kit : null}
-      >
-        <Button
-          ref={kitRef}
-          isLoading={loading}
-          loadingLabel="Saving"
-          onClick={press}
-        >
-          Save
-        </Button>
-        <Button variant="ghost">Cancel</Button>
-      </Row>
-      <div className="flex items-center gap-3 border-t pt-4">
-        <Switch
-          id={switchId}
-          checked={loading}
-          onCheckedChange={(checked) => hold(checked)}
+    <figure className="overflow-hidden rounded-xl bg-panel">
+      <div className="ruler h-5 border-b" aria-hidden />
+      <div className="grid divide-y md:grid-cols-2 md:divide-x md:divide-y-0">
+        <Specimen
+          title="A button that swaps its label"
+          note="Most kits do this. The button grows while it saves, and the page around it moves."
+          loading={loading}
+          render={(isLoading) => (
+            <Button disabled={isLoading} onClick={press}>
+              {isLoading ? 'Saving…' : 'Save'}
+            </Button>
+          )}
         />
-        <label htmlFor={switchId} className="text-sm text-foreground">
-          Keep both buttons loading
-        </label>
+        <Specimen
+          title="Omuk UI’s Button"
+          note="The label stays in the layout, hidden, and the spinner sits on top. Nothing moves."
+          loading={loading}
+          render={(isLoading) => (
+            <Button isLoading={isLoading} loadingLabel="Saving" onClick={press}>
+              Save
+            </Button>
+          )}
+        />
+      </div>
+      <figcaption className="border-t px-6 py-4 text-sm text-muted">
+        Press either Save button. Both load for two seconds. The widths are
+        measured live from the page, not drawn.
+      </figcaption>
+    </figure>
+  );
+}
+
+function Specimen({
+  title,
+  note,
+  loading,
+  render,
+}: {
+  title: string;
+  note: string;
+  loading: boolean;
+  render: (loading: boolean) => React.ReactNode;
+}) {
+  const { ref, width, rest } = useWidths();
+  const grew = loading && rest > 0 && width !== rest;
+  return (
+    <div className="flex flex-col justify-between gap-10 p-6 md:p-8">
+      <div className="magnify flex items-end gap-2">
+        <div
+          ref={ref}
+          data-loading={loading}
+          className="flex flex-col items-stretch gap-1"
+        >
+          <Dimension value={width} grew={grew} />
+          {render(loading)}
+        </div>
+        <Button variant="ghost" tabIndex={-1}>
+          Cancel
+        </Button>
+      </div>
+      <div className="flex flex-col gap-1">
+        <p className="font-medium text-foreground">{title}</p>
+        <p className="max-w-sm text-pretty text-muted">{note}</p>
+        <p
+          className={cn(
+            'pt-2 font-mono text-xs tabular-nums',
+            grew ? 'text-danger' : 'text-muted',
+          )}
+          aria-live="polite"
+        >
+          {rest > 0 && `At rest ${rest} px.`}
+          {loading && ` Loading ${width} px.`}
+        </p>
       </div>
     </div>
   );
 }
 
-function Row({
-  title,
-  note,
-  width,
-  rest,
-  children,
-}: {
-  title: string;
-  note: string;
-  width: number;
-  /** The width at rest while loading, or null at rest. */
-  rest: number | null;
-  children: React.ReactNode;
-}) {
-  const grew = rest !== null && width !== rest;
+/** A dimension line the width of its parent, with the width written on it. */
+function Dimension({ value, grew }: { value: number; grew: boolean }) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg bg-raised p-4 shadow-sm">
-      <div className="flex flex-col gap-0.5">
-        <p className="font-medium text-foreground">{title}</p>
-        <p className="text-xs text-muted">{note}</p>
-      </div>
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">{children}</div>
-        <p
-          className={
-            grew
-              ? 'font-mono text-xs text-danger tabular-nums'
-              : 'font-mono text-xs text-muted tabular-nums'
-          }
-          aria-live="polite"
-        >
-          {width > 0 ? `${width} px` : ''}
-          {rest !== null && (grew ? `, was ${rest}` : ', the same')}
-        </p>
-      </div>
+    <div
+      className={cn(
+        'dimension flex h-3 items-center justify-center transition-colors',
+        grew ? 'text-danger' : 'text-accent',
+      )}
+      aria-hidden
+    >
+      <span className="bg-panel px-1 font-mono text-2xs tabular-nums">
+        {value > 0 ? value : ''}
+      </span>
     </div>
   );
 }

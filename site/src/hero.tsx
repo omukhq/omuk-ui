@@ -4,57 +4,57 @@ import { INSTALL_LINE, REPO_URL, VERSION } from './links';
 import { SizeDemo } from './size-demo';
 
 /**
- * The first screen: what it is, the install line, where the code is, and
- * the first promise, live: two Save buttons, one that grows and one that
- * keeps its size.
+ * The first screen: the claim, set large; what it is in one sentence; the
+ * install line; then the claim proven on a spec drawing.
  */
 export function Hero() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="mx-auto grid max-w-5xl items-center gap-12 px-4 pt-12 pb-16 sm:px-6 sm:pt-20 lg:grid-cols-2"
+      className="mx-auto max-w-site px-gutter pt-16 pb-section md:pt-28"
     >
-      <div className="flex min-w-0 flex-col gap-6">
-        <div className="flex flex-col gap-3">
-          <h1
-            id="hero-title"
-            className="text-2xl font-semibold text-foreground"
-          >
-            Omuk UI
-          </h1>
-          <p className="text-xl text-balance text-foreground">
-            React 19 components and design tokens for Tailwind CSS 4.
-          </p>
-        </div>
-        <p className="text-base text-pretty text-muted">
-          Forms, dialogs, menus, tables, date pickers and toasts, in light and
-          dark mode. Each component is its own import, so your app loads only
-          what it uses.
+      <h1
+        id="hero-title"
+        className="text-display font-semibold text-balance text-foreground"
+      >
+        Nothing jumps.
+      </h1>
+      <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-12">
+        <p className="text-lede text-pretty text-muted md:col-span-6">
+          Omuk UI is my React 19 component kit for Tailwind CSS 4, built for
+          speed. Nothing moves while it loads, every size is a token, and each
+          component is its own import.
         </p>
-        <div className="flex items-center gap-2 rounded-lg bg-panel py-1 pr-1 pl-4">
-          <code className="min-w-0 flex-1 truncate font-mono text-xs text-foreground">
-            {INSTALL_LINE}
-          </code>
-          <CopyButton text={INSTALL_LINE} label="Copy the install command" />
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button size="lg" render={<a href="#install" />} nativeButton={false}>
-            Get started
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            render={<a href={REPO_URL} />}
-            nativeButton={false}
-          >
-            View on GitHub
-          </Button>
-          <p className="text-xs text-muted sm:ml-2">
-            MIT license. Version {VERSION}.
-          </p>
+        <div className="flex flex-col gap-3 md:col-span-5 md:col-start-8 md:self-end">
+          <div className="flex items-center gap-2 rounded-lg py-1 pr-1 pl-4 inset-ring inset-ring-border">
+            <code className="min-w-0 flex-1 truncate font-mono text-xs text-foreground">
+              {INSTALL_LINE}
+            </code>
+            <CopyButton text={INSTALL_LINE} label="Copy the install command" />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="lg"
+              render={<a href="#install" />}
+              nativeButton={false}
+            >
+              Install
+            </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              render={<a href={REPO_URL} />}
+              nativeButton={false}
+            >
+              Read the source
+            </Button>
+            <p className="ml-auto text-xs text-muted">MIT, version {VERSION}</p>
+          </div>
         </div>
       </div>
-      <SizeDemo />
+      <div className="mt-16 md:mt-20">
+        <SizeDemo />
+      </div>
     </section>
   );
 }

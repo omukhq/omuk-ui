@@ -25,8 +25,9 @@ function siteLiteralsIn(source: string) {
 }
 
 const root = new URL('.', import.meta.url).pathname;
+// tokens.css is the site's token file: the one place for raw values.
 const files = [...new Glob('**/*.{ts,tsx,css}').scanSync(root)].filter(
-  (file) => !file.endsWith('.test.ts'),
+  (file) => !file.endsWith('.test.ts') && file !== 'tokens.css',
 );
 
 describe('the check finds literal values', () => {

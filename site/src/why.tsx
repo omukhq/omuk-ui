@@ -1,86 +1,80 @@
-import { Section } from './section';
+import { PartTitle } from './section';
 
-const PROMISES = [
+// Why it exists: the moment that started it, set large; that it is a
+// personal project about speed; then its five rules, each with the fact
+// that backs it. The rules are not a sequence, so they are not numbered.
+
+const RULES = [
   {
-    title: 'Nothing jumps.',
-    text: 'A loading button keeps its exact size: the spinner sits where the label was. A dialog stays open while its action runs, and shows the error there if it fails.',
-  },
-  {
-    title: 'No number by hand.',
-    text: 'Every colour, size, radius and space is a named token. A test fails the moment a component writes a raw pixel or hex value. Dark mode, or a new brand colour, is one file.',
+    title: 'No layout shift.',
+    text: 'A loading button keeps its exact size. A dialog stays where it is while its action runs, and shows the error there. Fonts load from your own domain. The page does not move under the reader.',
+    proof: ['Button at rest: 55 px', 'Button loading: 55 px'],
   },
   {
     title: 'A page pays only for what it shows.',
-    text: 'There is no index file. @omuk/ui/button is the button and nothing else, so a sign-in page never downloads a date picker.',
+    text: 'There is no index file. Each component is its own import, and the heavy parts load when they are first used: the dialogs with the first prompt, the toaster with the first toast.',
+    proof: [
+      'Input: 0.5 kB',
+      'Button: 2.2 kB',
+      'Date picker: 12.2 kB',
+      'gzip, React not counted',
+    ],
   },
   {
-    title: 'Ours all the way down.',
-    text: 'No headless library underneath and no second layer of class names. When something is wrong, it is our bug, and we can fix it the same day.',
+    title: 'The browser does the work.',
+    text: 'Dialogs are the browser’s own <dialog>, popovers its popover attribute. There is no headless library underneath, so there are fewer bytes, and when something is wrong it is my bug to fix.',
+    proof: ['<dialog>', 'popover="manual"', 'popovertarget'],
   },
   {
-    title: 'Your build, not ours.',
-    text: 'The package is TypeScript source. Your bundler compiles it with your app, so there is no second build to keep in step, and you can read every line you ship.',
+    title: 'Every size is a token.',
+    // design-ok: the next line names the values the test refuses; it is copy, not a style.
+    text: 'Colours, sizes, radii and spacing have names, in one file. A test fails the moment a component writes 13px or #eee. Dark mode is the same file, with other values.', // design-ok
+    proof: ['src/design/theme.css', 'src/tokens.test.ts'],
+  },
+  {
+    title: 'Your build, not mine.',
+    text: 'The package is TypeScript source. Your bundler compiles it and drops what you do not use, with the rest of your app. There is no second build, and you can read every line you ship.',
+    proof: ['"./button": "./src/button.tsx"'],
   },
 ];
 
-/** The story, the live Save button, and the five promises. */
 export function Why() {
   return (
-    <Section id="why" title="Why we built it">
-      <div className="grid items-start gap-12 lg:grid-cols-2">
-        <div className="flex flex-col gap-4 text-base text-foreground">
-          <p>
-            You press Save. The label turns into “Saving…”, the button gets
-            wider, and the button next to it shifts. Nobody files a bug about
-            it. But you feel it, every time.
-          </p>
-          <p className="text-muted">
-            We kept finding small moments like that in our own apps. Each one
-            was easy to fix once. The trouble was fixing it again in the next
-            app, and the next. So we built one place where the fix lives.
-          </p>
-          <p className="text-muted">
-            It runs our apps in production. We made it public, under the MIT
-            license, so that your buttons stop jumping too.
-          </p>
-          <p className="text-muted">
-            The two Save buttons{' '}
-            <a
-              href="#top"
-              className="rounded-sm text-accent underline-offset-4 hover:underline focus-visible:focus-ring"
+    <section id="why" aria-labelledby="why-title" className="border-t">
+      <div className="mx-auto max-w-site px-gutter py-section">
+        <PartTitle id="why-title">Why I built it</PartTitle>
+        <p className="mt-10 max-w-4xl text-story text-balance text-foreground md:mt-14">
+          You press Save. The label turns into “Saving…”, the button grows, and
+          the row beside it shifts. Nobody files a bug about it. But you feel
+          it, every time.
+        </p>
+        <p className="mt-8 max-w-2xl text-lede text-pretty text-muted">
+          Omuk UI is a personal project. I kept fixing the same small moments,
+          and the same slow pages, in my own apps: Markpad, a secrets manager, a
+          few dashboards. Now the fixes live in one place, and every component
+          keeps five rules about speed.
+        </p>
+        <dl className="mt-16 border-t md:mt-24">
+          {RULES.map((rule) => (
+            <div
+              key={rule.title}
+              className="grid gap-3 border-b py-8 md:grid-cols-12 md:gap-8 md:py-10"
             >
-              at the top of the page
-            </a>{' '}
-            show the first promise. Press one, or keep both loading.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-semibold text-foreground">
-            Five promises
-          </h3>
-          <p className="text-muted">
-            Every component keeps them, and a test checks most of them.
-          </p>
-          <ol className="mt-2 flex flex-col">
-            {PROMISES.map((promise, index) => (
-              <li
-                key={promise.title}
-                className="flex gap-4 border-t py-4 text-sm"
-              >
-                <span className="w-4 shrink-0 font-semibold text-muted tabular-nums">
-                  {index + 1}
-                </span>
-                <p className="text-pretty">
-                  <span className="font-semibold text-foreground">
-                    {promise.title}
-                  </span>{' '}
-                  <span className="text-muted">{promise.text}</span>
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
+              <dt className="text-xl font-semibold text-balance text-foreground md:col-span-4">
+                {rule.title}
+              </dt>
+              <dd className="text-base text-pretty text-muted md:col-span-5">
+                {rule.text}
+              </dd>
+              <dd className="flex flex-col gap-1 font-mono text-xs text-foreground md:col-span-3">
+                {rule.proof.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
-    </Section>
+    </section>
   );
 }
