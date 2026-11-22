@@ -13,12 +13,7 @@ const RULES = [
   {
     title: 'A page pays only for what it shows.',
     text: 'There is no index file. Each component is its own import, and the heavy parts load when they are first used: the dialogs with the first prompt, the toaster with the first toast.',
-    proof: [
-      'Input: 0.5 kB',
-      'Button: 2.2 kB',
-      'Date picker: 12.2 kB',
-      'gzip, React not counted',
-    ],
+    proof: ["import { Button } from '@omuk/ui/button'"],
   },
   {
     title: 'The browser does the work.',
