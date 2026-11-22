@@ -50,11 +50,11 @@ It runs our apps in production. We made it public, under the MIT license, so tha
 Install from GitHub with an exact tag:
 
 ```bash
-bun add github:omukhq/omuk-ui#v1.0.0-alpha.17
+bun add github:omukhq/omuk-ui#v1.0.0-alpha.22
 ```
 
 ```json
-"@omuk/ui": "github:omukhq/omuk-ui#v1.0.0-alpha.17"
+"@omuk/ui": "github:omukhq/omuk-ui#v1.0.0-alpha.22"
 ```
 
 - Use a tag, never a branch: a tag never moves. See [Versions](#versions).

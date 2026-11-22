@@ -4,6 +4,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.22] - 2026-11-23
+
+### Fixed
+
+- `Textarea` keeps its container's width. It grows with its text (`field-sizing-content`), and a long line with no
+  space (a key, a URL) made it wider than its container: a dialog's content then scrolled sideways. Now such a line
+  wraps anywhere (`w-full min-w-0 wrap-anywhere`). Nothing to update; an app's own `w-full` or `wrap-anywhere` on a
+  textarea can go.
+
 ### Changed
 
 - The repository is public, under the MIT license (`LICENSE`). Install it from GitHub with no SSH key:
