@@ -1,21 +1,32 @@
 import { Skeleton } from '@omuk/ui/skeleton';
 import { lazy, Suspense } from 'react';
 import { ComponentsIndex } from './components-index';
+import { FIRST_DOC } from './docs/registry';
 import { Footer } from './footer';
 import { Header } from './header';
 import { Hero } from './hero';
 import { Install } from './install';
+import { usePath } from './router';
 import { Section } from './section';
 import { Why } from './why';
 
-// The page. The first screen (header, headline, the spec drawing) is in the
-// main bundle. The live app screen is below the fold, with most of the
-// components: it is a chunk of its own, fetched as soon as the page runs,
-// so it never holds up the first paint.
+// The site: the home page at /, a component's page at /docs/<slug>. The
+// home page's first screen is in the main bundle. The live app screen and
+// the docs are chunks of their own: the home page never loads the docs, and
+// a docs page never loads the app screen.
 
 const AppScreen = lazy(() => import('./gallery/app-screen'));
+const DocsLayout = lazy(() => import('./docs/layout'));
+
+/** The slug in /docs/<slug>; /docs alone is the first page. */
+function docsSlug(path: string) {
+  const rest = path.replace(/^\/docs\/?/, '').replace(/\/$/, '');
+  return rest === '' ? FIRST_DOC.slug : rest;
+}
 
 export function App() {
+  const path = usePath();
+  const inDocs = path === '/docs' || path.startsWith('/docs/');
   return (
     <div id="top" className="flex min-h-dvh flex-col overflow-x-clip">
       <a
@@ -25,29 +36,43 @@ export function App() {
         Skip to the content
       </a>
       <Header />
-      <main id="main" className="flex-1">
-        <Hero />
-        <Why />
-        <Section
-          id="in-use"
-          title="In use"
-          description="A screen from my secrets manager, rebuilt here from Omuk UI’s parts only. It all works: search, filter, open a row’s menu, delete a secret. Switch to dark mode at the top."
-        >
-          <Suspense fallback={<ScreenSkeleton />}>
-            <AppScreen />
+      {inDocs ? (
+        <div className="flex-1">
+          <Suspense fallback={null}>
+            <DocsLayout slug={docsSlug(path)} />
           </Suspense>
-        </Section>
-        <Section
-          id="components"
-          title="Components"
-          description="Every part, each its own import. Each name opens its source: the file is the documentation."
-        >
-          <ComponentsIndex />
-        </Section>
-        <Install />
-      </main>
+        </div>
+      ) : (
+        <Home />
+      )}
       <Footer />
     </div>
+  );
+}
+
+function Home() {
+  return (
+    <main id="main" className="flex-1">
+      <Hero />
+      <Why />
+      <Section
+        id="in-use"
+        title="In use"
+        description="A screen from my secrets manager, rebuilt here from Omuk UI’s parts only. It all works: search, filter, open a row’s menu, delete a secret. Switch to dark mode at the top."
+      >
+        <Suspense fallback={<ScreenSkeleton />}>
+          <AppScreen />
+        </Suspense>
+      </Section>
+      <Section
+        id="components"
+        title="Components"
+        description="Every part, each its own import, each with a page: live examples, the code, the props and the keys."
+      >
+        <ComponentsIndex />
+      </Section>
+      <Install />
+    </main>
   );
 }
 

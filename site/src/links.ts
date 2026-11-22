@@ -15,10 +15,9 @@ export function sourceUrl(file: string) {
   return `${REPO_URL}/blob/main/src/${file}`;
 }
 
-/** The page's parts, in order: the header links to each. */
+/** The home page's parts, in order: the header links to each. */
 export const SECTIONS = [
   { id: 'why', label: 'Why' },
   { id: 'in-use', label: 'In use' },
-  { id: 'components', label: 'Components' },
   { id: 'install', label: 'Install' },
 ] as const;

@@ -1,29 +1,52 @@
 import { Button } from '@omuk/ui/button';
+import { cn } from '@omuk/ui/utils';
 import { MoonIcon, SunIcon } from 'lucide-react';
+import { FIRST_DOC } from './docs/registry';
 import { REPO_URL, SECTIONS } from './links';
+import { Link, usePath } from './router';
 import { setTheme, useTheme } from './theme';
 
-/** The bar at the top: the name, the sections, the theme and GitHub. */
+/**
+ * The bar at the top: the name (home), the docs, the home page's parts,
+ * the theme and the source. The parts are plain links to /#part: on the
+ * home page they scroll, from the docs they open it there.
+ */
 export function Header() {
   const theme = useTheme();
   const next = theme === 'dark' ? 'light' : 'dark';
+  const inDocs = usePath().startsWith('/docs');
   return (
     <header className="sticky top-0 z-40 border-b bg-page">
-      <div className="mx-auto flex h-14 max-w-site items-center gap-2 px-gutter">
-        <a
-          href="#top"
+      <div className="mx-auto flex h-14 max-w-site items-center gap-1 px-gutter">
+        <Link
+          to="/"
           className="mr-auto rounded-md text-sm font-semibold text-foreground focus-visible:focus-ring"
         >
           Omuk UI
-        </a>
-        <nav aria-label="Sections" className="hidden items-center sm:flex">
+        </Link>
+        <nav aria-label="Site" className="flex items-center">
+          <Button
+            variant="ghost"
+            render={
+              <Link
+                to={`/docs/${FIRST_DOC.slug}`}
+                aria-current={inDocs ? 'page' : undefined}
+              />
+            }
+            nativeButton={false}
+            className={cn(
+              inDocs ? 'text-foreground' : 'text-muted hover:text-foreground',
+            )}
+          >
+            Docs
+          </Button>
           {SECTIONS.map((section) => (
             <Button
               key={section.id}
               variant="ghost"
-              render={<a href={`#${section.id}`} />}
+              render={<a href={`/#${section.id}`} />}
               nativeButton={false}
-              className="text-muted hover:text-foreground"
+              className="hidden text-muted hover:text-foreground md:inline-flex"
             >
               {section.label}
             </Button>

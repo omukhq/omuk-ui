@@ -23,6 +23,8 @@
   --container-site: 76rem;
   --spacing-section: clamp(4.5rem, 9vw, 7.5rem);
   --spacing-gutter: clamp(1rem, 4vw, 2rem);
+  /* The docs sidebar: the window's height under the 56px header. */
+  --spacing-sidebar: calc(100dvh - 3.5rem);
 }
 
 /* The spec drawing in the hero shows the buttons larger than life, so the
