@@ -92,8 +92,10 @@ export const DOCS: DocEntry[] = [
     name: 'Field',
     group: 'Forms',
     file: 'field',
+    imports: 'Field, FieldDescription, FieldError, FieldLabel',
     description:
-      'A label, a control, a hint and an error, in one layout with the right spacing and the ARIA links between them.',
+      'A label, a control, a hint and an error, in one layout with the right spacing, across or stacked.',
+    load: () => import('./pages/field'),
   },
   {
     slug: 'input',
@@ -109,6 +111,8 @@ export const DOCS: DocEntry[] = [
     name: 'Input group',
     group: 'Forms',
     file: 'input-group',
+    imports: 'InputGroup, InputGroupAddon, InputGroupInput',
+    load: () => import('./pages/input-group'),
     description:
       'A field with parts inside it: an icon, a prefix, a button that shows a password or clears the text.',
   },
@@ -117,6 +121,7 @@ export const DOCS: DocEntry[] = [
     name: 'Textarea',
     group: 'Forms',
     file: 'textarea',
+    load: () => import('./pages/textarea'),
     description:
       'A text field for several lines. It grows with its text, down and never sideways.',
   },
@@ -134,6 +139,9 @@ export const DOCS: DocEntry[] = [
     name: 'Combobox',
     group: 'Forms',
     file: 'combobox',
+    imports:
+      'Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList',
+    load: () => import('./pages/combobox'),
     description:
       'A field that filters a list as you type: for a long list, where a select would need scrolling.',
   },
@@ -142,6 +150,7 @@ export const DOCS: DocEntry[] = [
     name: 'Checkbox',
     group: 'Forms',
     file: 'checkbox',
+    load: () => import('./pages/checkbox'),
     description:
       'On or off, or partly on for a group. The whole row with its label is the target.',
   },
@@ -150,6 +159,8 @@ export const DOCS: DocEntry[] = [
     name: 'Radio group',
     group: 'Forms',
     file: 'radio-group',
+    imports: 'RadioGroup, RadioGroupItem',
+    load: () => import('./pages/radio-group'),
     description:
       'One choice out of a few, each with room for a description. Arrow keys move the choice.',
   },
@@ -158,6 +169,7 @@ export const DOCS: DocEntry[] = [
     name: 'Switch',
     group: 'Forms',
     file: 'switch',
+    load: () => import('./pages/switch'),
     description:
       'A setting that takes effect at once: on or off, with no Save button.',
   },
@@ -167,6 +179,7 @@ export const DOCS: DocEntry[] = [
     group: 'Forms',
     file: 'input-otp',
     imports: 'InputOTP, InputOTPGroup, InputOTPSlot',
+    load: () => import('./pages/input-otp'),
     description:
       'Boxes for a one-time code from an app or a text message, with paste and autofill.',
   },
@@ -175,6 +188,7 @@ export const DOCS: DocEntry[] = [
     name: 'Label',
     group: 'Forms',
     file: 'label',
+    load: () => import('./pages/label'),
     description: 'The name of a field, linked to it, in the form’s type.',
   },
   // Dates
