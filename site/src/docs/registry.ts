@@ -219,6 +219,7 @@ export const DOCS: DocEntry[] = [
     name: 'Alert dialog',
     group: 'Overlays',
     file: 'alert-dialog',
+    load: () => import('./pages/alert-dialog'),
     description:
       'A question that stops the work until it is answered: a delete, a discard. Focus starts on the safe answer.',
   },
@@ -227,6 +228,7 @@ export const DOCS: DocEntry[] = [
     name: 'Drawer',
     group: 'Overlays',
     file: 'drawer',
+    load: () => import('./pages/drawer'),
     description:
       'A panel from an edge of the window. A swipe closes it on a phone.',
   },
@@ -235,6 +237,7 @@ export const DOCS: DocEntry[] = [
     name: 'Popover',
     group: 'Overlays',
     file: 'popover',
+    load: () => import('./pages/popover'),
     description:
       'A small panel beside its button, in the browser’s top layer. It turns to the side with room.',
   },
@@ -243,6 +246,7 @@ export const DOCS: DocEntry[] = [
     name: 'Tooltip',
     group: 'Overlays',
     file: 'tooltip',
+    load: () => import('./pages/tooltip'),
     description:
       'A short name for a control with no text, shown on hover and on keyboard focus.',
   },
@@ -260,6 +264,7 @@ export const DOCS: DocEntry[] = [
     name: 'Context menu',
     group: 'Overlays',
     file: 'context-menu',
+    load: () => import('./pages/context-menu'),
     description:
       'The same menu, opened where the pointer is: a right-click, a long press, or Shift+F10.',
   },
@@ -279,6 +284,7 @@ export const DOCS: DocEntry[] = [
     name: 'Spinner',
     group: 'Feedback',
     file: 'spinner',
+    load: () => import('./pages/spinner'),
     description:
       'Work in progress, in a known place: a button, a save state, a block.',
   },
@@ -287,6 +293,7 @@ export const DOCS: DocEntry[] = [
     name: 'Skeleton',
     group: 'Feedback',
     file: 'skeleton',
+    load: () => import('./pages/skeleton'),
     description:
       'The shape of the content while it loads, so the page does not move when it comes.',
   },
@@ -295,6 +302,7 @@ export const DOCS: DocEntry[] = [
     name: 'Status',
     group: 'Feedback',
     file: 'status',
+    load: () => import('./pages/status'),
     description: 'A word and a dot in one colour: live, check this, failed.',
   },
   // Data
