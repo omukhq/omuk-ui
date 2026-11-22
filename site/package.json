@@ -5,7 +5,7 @@
   "description": "ui.omuk.dev: the public home page of Omuk UI.",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && bun scripts/pages.ts",
     "preview": "vite preview",
     "test": "bun test",
     "typecheck": "tsc --noEmit -p .",
