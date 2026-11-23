@@ -49,19 +49,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: `bg-primary text-on-primary hover:bg-primary/90`,
+        default: `bg-primary text-on-primary hover:bg-primary-hover`,
         outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
         secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
         ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected`,
         destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-danger`,
-        'danger-confirm': `bg-danger text-on-primary hover:bg-danger/90`,
+        'danger-confirm': `bg-danger text-on-primary hover:bg-danger-hover`,
         link: `text-accent underline-offset-4 hover:underline`,
       },
       size: {
         default:
           'h-9 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
-        xs: 'h-6 gap-1 rounded-sm px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
-        sm: 'h-7 gap-1 rounded-sm px-2 text-xs font-normal',
+        xs: 'h-6 gap-1 rounded-sm px-2.5 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        sm: 'h-7 gap-1 px-3 text-xs font-normal',
         lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
         icon: 'size-9 squircle',
         'icon-xs':

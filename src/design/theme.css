@@ -61,12 +61,16 @@
   --color-foreground: var(--color-gray-950);
   --color-muted: var(--color-gray-600);
   --color-primary: var(--color-gray-950);    /* primary buttons, tooltips, toasts */
+  --color-primary-hover: var(--color-gray-800);  /* a solid step, not 90%: nothing shows through */
   --color-on-primary: var(--color-white);
   --color-accent: var(--color-blue-600);      /* links, caret, picked values, chart series 1 */
   --color-on-accent: var(--color-white);      /* text on an accent fill: a focused date part */
   --color-mark: var(--color-blue-100);          /* comment highlights, added text, focus ring, plan badges */
   --color-found: var(--color-yellow-200);        /* the words a search found, in its results */
   --color-danger: var(--color-red-600);
+  /* The danger fill under the pointer: a step darker. Red at 90% on white
+     read as a washed pink, and an edge crossing flashed. */
+  --color-danger-hover: var(--color-red-700);
   --color-success: var(--color-green-700);  /* 4.9:1 on white; Tailwind's green-600 is 3.2:1 */
   --color-warning: var(--color-amber-700);
   --color-info: var(--color-blue-600);
@@ -179,6 +183,7 @@
     --color-foreground: var(--color-gray-100);
     --color-muted: var(--color-gray-300);
     --color-primary: var(--color-gray-100);
+    --color-primary-hover: var(--color-gray-300);
     --color-on-primary: var(--color-gray-950);
     --color-accent: var(--color-blue-300);
     --color-on-accent: var(--color-gray-950);
@@ -197,6 +202,7 @@
     --color-on-avatar-6: var(--color-green-200);
     --color-found: var(--color-yellow-800);
     --color-danger: var(--color-red-300);     /* red-400 is 3.6:1 on a card */
+    --color-danger-hover: var(--color-red-200);
     --color-success: var(--color-green-400);
     --color-warning: var(--color-amber-400);
     --color-info: var(--color-blue-300);
