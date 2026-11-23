@@ -3,10 +3,17 @@ import Delete from '../examples/alert-dialog/delete';
 import deleteSource from '../examples/alert-dialog/delete.tsx?raw';
 import Discard from '../examples/alert-dialog/discard';
 import discardSource from '../examples/alert-dialog/discard.tsx?raw';
+import AlertDialogPlayground from '../examples/alert-dialog/playground';
 
 export default function AlertDialogPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then open the alert. variant is the action button's."
+      >
+        <AlertDialogPlayground />
+      </DocSection>
       <DocSection
         title="A delete"
         description="The safe answer comes first and takes the focus. The action is a Button: while the work runs, it shows a spinner and keeps its size, and the parent closes the dialog when the work is done."

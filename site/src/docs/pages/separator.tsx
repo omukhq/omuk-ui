@@ -1,12 +1,19 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Horizontal from '../examples/separator/horizontal';
 import horizontalSource from '../examples/separator/horizontal.tsx?raw';
+import SeparatorPlayground from '../examples/separator/playground';
 import Vertical from '../examples/separator/vertical';
 import verticalSource from '../examples/separator/vertical.tsx?raw';
 
 export default function SeparatorPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The line and its code follow."
+      >
+        <SeparatorPlayground />
+      </DocSection>
       <DocSection
         title="Across"
         description="A 1-wide line in the border colour, the full width of its box, between two groups."

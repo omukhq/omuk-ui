@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Pages from '../examples/pagination/pages';
 import pagesSource from '../examples/pagination/pages.tsx?raw';
+import PaginationPlayground from '../examples/pagination/playground';
 import Range from '../examples/pagination/range';
 import rangeSource from '../examples/pagination/range.tsx?raw';
 
 export default function PaginationPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The pagination and its code follow."
+      >
+        <PaginationPlayground />
+      </DocSection>
       <DocSection
         title="Pages"
         description="Previous, the first page, the current page and its neighbours, the last page, and next. The current page has the outline and says so to a screen reader; a gap shows as an ellipsis."

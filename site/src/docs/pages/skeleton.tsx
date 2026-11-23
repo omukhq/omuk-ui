@@ -3,10 +3,17 @@ import Card from '../examples/skeleton/card';
 import cardSource from '../examples/skeleton/card.tsx?raw';
 import List from '../examples/skeleton/list';
 import listSource from '../examples/skeleton/list.tsx?raw';
+import SkeletonPlayground from '../examples/skeleton/playground';
 
 export default function SkeletonPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The bar and its code follow."
+      >
+        <SkeletonPlayground />
+      </DocSection>
       <DocSection
         title="A card while it loads"
         description="Press Reload. Each bar has the size of the text it stands for: h-5 for a line of small text, h-4 for extra small. The card keeps its size, so nothing below it moves when the content comes."

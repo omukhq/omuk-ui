@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Details from '../examples/popover/details';
 import detailsSource from '../examples/popover/details.tsx?raw';
+import PopoverPlayground from '../examples/popover/playground';
 import Rename from '../examples/popover/rename';
 import renameSource from '../examples/popover/rename.tsx?raw';
 
 export default function PopoverPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then open the popover."
+      >
+        <PopoverPlayground />
+      </DocSection>
       <DocSection
         title="More about a setting"
         description="A title, a description and a ×. The title and the description name the panel for a screen reader. The panel pads nothing itself: its content does."

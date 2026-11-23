@@ -5,6 +5,7 @@ import AsLink from '../examples/button/link';
 import linkSource from '../examples/button/link.tsx?raw';
 import Loading from '../examples/button/loading';
 import loadingSource from '../examples/button/loading.tsx?raw';
+import ButtonPlayground from '../examples/button/playground';
 import Sizes from '../examples/button/sizes';
 import sizesSource from '../examples/button/sizes.tsx?raw';
 import Variants from '../examples/button/variants';
@@ -13,6 +14,12 @@ import variantsSource from '../examples/button/variants.tsx?raw';
 export default function ButtonPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The button and its code follow."
+      >
+        <ButtonPlayground />
+      </DocSection>
       <DocSection
         title="Variants"
         description="One primary button for each surface. Outline for the other actions of a form or a dialog, ghost in toolbars and menus. Destructive offers a delete; danger-confirm is only the last step of one."

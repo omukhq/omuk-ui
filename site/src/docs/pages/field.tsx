@@ -7,10 +7,17 @@ import ErrorExample from '../examples/field/error';
 import errorSource from '../examples/field/error.tsx?raw';
 import Fieldset from '../examples/field/fieldset';
 import fieldsetSource from '../examples/field/fieldset.tsx?raw';
+import FieldPlayground from '../examples/field/playground';
 
 export default function FieldPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The field and its code follow."
+      >
+        <FieldPlayground />
+      </DocSection>
       <DocSection
         title="A label, a field and a hint"
         description="Field stacks its parts with the form’s spacing: the label above, the hint below. FieldGroup spaces the fields of a form."

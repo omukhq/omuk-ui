@@ -15,7 +15,14 @@ import { DESIGN_URL, sourceUrl } from '../links';
 import { Link } from '../router';
 import { ImportLine } from './blocks';
 import { DocsNav } from './nav';
-import { DOCS, type DocEntry, docFor, importLine } from './registry';
+import {
+  DOCS_BY_NAME,
+  type DocEntry,
+  docFor,
+  importLine,
+  loadedPage,
+  preloadPage,
+} from './registry';
 
 // The docs: the sidebar with every component, and one component's page.
 // This file is a chunk of its own (the home page never loads it), and each
@@ -23,16 +30,35 @@ import { DOCS, type DocEntry, docFor, importLine } from './registry';
 
 const pages = new Map<string, LazyExoticComponent<ComponentType>>();
 
-/** The page's component, made once for each slug. */
-function pageFor(entry: DocEntry) {
-  const load = entry.load;
-  if (!load) return null;
+/**
+ * The page's component. A page whose code has loaded (a hover on its link
+ * fetched it) shows at once. Otherwise it is lazy: React shows the skeleton
+ * until the code comes, and can hold it for up to 300 ms even when the
+ * code is quick.
+ */
+function pageFor(entry: DocEntry): ComponentType | null {
+  const ready = loadedPage(entry.slug);
+  if (ready) return ready;
+  if (!entry.load) return null;
   let page = pages.get(entry.slug);
   if (!page) {
-    page = lazy(load);
+    page = lazy(() =>
+      preloadPage(entry).then(() => ({
+        default: loadedPage(entry.slug) ?? NotWritten,
+      })),
+    );
     pages.set(entry.slug, page);
   }
   return page;
+}
+
+function NotWritten() {
+  return null;
+}
+
+/** Starts a page's code on hover; a failed load waits for the click. */
+function preload(entry: DocEntry) {
+  preloadPage(entry).catch(() => {});
 }
 
 export default function DocsLayout({ slug }: { slug: string }) {
@@ -40,10 +66,10 @@ export default function DocsLayout({ slug }: { slug: string }) {
   return (
     <>
       <div className="mx-auto flex max-w-docs gap-12 px-gutter">
-        <aside className="sticky top-14 hidden h-sidebar w-56 shrink-0 overflow-y-auto py-10 pr-1 scrollbar-subtle lg:block">
+        <aside className="sticky top-14 hidden h-sidebar w-56 shrink-0 overflow-y-auto pt-6 pr-1 pb-10 scrollbar-subtle lg:block">
           <DocsNav current={slug} />
         </aside>
-        <main id="main" className="min-w-0 flex-1 pt-8 pb-section lg:pt-14">
+        <main id="main" className="min-w-0 flex-1 pt-6 pb-section">
           <PhoneNav current={slug} />
           {entry ? (
             <DocPage key={entry.slug} entry={entry} />
@@ -81,7 +107,9 @@ function PhoneNav({ current }: { current: string }) {
 type Heading = { id: string; title: string };
 
 function DocPage({ entry }: { entry: DocEntry }) {
-  const Page = pageFor(entry);
+  // Picked once for the visit: if the lazy one is showing when the code
+  // lands, a swap to the ready one would mount the page again.
+  const [Page] = useState(() => pageFor(entry));
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [active, setActive] = useState<string>();
 
@@ -119,7 +147,7 @@ function DocPage({ entry }: { entry: DocEntry }) {
     <div className="flex gap-12">
       <article className="flex min-w-0 flex-1 flex-col">
         <p className="text-sm text-muted">{entry.group}</p>
-        <h1 className="mt-2 text-title font-semibold text-balance text-foreground">
+        <h1 className="mt-2 text-heading font-semibold text-balance text-foreground">
           {entry.name}
         </h1>
         <p className="mt-6 max-w-2xl text-lede text-pretty text-muted">
@@ -170,7 +198,7 @@ function Outline({
   active?: string;
 }) {
   return (
-    <aside className="sticky top-14 hidden h-sidebar w-52 shrink-0 overflow-y-auto pt-14 pb-10 scrollbar-subtle xl:block">
+    <aside className="sticky top-14 hidden h-sidebar w-52 shrink-0 overflow-y-auto pt-6 pb-10 scrollbar-subtle xl:block">
       {headings.length > 0 && (
         <nav aria-label="On this page" className="flex flex-col gap-3">
           <p className="text-sm font-medium text-foreground">On this page</p>
@@ -211,9 +239,9 @@ function PageSkeleton() {
 
 /** The pages before and after this one, in the sidebar's order. */
 function PrevNext({ slug }: { slug: string }) {
-  const index = DOCS.findIndex((entry) => entry.slug === slug);
-  const previous = DOCS[index - 1];
-  const next = DOCS[index + 1];
+  const index = DOCS_BY_NAME.findIndex((entry) => entry.slug === slug);
+  const previous = DOCS_BY_NAME[index - 1];
+  const next = DOCS_BY_NAME[index + 1];
   return (
     <nav
       aria-label="Previous and next"
@@ -225,7 +253,7 @@ function PrevNext({ slug }: { slug: string }) {
           render={
             <Link
               to={`/docs/${previous.slug}`}
-              onPreload={() => void previous.load?.()}
+              onPreload={() => preload(previous)}
             />
           }
           nativeButton={false}
@@ -244,10 +272,7 @@ function PrevNext({ slug }: { slug: string }) {
         <Button
           variant="ghost"
           render={
-            <Link
-              to={`/docs/${next.slug}`}
-              onPreload={() => void next.load?.()}
-            />
+            <Link to={`/docs/${next.slug}`} onPreload={() => preload(next)} />
           }
           nativeButton={false}
         >
@@ -266,7 +291,7 @@ function PrevNext({ slug }: { slug: string }) {
 function NotFound({ slug }: { slug: string }) {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-title font-semibold text-foreground">Not found</h1>
+      <h1 className="text-heading font-semibold text-foreground">Not found</h1>
       <p className="max-w-xl text-lede text-pretty text-muted">
         There is no component called “{slug}”. Pick one from the list, or search
         for it.

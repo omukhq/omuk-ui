@@ -3,12 +3,19 @@ import Basic from '../examples/textarea/basic';
 import basicSource from '../examples/textarea/basic.tsx?raw';
 import Invalid from '../examples/textarea/invalid';
 import invalidSource from '../examples/textarea/invalid.tsx?raw';
+import TextareaPlayground from '../examples/textarea/playground';
 import States from '../examples/textarea/states';
 import statesSource from '../examples/textarea/states.tsx?raw';
 
 export default function TextareaPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The textarea and its code follow."
+      >
+        <TextareaPlayground />
+      </DocSection>
       <DocSection
         title="With a label"
         description="It starts 64 tall, about two lines, and grows with its text, down and never sideways. Add a line to see it grow."

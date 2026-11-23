@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Columns from '../examples/sortable/columns';
 import columnsSource from '../examples/sortable/columns.tsx?raw';
+import SortablePlayground from '../examples/sortable/playground';
 import Steps from '../examples/sortable/steps';
 import stepsSource from '../examples/sortable/steps.tsx?raw';
 
 export default function SortablePage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The list and its code follow."
+      >
+        <SortablePlayground />
+      </DocSection>
       <DocSection
         title="With handles"
         description="Drag an item by its handle, or focus the handle and press Up or Down. The items it passes slide aside; on the drop, onValueChange gets the new order."

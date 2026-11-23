@@ -6,6 +6,7 @@ import { Header } from './header';
 import { Hero } from './hero';
 import { Install } from './install';
 import { usePath } from './router';
+import { setSearchOpen, useSearch } from './search-store';
 import { Section } from './section';
 import { Why } from './why';
 
@@ -16,6 +17,18 @@ import { Why } from './why';
 
 const AppScreen = lazy(() => import('./gallery/app-screen'));
 const DocsLayout = lazy(() => import('./docs/layout'));
+const Search = lazy(() => import('./search'));
+
+/** ⌘K's search, mounted once it first opens. */
+function SearchHost() {
+  const { open, loaded } = useSearch();
+  if (!loaded) return null;
+  return (
+    <Suspense fallback={null}>
+      <Search open={open} onOpenChange={setSearchOpen} />
+    </Suspense>
+  );
+}
 
 /** The slug in /docs/<slug>; /docs alone is the first page. */
 function docsSlug(path: string) {
@@ -45,6 +58,7 @@ export function App() {
         <Home />
       )}
       <Footer />
+      <SearchHost />
     </div>
   );
 }

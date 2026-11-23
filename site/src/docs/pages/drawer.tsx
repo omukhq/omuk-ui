@@ -3,10 +3,17 @@ import Directions from '../examples/drawer/directions';
 import directionsSource from '../examples/drawer/directions.tsx?raw';
 import Edit from '../examples/drawer/edit';
 import editSource from '../examples/drawer/edit.tsx?raw';
+import DrawerPlayground from '../examples/drawer/playground';
 
 export default function DrawerPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then open the drawer."
+      >
+        <DrawerPlayground />
+      </DocSection>
       <DocSection
         title="A form in a drawer"
         description="The header and the footer stay in place, and the fields between them scroll. Save closes the drawer from state; DrawerClose closes it with no change."

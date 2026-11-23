@@ -1,6 +1,7 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Basic from '../examples/switch/basic';
 import basicSource from '../examples/switch/basic.tsx?raw';
+import SwitchPlayground from '../examples/switch/playground';
 import Settings from '../examples/switch/settings';
 import settingsSource from '../examples/switch/settings.tsx?raw';
 import States from '../examples/switch/states';
@@ -9,6 +10,12 @@ import statesSource from '../examples/switch/states.tsx?raw';
 export default function SwitchPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The switch and its code follow."
+      >
+        <SwitchPlayground />
+      </DocSection>
       <DocSection
         title="With a label"
         description="A switch acts at once: save the change in onCheckedChange, with no Save button. Off, it looks like an empty checkbox; on, the knob grows, slides and shows a tick."

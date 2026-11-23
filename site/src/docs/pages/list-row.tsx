@@ -1,12 +1,19 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Outline from '../examples/list-row/outline';
 import outlineSource from '../examples/list-row/outline.tsx?raw';
+import ListRowPlayground from '../examples/list-row/playground';
 import Sidebar from '../examples/list-row/sidebar';
 import sidebarSource from '../examples/list-row/sidebar.tsx?raw';
 
 export default function ListRowPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The row and its code follow."
+      >
+        <ListRowPlayground />
+      </DocSection>
       <DocSection
         title="A sidebar"
         description="An icon, a name and a count. The current row takes the selected tint at medium weight, and its icon the text colour. ListRowMeta puts small muted text at the row’s end."

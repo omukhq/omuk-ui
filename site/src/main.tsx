@@ -13,6 +13,12 @@ onPathChange((path) => {
   document.title = titleFor(path);
 });
 
+// After a new deploy, a tab that was open asks for page files that are gone,
+// and the page goes blank. Load the new version instead.
+window.addEventListener('vite:preloadError', () => {
+  window.location.reload();
+});
+
 createRoot(root).render(
   <StrictMode>
     <App />

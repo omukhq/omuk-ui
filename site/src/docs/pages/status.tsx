@@ -1,12 +1,19 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import List from '../examples/status/list';
 import listSource from '../examples/status/list.tsx?raw';
+import StatusPlayground from '../examples/status/playground';
 import Tones from '../examples/status/tones';
 import tonesSource from '../examples/status/tones.tsx?raw';
 
 export default function StatusPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The status and its code follow."
+      >
+        <StatusPlayground />
+      </DocSection>
       <DocSection
         title="Four tones"
         description="Success for live, done or connected. Warning for something to check. Danger for a failure. Muted, the default, for a state that needs nothing."

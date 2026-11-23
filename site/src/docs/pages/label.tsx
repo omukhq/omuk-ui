@@ -5,10 +5,17 @@ import WithControl from '../examples/label/control';
 import controlSource from '../examples/label/control.tsx?raw';
 import WithHint from '../examples/label/hint';
 import hintSource from '../examples/label/hint.tsx?raw';
+import LabelPlayground from '../examples/label/playground';
 
 export default function LabelPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The label and its code follow."
+      >
+        <LabelPlayground />
+      </DocSection>
       <DocSection
         title="Above a field"
         description="A medium-weight label, linked to its field with htmlFor. A press on the label puts the focus in the field."

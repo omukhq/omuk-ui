@@ -1,4 +1,5 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
+import CardPlayground from '../examples/card/playground';
 import Settings from '../examples/card/settings';
 import settingsSource from '../examples/card/settings.tsx?raw';
 import Stats from '../examples/card/stats';
@@ -7,6 +8,12 @@ import statsSource from '../examples/card/stats.tsx?raw';
 export default function CardPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The card and its code follow."
+      >
+        <CardPlayground />
+      </DocSection>
       <DocSection
         title="A header, content and a footer"
         description="A settings group: the title and what it changes, the field, and the actions. A footer with border-t keeps a gap to its line."

@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Line from '../examples/tabs/line';
 import lineSource from '../examples/tabs/line.tsx?raw';
+import TabsPlayground from '../examples/tabs/playground';
 import Track from '../examples/tabs/track';
 import trackSource from '../examples/tabs/track.tsx?raw';
 
 export default function TabsPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The tabs and their code follow."
+      >
+        <TabsPlayground />
+      </DocSection>
       <DocSection
         title="Line tabs"
         description="The design system’s tabs: muted labels on a line, the selected one in the text colour over an accent underline. Only the colour changes, so nothing moves."

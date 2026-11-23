@@ -1,6 +1,7 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Password from '../examples/input-group/password';
 import passwordSource from '../examples/input-group/password.tsx?raw';
+import InputGroupPlayground from '../examples/input-group/playground';
 import Prefix from '../examples/input-group/prefix';
 import prefixSource from '../examples/input-group/prefix.tsx?raw';
 import Search from '../examples/input-group/search';
@@ -11,6 +12,12 @@ import stackedSource from '../examples/input-group/stacked.tsx?raw';
 export default function InputGroupPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The input group and its code follow."
+      >
+        <InputGroupPlayground />
+      </DocSection>
       <DocSection
         title="An icon and a clear button"
         description="The group is the field’s box; the input inside it has none. An addon at the start holds the icon. The clear button shows only while there is text. Type a few letters."

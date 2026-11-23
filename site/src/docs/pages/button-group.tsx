@@ -1,6 +1,7 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Actions from '../examples/button-group/actions';
 import actionsSource from '../examples/button-group/actions.tsx?raw';
+import ButtonGroupPlayground from '../examples/button-group/playground';
 import Split from '../examples/button-group/split';
 import splitSource from '../examples/button-group/split.tsx?raw';
 import WithText from '../examples/button-group/with-text';
@@ -9,6 +10,12 @@ import withTextSource from '../examples/button-group/with-text.tsx?raw';
 export default function ButtonGroupPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The group and its code follow."
+      >
+        <ButtonGroupPlayground />
+      </DocSection>
       <DocSection
         title="Actions that belong together"
         description="Outline buttons side by side share their edges: each one after the first moves back by the edge’s width, and only the outer corners stay round."

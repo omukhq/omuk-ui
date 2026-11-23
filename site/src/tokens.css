@@ -11,6 +11,10 @@
   --text-title: clamp(2.25rem, 5.5vw, 4.25rem);
   --text-title--line-height: 0.98;
   --text-title--letter-spacing: -0.035em;
+  /* The name at the top of a docs page: smaller than a home page title. */
+  --text-heading: 2.25rem;
+  --text-heading--line-height: 1.1;
+  --text-heading--letter-spacing: -0.025em;
   /* The paragraph under a headline. */
   --text-lede: clamp(1.125rem, 1.5vw, 1.3125rem);
   --text-lede--line-height: 1.5;
@@ -37,4 +41,49 @@
   --sh-jsxliterals: var(--color-foreground);
   --sh-sign: var(--color-muted);
   --sh-comment: var(--color-muted);
+}
+
+/* A thin scrollbar with no track: hidden until the area is in use (the
+   pointer over it, or the focus inside it); then a soft thumb in the text
+   colour, so it reads in light and dark alike. Its space stays reserved,
+   so nothing moves when it shows. Put it on every element that scrolls.
+   Chrome and Safari draw it from the ::-webkit-scrollbar parts: with them,
+   macOS does not swap in its own dark floating scrollbar while a trackpad
+   scrolls. Firefox has no such parts and reads scrollbar-color. */
+@utility scrollbar-subtle {
+  &::-webkit-scrollbar {
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+  }
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border: calc(var(--spacing) * 0.5) solid transparent;
+    border-radius: var(--radius-full, 9999px);
+    background-clip: padding-box;
+    background-color: transparent;
+  }
+  &:hover::-webkit-scrollbar-thumb,
+  &:focus-within::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in oklch,
+      var(--color-foreground) 12%,
+      transparent
+    );
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    &:hover,
+    &:focus-within {
+      scrollbar-color: color-mix(
+          in oklch,
+          var(--color-foreground) 12%,
+          transparent
+        )
+        transparent;
+    }
+  }
 }

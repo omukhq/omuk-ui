@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Period from '../examples/segmented/period';
 import periodSource from '../examples/segmented/period.tsx?raw';
+import SegmentedPlayground from '../examples/segmented/playground';
 import View from '../examples/segmented/view';
 import viewSource from '../examples/segmented/view.tsx?raw';
 
 export default function SegmentedPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The control and its code follow."
+      >
+        <SegmentedPlayground />
+      </DocSection>
       <DocSection
         title="A view"
         description="The chosen segment is raised; the others sit on the track. Keep the value in the parent with value and onValueChange."

@@ -1,6 +1,7 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Kinds from '../examples/avatar/kinds';
 import kindsSource from '../examples/avatar/kinds.tsx?raw';
+import AvatarPlayground from '../examples/avatar/playground';
 import Sizes from '../examples/avatar/sizes';
 import sizesSource from '../examples/avatar/sizes.tsx?raw';
 import Stack from '../examples/avatar/stack';
@@ -9,6 +10,12 @@ import stackSource from '../examples/avatar/stack.tsx?raw';
 export default function AvatarPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The avatar and its code follow."
+      >
+        <AvatarPlayground />
+      </DocSection>
       <DocSection
         title="People, apps and teams"
         description="A person is round; an app and a team are square. Without a picture, a person shows their initials on a colour picked from their userId, so the same person has the same colour everywhere."

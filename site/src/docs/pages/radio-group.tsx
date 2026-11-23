@@ -5,10 +5,17 @@ import WithDescription from '../examples/radio-group/description';
 import descriptionSource from '../examples/radio-group/description.tsx?raw';
 import Horizontal from '../examples/radio-group/horizontal';
 import horizontalSource from '../examples/radio-group/horizontal.tsx?raw';
+import RadioGroupPlayground from '../examples/radio-group/playground';
 
 export default function RadioGroupPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The radio group and its code follow."
+      >
+        <RadioGroupPlayground />
+      </DocSection>
       <DocSection
         title="One choice"
         description="Each RadioGroupItem has a value and a Label linked with htmlFor. Name the group with aria-labelledby or aria-label. Tab to the group, then use the arrow keys."

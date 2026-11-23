@@ -5,12 +5,19 @@ import WithDescription from '../examples/checkbox/description';
 import descriptionSource from '../examples/checkbox/description.tsx?raw';
 import Indeterminate from '../examples/checkbox/indeterminate';
 import indeterminateSource from '../examples/checkbox/indeterminate.tsx?raw';
+import CheckboxPlayground from '../examples/checkbox/playground';
 import States from '../examples/checkbox/states';
 import statesSource from '../examples/checkbox/states.tsx?raw';
 
 export default function CheckboxPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The checkbox and its code follow."
+      >
+        <CheckboxPlayground />
+      </DocSection>
       <DocSection
         title="With a label"
         description="A Label after the box, linked with htmlFor: a press on the label toggles the box too. The box’s own target reaches past its edge, so a small box is still easy to hit."

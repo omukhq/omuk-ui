@@ -3,10 +3,17 @@ import Basic from '../examples/select/basic';
 import basicSource from '../examples/select/basic.tsx?raw';
 import Groups from '../examples/select/groups';
 import groupsSource from '../examples/select/groups.tsx?raw';
+import SelectPlayground from '../examples/select/playground';
 
 export default function SelectPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The select and its code follow."
+      >
+        <SelectPlayground />
+      </DocSection>
       <DocSection
         title="A value from a list"
         description="Give the options to items too: the trigger then shows the chosen option’s label, and typing finds an option by it."

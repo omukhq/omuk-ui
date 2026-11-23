@@ -1,12 +1,19 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import Invoices from '../examples/table/invoices';
 import invoicesSource from '../examples/table/invoices.tsx?raw';
+import TablePlayground from '../examples/table/playground';
 import Totals from '../examples/table/totals';
 import totalsSource from '../examples/table/totals.tsx?raw';
 
 export default function TablePage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The table and its code follow."
+      >
+        <TablePlayground />
+      </DocSection>
       <DocSection
         title="Rows with an action"
         description="Numbers sit on the right, in mono at the extra-small size, so the digits line up. A row’s actions go in a menu behind an extra-small ghost button at the row’s end."

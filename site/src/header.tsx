@@ -1,9 +1,10 @@
 import { Button } from '@omuk/ui/button';
 import { cn } from '@omuk/ui/utils';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { MoonIcon, SearchIcon, SunIcon } from 'lucide-react';
 import { FIRST_DOC } from './docs/registry';
 import { REPO_URL, SECTIONS } from './links';
 import { Link, usePath } from './router';
+import { openSearch, preloadSearch, searchKeys } from './search-store';
 import { setTheme, useTheme } from './theme';
 
 /**
@@ -29,6 +30,21 @@ export function Header() {
         >
           Omuk UI
         </Link>
+        <Button
+          variant="outline"
+          onClick={openSearch}
+          onPointerEnter={preloadSearch}
+          onFocus={preloadSearch}
+          aria-label="Find a component"
+          aria-keyshortcuts="Meta+K Control+K"
+          className="mr-2 text-muted hover:text-foreground"
+        >
+          <SearchIcon data-icon="inline-start" strokeWidth={1.5} aria-hidden />
+          <span className="hidden sm:inline">Find a component</span>
+          <kbd className="ml-4 hidden rounded-sm bg-hover px-1.5 font-mono text-xs text-muted sm:inline">
+            {searchKeys()}
+          </kbd>
+        </Button>
         <nav aria-label="Site" className="flex items-center">
           <Button
             variant="ghost"

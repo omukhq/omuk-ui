@@ -14,11 +14,18 @@ import Drawer from '../examples/prompt/drawer';
 import drawerSource from '../examples/prompt/drawer.tsx?raw';
 import Modal from '../examples/prompt/modal';
 import modalSource from '../examples/prompt/modal.tsx?raw';
+import PromptPlayground from '../examples/prompt/playground';
 import setupSource from '../examples/prompt/setup.tsx?raw';
 
 export default function PromptPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the options on the right, then open the alert."
+      >
+        <PromptPlayground />
+      </DocSection>
       <DocSection
         title="Set up"
         description="Put one PromptProvider in the app. Then any handler opens a prompt with usePrompt, or with prompt outside a component. No open state in the caller."

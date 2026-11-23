@@ -41,16 +41,6 @@ export function importLine(entry: DocEntry) {
   return `import { ${names} } from '@omuk/ui/${entry.file}';`;
 }
 
-export const GROUPS: DocGroup[] = [
-  'Actions',
-  'Forms',
-  'Dates',
-  'Overlays',
-  'Feedback',
-  'Data',
-  'Layout',
-];
-
 export const DOCS: DocEntry[] = [
   // Actions
   {
@@ -137,6 +127,16 @@ export const DOCS: DocEntry[] = [
     description:
       'One value from a list. It opens over its trigger, finds an option as you type, and works from the keyboard alone.',
     load: () => import('./pages/select'),
+  },
+  {
+    slug: 'command',
+    name: 'Command menu',
+    group: 'Overlays',
+    file: 'command',
+    imports: 'Command, CommandDialog',
+    load: () => import('./pages/command'),
+    description:
+      'A search field over a list of commands, for ⌘K: type to narrow it, the arrow keys to move, Enter to run.',
   },
   {
     slug: 'combobox',
@@ -420,5 +420,29 @@ export function docFor(slug: string) {
   return DOCS.find((entry) => entry.slug === slug);
 }
 
+/** Every page by name, A to Z: the sidebar's order, and previous and next. */
+export const DOCS_BY_NAME = [...DOCS].sort((a, b) =>
+  a.name.localeCompare(b.name),
+);
+
 /** The first page of the docs, where /docs leads. */
 export const FIRST_DOC = DOCS[0];
+
+const loaded = new Map<string, ComponentType>();
+
+/**
+ * Loads a page's code and keeps its component. A link calls it on hover
+ * and on focus, so a click on it usually finds the page ready.
+ */
+export function preloadPage(entry: DocEntry) {
+  const load = entry.load;
+  if (!load || loaded.has(entry.slug)) return Promise.resolve();
+  return load().then((module) => {
+    loaded.set(entry.slug, module.default);
+  });
+}
+
+/** The page's component, when its code has loaded; undefined before. */
+export function loadedPage(slug: string) {
+  return loaded.get(slug);
+}

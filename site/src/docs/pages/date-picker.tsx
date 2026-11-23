@@ -3,6 +3,7 @@ import Day from '../examples/date-picker/day';
 import daySource from '../examples/date-picker/day.tsx?raw';
 import DayAndTime from '../examples/date-picker/day-and-time';
 import dayAndTimeSource from '../examples/date-picker/day-and-time.tsx?raw';
+import DatePickerPlayground from '../examples/date-picker/playground';
 import Range from '../examples/date-picker/range';
 import rangeSource from '../examples/date-picker/range.tsx?raw';
 import Time from '../examples/date-picker/time';
@@ -11,6 +12,12 @@ import timeSource from '../examples/date-picker/time.tsx?raw';
 export default function DatePickerPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The date picker and its code follow."
+      >
+        <DatePickerPlayground />
+      </DocSection>
       <DocSection
         title="A day"
         description="The value is ISO text, such as 2026-12-04. Type the parts in the language’s order, step them with the arrow keys, or open the calendar from the button in the field."

@@ -3,10 +3,17 @@ import Actions from '../examples/dropdown-menu/actions';
 import actionsSource from '../examples/dropdown-menu/actions.tsx?raw';
 import Choices from '../examples/dropdown-menu/choices';
 import choicesSource from '../examples/dropdown-menu/choices.tsx?raw';
+import DropdownMenuPlayground from '../examples/dropdown-menu/playground';
 
 export default function DropdownMenuPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then open the menu. variant is the Delete item's, disabled the Duplicate item's."
+      >
+        <DropdownMenuPlayground />
+      </DocSection>
       <DocSection
         title="Actions"
         description="An icon at the start of each item, a shortcut at the end. A destructive item comes last, after a separator."

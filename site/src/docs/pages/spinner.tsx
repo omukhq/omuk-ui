@@ -5,10 +5,17 @@ import ButtonExample from '../examples/spinner/button';
 import buttonSource from '../examples/spinner/button.tsx?raw';
 import Inline from '../examples/spinner/inline';
 import inlineSource from '../examples/spinner/inline.tsx?raw';
+import SpinnerPlayground from '../examples/spinner/playground';
 
 export default function SpinnerPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The spinner and its code follow."
+      >
+        <SpinnerPlayground />
+      </DocSection>
       <DocSection
         title="Beside a word"
         description="On its own it is muted and 16 square. A size class makes it bigger, a text colour changes its colour. Its aria-label is what a screen reader hears."

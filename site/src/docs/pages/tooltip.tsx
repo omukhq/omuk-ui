@@ -1,4 +1,5 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
+import TooltipPlayground from '../examples/tooltip/playground';
 import Sides from '../examples/tooltip/sides';
 import sidesSource from '../examples/tooltip/sides.tsx?raw';
 import Toolbar from '../examples/tooltip/toolbar';
@@ -7,6 +8,12 @@ import toolbarSource from '../examples/tooltip/toolbar.tsx?raw';
 export default function TooltipPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then point at the button. delay belongs to the TooltipProvider."
+      >
+        <TooltipPlayground />
+      </DocSection>
       <DocSection
         title="Names for icon buttons"
         description="Each icon button has an aria-label, and the tooltip shows the same name, with its shortcut in a kbd. In a TooltipProvider, one tooltip shows at a time: slide along the row, and the next name shows at once."

@@ -4,16 +4,35 @@ import Action from '../examples/toast/action';
 import actionSource from '../examples/toast/action.tsx?raw';
 import Kinds from '../examples/toast/kinds';
 import kindsSource from '../examples/toast/kinds.tsx?raw';
+import ToastPlayground from '../examples/toast/playground';
+import Position from '../examples/toast/position';
+import positionSource from '../examples/toast/position.tsx?raw';
+import { useToastPosition } from '../examples/toast/position-store';
 import setupSource from '../examples/toast/setup.tsx?raw';
 
 export default function ToastPage() {
+  const position = useToastPosition();
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the options on the right, then show the toast. Leave actionLabel empty for no action."
+      >
+        <ToastPlayground />
+      </DocSection>
       <DocSection
         title="Set up"
         description="One Toaster near the root of the app. toast has the same calls as the sonner package, so code written for sonner works as it is."
       >
         <CodeView code={setupSource.trimEnd()} />
+      </DocSection>
+      <DocSection
+        title="Position"
+        description="Six places, from 640 wide up: the top or the bottom, at the left, the centre or the right. At the top the stack grows down. On a phone the toasts are always centred."
+      >
+        <Example source={positionSource}>
+          <Position />
+        </Example>
       </DocSection>
       <DocSection
         title="Kinds"
@@ -68,12 +87,12 @@ export default function ToastPage() {
         <Notes
           items={[
             'Up to three in a stack, the newest at the bottom. Pointing at the stack opens it and stops the timers.',
-            'Bottom right on a computer, bottom centre on a phone, at most 400 wide and two lines.',
+            'Bottom right on a computer unless position says otherwise, centred on a phone, at most 384 wide and two lines.',
             'The toasts are read by a screen reader through a live region; the action and the close button are real buttons.',
           ]}
         />
       </DocSection>
-      <Toaster />
+      <Toaster position={position} />
     </>
   );
 }

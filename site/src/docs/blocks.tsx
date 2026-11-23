@@ -124,7 +124,7 @@ export type PropRow = {
 /** A component's props: name, type, default, and what each one does. */
 export function PropsTable({ rows }: { rows: PropRow[] }) {
   return (
-    <div className="overflow-x-auto rounded-xl inset-ring inset-ring-border">
+    <div className="overflow-x-auto rounded-xl inset-ring scrollbar-subtle inset-ring-border">
       <Table>
         <TableHeader>
           <TableRow>

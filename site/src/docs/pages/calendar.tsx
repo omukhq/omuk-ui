@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Day from '../examples/calendar/day';
 import daySource from '../examples/calendar/day.tsx?raw';
+import CalendarPlayground from '../examples/calendar/playground';
 import Range from '../examples/calendar/range';
 import rangeSource from '../examples/calendar/range.tsx?raw';
 
 export default function CalendarPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The calendar and its code follow."
+      >
+        <CalendarPlayground />
+      </DocSection>
       <DocSection
         title="A day"
         description="The value is ISO text, such as 2026-11-23. minValue stops the past; isDateUnavailable crosses out the days that cannot be chosen, here the weekends."

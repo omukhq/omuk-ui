@@ -5,10 +5,17 @@ import AsButton from '../examples/combobox/button';
 import buttonSource from '../examples/combobox/button.tsx?raw';
 import Multiple from '../examples/combobox/multiple';
 import multipleSource from '../examples/combobox/multiple.tsx?raw';
+import ComboboxPlayground from '../examples/combobox/playground';
 
 export default function ComboboxPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The combobox and its code follow."
+      >
+        <ComboboxPlayground />
+      </DocSection>
       <DocSection
         title="Type to filter"
         description="The list shows the items that contain the typed text, with no regard to case or accents. ComboboxList draws each item with its function. showClear adds a button that empties the field."

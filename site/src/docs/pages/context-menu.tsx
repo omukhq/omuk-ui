@@ -3,10 +3,17 @@ import Actions from '../examples/context-menu/actions';
 import actionsSource from '../examples/context-menu/actions.tsx?raw';
 import Choices from '../examples/context-menu/choices';
 import choicesSource from '../examples/context-menu/choices.tsx?raw';
+import ContextMenuPlayground from '../examples/context-menu/playground';
 
 export default function ContextMenuPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then right-click the area. variant is the Delete item's, disabled the Duplicate item's."
+      >
+        <ContextMenuPlayground />
+      </DocSection>
       <DocSection
         title="Actions on a row"
         description="ContextMenuTrigger is the area that answers a right-click. The menu opens at the pointer, or under the focused area from the keyboard. A destructive item comes last, after a separator."

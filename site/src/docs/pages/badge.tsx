@@ -1,12 +1,19 @@
 import { DocSection, Example, Notes, PropsTable } from '../blocks';
 import InContext from '../examples/badge/in-context';
 import inContextSource from '../examples/badge/in-context.tsx?raw';
+import BadgePlayground from '../examples/badge/playground';
 import Variants from '../examples/badge/variants';
 import variantsSource from '../examples/badge/variants.tsx?raw';
 
 export default function BadgePage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The badge and its code follow."
+      >
+        <BadgePlayground />
+      </DocSection>
       <DocSection
         title="Variants"
         description="Most badges are neutral: the hover fill and muted text. Plan is the one with colour, for a paid feature. Destructive puts the text in the danger colour."

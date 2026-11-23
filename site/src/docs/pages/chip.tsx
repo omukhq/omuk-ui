@@ -1,12 +1,19 @@
 import { DocSection, Example, KeysTable, Notes, PropsTable } from '../blocks';
 import Invites from '../examples/chip/invites';
 import invitesSource from '../examples/chip/invites.tsx?raw';
+import ChipPlayground from '../examples/chip/playground';
 import Tags from '../examples/chip/tags';
 import tagsSource from '../examples/chip/tags.tsx?raw';
 
 export default function ChipPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The chip and its code follow."
+      >
+        <ChipPlayground />
+      </DocSection>
       <DocSection
         title="Removable"
         description="With onRemove, the chip draws a remove button at its end. Give each one a removeLabel that names what it removes."

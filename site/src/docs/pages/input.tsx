@@ -3,12 +3,19 @@ import WithLabel from '../examples/input/field';
 import fieldSource from '../examples/input/field.tsx?raw';
 import Invalid from '../examples/input/invalid';
 import invalidSource from '../examples/input/invalid.tsx?raw';
+import InputPlayground from '../examples/input/playground';
 import States from '../examples/input/states';
 import statesSource from '../examples/input/states.tsx?raw';
 
 export default function InputPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The input and its code follow."
+      >
+        <InputPlayground />
+      </DocSection>
       <DocSection
         title="With a label"
         description="A Label above, linked with htmlFor. The field is 36 tall: the same as a button, so they line up in a row."

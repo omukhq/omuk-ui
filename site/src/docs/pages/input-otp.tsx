@@ -5,10 +5,17 @@ import Groups from '../examples/input-otp/groups';
 import groupsSource from '../examples/input-otp/groups.tsx?raw';
 import Invalid from '../examples/input-otp/invalid';
 import invalidSource from '../examples/input-otp/invalid.tsx?raw';
+import InputOTPPlayground from '../examples/input-otp/playground';
 
 export default function InputOTPPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right. The code field and its code follow."
+      >
+        <InputOTPPlayground />
+      </DocSection>
       <DocSection
         title="Six digits"
         description="One real input under the boxes takes the code, so typing, paste and the phone’s autofill all work. pattern keeps out what does not belong: here, anything but digits."

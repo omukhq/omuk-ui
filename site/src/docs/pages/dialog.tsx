@@ -3,10 +3,17 @@ import Basic from '../examples/dialog/basic';
 import basicSource from '../examples/dialog/basic.tsx?raw';
 import Controlled from '../examples/dialog/controlled';
 import controlledSource from '../examples/dialog/controlled.tsx?raw';
+import DialogPlayground from '../examples/dialog/playground';
 
 export default function DialogPage() {
   return (
     <>
+      <DocSection
+        title="Playground"
+        description="Change the props on the right, then open the dialog."
+      >
+        <DialogPlayground />
+      </DocSection>
       <DocSection
         title="With a trigger"
         description="The trigger opens it, DialogClose or Escape closes it, and focus goes back to the trigger. render draws the trigger and the close as Buttons."
