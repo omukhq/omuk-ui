@@ -1,3 +1,4 @@
+import { cn } from '@omuk/ui/utils';
 import {
   CHANGELOG_URL,
   DESIGN_URL,
@@ -5,6 +6,7 @@ import {
   REPO_URL,
   VERSION,
 } from './links';
+import { usePath } from './router';
 
 const LINKS = [
   { label: 'Source', href: REPO_URL },
@@ -14,9 +16,15 @@ const LINKS = [
 ];
 
 export function Footer() {
+  const inDocs = usePath().startsWith('/docs');
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-site flex-col gap-6 px-gutter py-12 sm:flex-row sm:items-end sm:justify-between">
+      <div
+        className={cn(
+          'mx-auto flex flex-col gap-6 px-gutter py-12 sm:flex-row sm:items-end sm:justify-between',
+          inDocs ? 'max-w-docs' : 'max-w-site',
+        )}
+      >
         <div className="flex flex-col gap-1">
           <p className="font-semibold text-foreground">Omuk UI</p>
           <p className="text-sm text-muted">

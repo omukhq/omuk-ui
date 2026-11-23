@@ -1,6 +1,5 @@
 import { Skeleton } from '@omuk/ui/skeleton';
 import { lazy, Suspense } from 'react';
-import { ComponentsIndex } from './components-index';
 import { FIRST_DOC } from './docs/registry';
 import { Footer } from './footer';
 import { Header } from './header';
@@ -63,13 +62,6 @@ function Home() {
         <Suspense fallback={<ScreenSkeleton />}>
           <AppScreen />
         </Suspense>
-      </Section>
-      <Section
-        id="components"
-        title="Components"
-        description="Every part, each its own import, each with a page: live examples, the code, the props and the keys."
-      >
-        <ComponentsIndex />
       </Section>
       <Install />
     </main>

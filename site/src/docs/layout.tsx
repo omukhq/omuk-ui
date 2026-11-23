@@ -1,12 +1,15 @@
 import { Button } from '@omuk/ui/button';
 import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
 import { Skeleton } from '@omuk/ui/skeleton';
+import { cn } from '@omuk/ui/utils';
 import { ChevronLeftIcon, ChevronRightIcon, PanelLeftIcon } from 'lucide-react';
 import {
   type ComponentType,
   type LazyExoticComponent,
   lazy,
   Suspense,
+  useCallback,
+  useState,
 } from 'react';
 import { DESIGN_URL, sourceUrl } from '../links';
 import { Link } from '../router';
@@ -36,7 +39,7 @@ export default function DocsLayout({ slug }: { slug: string }) {
   const entry = docFor(slug);
   return (
     <>
-      <div className="mx-auto flex max-w-site gap-12 px-gutter">
+      <div className="mx-auto flex max-w-docs gap-12 px-gutter">
         <aside className="sticky top-14 hidden h-sidebar w-56 shrink-0 overflow-y-auto py-10 pr-1 scrollbar-subtle lg:block">
           <DocsNav current={slug} />
         </aside>
@@ -75,46 +78,123 @@ function PhoneNav({ current }: { current: string }) {
   );
 }
 
+type Heading = { id: string; title: string };
+
 function DocPage({ entry }: { entry: DocEntry }) {
   const Page = pageFor(entry);
+  const [headings, setHeadings] = useState<Heading[]>([]);
+  const [active, setActive] = useState<string>();
+
+  /**
+   * Reads the page's parts once its code has loaded (this element mounts
+   * with the page, inside the Suspense), and marks the part on screen.
+   */
+  // One function for the page's life: a new one each render would run it
+  // again, and its setState would render again.
+  const watchHeadings = useCallback(function watch(
+    element: HTMLDivElement | null,
+  ) {
+    if (!element) return;
+    const found = [...element.querySelectorAll('section > div > h2[id]')];
+    setHeadings(
+      found.map((heading) => ({
+        id: heading.id,
+        title: heading.textContent ?? '',
+      })),
+    );
+    const observer = new IntersectionObserver(
+      (records) => {
+        const visible = records.find((record) => record.isIntersecting);
+        if (visible) setActive(visible.target.id);
+      },
+      // The top of the window under the header (h-14). rootMargin takes px
+      // or %, not a CSS variable.
+      { rootMargin: '-56px 0px -70% 0px' }, // design-ok
+    );
+    for (const heading of found) observer.observe(heading);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <article className="flex flex-col">
-      <p className="text-sm text-muted">{entry.group}</p>
-      <h1 className="mt-2 text-title font-semibold text-balance text-foreground">
-        {entry.name}
-      </h1>
-      <p className="mt-6 max-w-2xl text-lede text-pretty text-muted">
-        {entry.description}
-      </p>
-      <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3">
-        <div className="w-full sm:w-auto sm:min-w-80">
-          <ImportLine code={importLine(entry)} />
-        </div>
-        <a
-          href={sourceUrl(`${entry.file}.tsx`)}
-          className="rounded-sm text-sm text-foreground underline-offset-4 hover:underline focus-visible:focus-ring"
-        >
-          Source
-        </a>
-        <a
-          href={DESIGN_URL}
-          className="rounded-sm text-sm text-foreground underline-offset-4 hover:underline focus-visible:focus-ring"
-        >
-          Design rules
-        </a>
-      </div>
-      {Page ? (
-        <Suspense fallback={<PageSkeleton />}>
-          <Page />
-        </Suspense>
-      ) : (
-        <p className="mt-14 max-w-2xl text-pretty text-muted">
-          This page is not written yet. Its source file has the props and the
-          notes on how it behaves.
+    <div className="flex gap-12">
+      <article className="flex min-w-0 flex-1 flex-col">
+        <p className="text-sm text-muted">{entry.group}</p>
+        <h1 className="mt-2 text-title font-semibold text-balance text-foreground">
+          {entry.name}
+        </h1>
+        <p className="mt-6 max-w-2xl text-lede text-pretty text-muted">
+          {entry.description}
         </p>
+        <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3">
+          <div className="w-full sm:w-auto sm:min-w-80">
+            <ImportLine code={importLine(entry)} />
+          </div>
+          <a
+            href={sourceUrl(`${entry.file}.tsx`)}
+            className="rounded-sm text-sm text-foreground underline-offset-4 hover:underline focus-visible:focus-ring"
+          >
+            Source
+          </a>
+          <a
+            href={DESIGN_URL}
+            className="rounded-sm text-sm text-foreground underline-offset-4 hover:underline focus-visible:focus-ring"
+          >
+            Design rules
+          </a>
+        </div>
+        {Page ? (
+          <Suspense fallback={<PageSkeleton />}>
+            <div ref={watchHeadings}>
+              <Page />
+            </div>
+          </Suspense>
+        ) : (
+          <p className="mt-14 max-w-2xl text-pretty text-muted">
+            This page is not written yet. Its source file has the props and the
+            notes on how it behaves.
+          </p>
+        )}
+        <PrevNext slug={entry.slug} />
+      </article>
+      <Outline headings={headings} active={active ?? headings[0]?.id} />
+    </div>
+  );
+}
+
+/** On a wide screen: the page's parts, beside it, the one on screen marked. */
+function Outline({
+  headings,
+  active,
+}: {
+  headings: Heading[];
+  active?: string;
+}) {
+  return (
+    <aside className="sticky top-14 hidden h-sidebar w-52 shrink-0 overflow-y-auto pt-14 pb-10 scrollbar-subtle xl:block">
+      {headings.length > 0 && (
+        <nav aria-label="On this page" className="flex flex-col gap-3">
+          <p className="text-sm font-medium text-foreground">On this page</p>
+          <ul className="flex flex-col gap-1 border-l">
+            {headings.map((heading) => (
+              <li key={heading.id}>
+                <a
+                  href={`#${heading.id}`}
+                  aria-current={heading.id === active ? 'location' : undefined}
+                  className={cn(
+                    '-ml-px block border-l py-1 pl-3 text-sm focus-visible:focus-ring',
+                    heading.id === active
+                      ? 'border-foreground text-foreground'
+                      : 'border-transparent text-muted hover:text-foreground',
+                  )}
+                >
+                  {heading.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
-      <PrevNext slug={entry.slug} />
-    </article>
+    </aside>
   );
 }
 

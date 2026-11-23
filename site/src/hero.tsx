@@ -1,11 +1,10 @@
 import { Button } from '@omuk/ui/button';
 import { CopyButton } from './copy-button';
 import { INSTALL_LINE, REPO_URL, VERSION } from './links';
-import { SizeDemo } from './size-demo';
 
 /**
  * The first screen: the claim, set large; what it is in one sentence; the
- * install line; then the claim proven on a spec drawing.
+ * install line.
  */
 export function Hero() {
   return (
@@ -22,8 +21,8 @@ export function Hero() {
       <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-12">
         <p className="text-lede text-pretty text-muted md:col-span-6">
           Omuk UI is my React 19 component kit for Tailwind CSS 4, built for
-          speed. Nothing moves while it loads, every size is a token, and each
-          component is its own import.
+          speed. Nothing moves while it loads, and each component is its own
+          import.
         </p>
         <div className="flex flex-col gap-3 md:col-span-5 md:col-start-8 md:self-end">
           <div className="flex items-center gap-2 rounded-lg py-1 pr-1 pl-4 inset-ring inset-ring-border">
@@ -51,9 +50,6 @@ export function Hero() {
             <p className="ml-auto text-xs text-muted">MIT, version {VERSION}</p>
           </div>
         </div>
-      </div>
-      <div className="mt-16 md:mt-20">
-        <SizeDemo />
       </div>
     </section>
   );

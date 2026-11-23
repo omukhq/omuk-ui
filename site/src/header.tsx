@@ -7,7 +7,7 @@ import { Link, usePath } from './router';
 import { setTheme, useTheme } from './theme';
 
 /**
- * The bar at the top: the name (home), the docs, the home page's parts,
+ * The bar at the top: the name (home), the components, the home page's parts,
  * the theme and the source. The parts are plain links to /#part: on the
  * home page they scroll, from the docs they open it there.
  */
@@ -17,7 +17,12 @@ export function Header() {
   const inDocs = usePath().startsWith('/docs');
   return (
     <header className="sticky top-0 z-40 border-b bg-page">
-      <div className="mx-auto flex h-14 max-w-site items-center gap-1 px-gutter">
+      <div
+        className={cn(
+          'mx-auto flex h-14 items-center gap-1 px-gutter',
+          inDocs ? 'max-w-docs' : 'max-w-site',
+        )}
+      >
         <Link
           to="/"
           className="mr-auto rounded-md text-sm font-semibold text-foreground focus-visible:focus-ring"
@@ -38,7 +43,7 @@ export function Header() {
               inDocs ? 'text-foreground' : 'text-muted hover:text-foreground',
             )}
           >
-            Docs
+            Components
           </Button>
           {SECTIONS.map((section) => (
             <Button

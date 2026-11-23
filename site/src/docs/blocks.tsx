@@ -9,6 +9,7 @@ import {
 } from '@omuk/ui/table';
 import { cn } from '@omuk/ui/utils';
 import { type ReactNode, useState } from 'react';
+import { highlight } from 'sugar-high';
 import { CopyButton } from '../copy-button';
 
 // The parts every component page is made of. A page is a list of these:
@@ -86,12 +87,24 @@ export function Example({
   );
 }
 
+/**
+ * Code in colour. sugar-high gives back spans with the colour of each token
+ * (--sh-<token>, in tokens.css). The code is our own example files, never
+ * input, and sugar-high escapes it, so the HTML is safe to set.
+ */
+function Highlighted({ code }: { code: string }) {
+  return (
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: our own files, escaped by sugar-high
+    <code dangerouslySetInnerHTML={{ __html: highlight(code) }} />
+  );
+}
+
 /** A file's code, scrolling inside its frame, with a copy button. */
 export function CodeView({ code }: { code: string }) {
   return (
     <div className="relative rounded-xl bg-panel">
-      <pre className="max-h-128 overflow-auto p-5 pr-12 font-mono text-xs text-foreground scrollbar-subtle">
-        <code>{code}</code>
+      <pre className="max-h-128 overflow-auto p-5 pr-12 font-mono text-xs/5 text-foreground scrollbar-subtle">
+        <Highlighted code={code} />
       </pre>
       <div className="absolute top-3 right-3">
         <CopyButton text={code} label="Copy the code" />
@@ -188,9 +201,9 @@ export function Notes({ items }: { items: ReactNode[] }) {
 export function ImportLine({ code }: { code: string }) {
   return (
     <div className="flex max-w-full items-center gap-2 rounded-lg py-1 pr-1 pl-4 inset-ring inset-ring-border">
-      <code className="min-w-0 flex-1 truncate font-mono text-xs text-foreground">
-        {code}
-      </code>
+      <span className="min-w-0 flex-1 truncate font-mono text-xs text-foreground">
+        <Highlighted code={code} />
+      </span>
       <CopyButton text={code} label="Copy the import" />
     </div>
   );
