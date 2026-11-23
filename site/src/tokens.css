@@ -1,0 +1,89 @@
+/* The site's own tokens: the sizes a home page needs and an app does not
+   (Omuk UI's type stops at 32px, made for app screens). This is the one file
+   in site/src with raw values; tokens.test.ts skips it. Colours, fonts and
+   every other size come from Omuk UI's theme.css. */
+
+@theme {
+  /* Display type: the headline, and the title of each part of the page. */
+  --text-display: clamp(3.5rem, 11vw, 8.5rem);
+  --text-display--line-height: 0.88;
+  --text-display--letter-spacing: -0.05em;
+  --text-title: clamp(2.25rem, 5.5vw, 4.25rem);
+  --text-title--line-height: 0.98;
+  --text-title--letter-spacing: -0.035em;
+  /* The name at the top of a docs page: smaller than a home page title. */
+  --text-heading: 2.25rem;
+  --text-heading--line-height: 1.1;
+  --text-heading--letter-spacing: -0.025em;
+  /* The paragraph under a headline. */
+  --text-lede: clamp(1.125rem, 1.5vw, 1.3125rem);
+  --text-lede--line-height: 1.5;
+
+  /* The page's width, and the air between its parts. */
+  --container-site: 76rem;
+  /* The docs are wider: the list, the page and its outline side by side. */
+  --container-docs: 96rem;
+  --spacing-section: clamp(4.5rem, 9vw, 7.5rem);
+  --spacing-gutter: clamp(1rem, 4vw, 2rem);
+  /* The docs sidebar: the window's height under the 56px header. */
+  --spacing-sidebar: calc(100dvh - 3.5rem);
+}
+
+/* The code colours (sugar-high reads --sh-<token>). Each is a colour of the
+   theme, so dark mode follows on its own. */
+:root {
+  --sh-identifier: var(--color-foreground);
+  --sh-keyword: var(--color-accent);
+  --sh-string: var(--color-success);
+  --sh-class: var(--color-warning);
+  --sh-entity: var(--color-danger);
+  --sh-property: var(--color-foreground);
+  --sh-jsxliterals: var(--color-foreground);
+  --sh-sign: var(--color-muted);
+  --sh-comment: var(--color-muted);
+}
+
+/* A thin scrollbar with no track: hidden until the area is in use (the
+   pointer over it, or the focus inside it); then a soft thumb in the text
+   colour, so it reads in light and dark alike. Its space stays reserved,
+   so nothing moves when it shows. Put it on every element that scrolls.
+   Chrome and Safari draw it from the ::-webkit-scrollbar parts: with them,
+   macOS does not swap in its own dark floating scrollbar while a trackpad
+   scrolls. Firefox has no such parts and reads scrollbar-color. */
+@utility scrollbar-subtle {
+  &::-webkit-scrollbar {
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+  }
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border: calc(var(--spacing) * 0.5) solid transparent;
+    border-radius: var(--radius-full, 9999px);
+    background-clip: padding-box;
+    background-color: transparent;
+  }
+  &:hover::-webkit-scrollbar-thumb,
+  &:focus-within::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in oklch,
+      var(--color-foreground) 12%,
+      transparent
+    );
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    &:hover,
+    &:focus-within {
+      scrollbar-color: color-mix(
+          in oklch,
+          var(--color-foreground) 12%,
+          transparent
+        )
+        transparent;
+    }
+  }
+}

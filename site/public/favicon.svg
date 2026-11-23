@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>Omuk UI</title>
+  <!-- Omuk UI's mark: a button on a tile. The colours are the theme's
+       primary and on-primary (gray-950 and white; swapped in dark mode). -->
+  <style>
+    .tile { fill: #030712; }
+    .key { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #f3f4f6; }
+      .key { fill: #030712; }
+    }
+  </style>
+  <rect class="tile" width="32" height="32" rx="8" />
+  <rect class="key" x="7" y="12.5" width="18" height="7" rx="3.5" />
+</svg>
