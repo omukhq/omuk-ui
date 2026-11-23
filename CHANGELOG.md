@@ -4,6 +4,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.23] - 2026-11-23
+
+### Changed
+
+- The package is on npm as `@omukhq/ui` (the `@omuk` scope on npm is not ours). Install it with
+  `bun add @omukhq/ui@1.0.0-alpha.23`, and import from `@omukhq/ui/<component>`. The code is the same as alpha.22.
+  An app that installs from a GitHub tag under the old name (`"@omuk/ui": "github:omukhq/omuk-ui#<tag>"`) keeps
+  working; to move, change the dependency and replace `@omuk/ui/` with `@omukhq/ui/` in imports and in the CSS paths.
+
 ## [1.0.0-alpha.22] - 2026-11-23
 
 ### Fixed

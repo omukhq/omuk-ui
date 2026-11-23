@@ -1,7 +1,6 @@
 {
-  "name": "@omuk/ui",
-  "version": "1.0.0-alpha.22",
-  "private": true,
+  "name": "@omukhq/ui",
+  "version": "1.0.0-alpha.23",
   "license": "MIT",
   "type": "module",
   "description": "React 19 components, design tokens and fonts for Tailwind CSS 4. Accessible, themeable, light and dark mode, one import per component.",
@@ -33,6 +32,15 @@
     "check": "bun run lint && bun run typecheck && bun run test"
   },
   "sideEffects": false,
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
   "exports": {
     "./alert-dialog": "./src/alert-dialog.tsx",
     "./avatar": "./src/avatar.tsx",
