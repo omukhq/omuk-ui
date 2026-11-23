@@ -52,6 +52,7 @@
     "./checkbox": "./src/checkbox.tsx",
     "./chip": "./src/chip.tsx",
     "./combobox": "./src/combobox.tsx",
+    "./command": "./src/command.tsx",
     "./context-menu": "./src/context-menu.tsx",
     "./date-picker": "./src/date-picker.tsx",
     "./dialog": "./src/dialog.tsx",
