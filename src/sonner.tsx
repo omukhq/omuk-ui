@@ -28,7 +28,9 @@ import { cn } from './utils';
 // Owner, 18 Nov 2026 (dash-kit design/toasts.html): each kind in its own
 // colour; `warning`, `loading` and `promise`; the same toast twice shows
 // once; and the toasts stack as sonner's do, the newest in front and the
-// older ones peeking out above it, opening into a list on hover or a tap.
+// older ones peeking out above it (below it at the top of the window),
+// opening into a list on hover or a tap. `position` takes sonner's six
+// places (owner, 23 Nov 2026).
 
 type Kind = 'default' | 'success' | 'error' | 'info' | 'warning' | 'loading';
 
@@ -73,17 +75,51 @@ type ClassNames = Partial<
   >
 >;
 
+/** Where the toasts sit: sonner's six places. */
+export type ToastPosition =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
+
 type ToasterProps = {
   closeButton?: boolean;
-  /** From the window's bottom; the band's own padding keeps 16 at the side. */
-  offset?: { bottom?: number | string; right?: number | string };
+  /**
+   * Where the toasts sit, from 640 up; on a phone they are always centred.
+   * 'bottom-right' when not given.
+   */
+  position?: ToastPosition;
+  /**
+   * From the window's edge on the toasts' side (top or bottom); the band's
+   * own padding keeps 16 at the side.
+   */
+  offset?: {
+    top?: number | string;
+    bottom?: number | string;
+    right?: number | string;
+  };
   mobileOffset?: { bottom?: number | string };
   duration?: number;
   visibleToasts?: number;
   toastOptions?: { classNames?: ClassNames };
-  // sonner's other props (position, theme, …): the app passes them, they
-  // don't change anything here.
+  // sonner's other props (theme, …): the app passes them, they don't
+  // change anything here.
   [prop: string]: unknown;
+};
+
+/**
+ * The band's place for each position: its edge, and where its toasts go
+ * along it from 640 up (a phone keeps them centred).
+ */
+const PLACE: Record<ToastPosition, string> = {
+  'top-left': 'top-4 bottom-auto sm:justify-start',
+  'top-center': 'top-4 bottom-auto sm:justify-center',
+  'top-right': 'top-4 bottom-auto sm:justify-end',
+  'bottom-left': 'top-auto bottom-4 sm:justify-start',
+  'bottom-center': 'top-auto bottom-4 sm:justify-center',
+  'bottom-right': 'top-auto bottom-4 sm:justify-end',
 };
 
 /** sonner's defaults. */
@@ -320,10 +356,11 @@ export const toast = Object.assign(
 // ── The toaster ─────────────────────────────────────────────────────────
 
 /**
- * The toasts at the bottom of the window: at the right from 640 up, centred
- * on phones, 16 from the edges (`offset`), up to 384 wide, the text cut
- * after two lines. Up to `visibleToasts` (3) in a stack: the newest in
- * front, the older ones peeking out 12 above it each, a little smaller.
+ * The toasts at an edge of the window: `position` from 640 up (the bottom
+ * right when not given), centred on phones, 16 from the edges (`offset`),
+ * up to 384 wide, the text cut after two lines. Up to `visibleToasts` (3)
+ * in a stack: the newest in front, the older ones peeking out 12 behind it
+ * each (above it at the bottom, below it at the top), a little smaller.
  * Pointing at the stack, focusing in it, or tapping it on a phone opens it
  * into a list 8 apart, and holds the timers; leaving it, or a tap outside,
  * closes it. Their look is DESIGN.md's toast (TOAST, toast-recipe.ts); the
@@ -331,6 +368,7 @@ export const toast = Object.assign(
  */
 export function Toaster({
   closeButton = true,
+  position = 'bottom-right',
   offset,
   duration = DEFAULT_DURATION,
   visibleToasts = DEFAULT_VISIBLE,
@@ -338,6 +376,9 @@ export function Toaster({
 }: ToasterProps) {
   const shown = useSyncExternalStore(subscribe, snapshot, snapshot);
   const classNames = toastOptions?.classNames ?? {};
+  // At the top, the stack grows down: older toasts peek out below the
+  // newest, and toasts come in from above.
+  const fromTop = position.startsWith('top');
   const [open, setOpen] = useState(false);
   // Each toast's own height, measured: the stack places the toasts by them.
   const [heights, setHeights] = useState<ReadonlyMap<Toast['id'], number>>(
@@ -441,11 +482,14 @@ export function Toaster({
       aria-atomic="false"
       popover="manual"
       // A popover's own box (the browser's: centred, bordered, Canvas
-      // coloured) undone: a band along the bottom of the window, its toasts
-      // centred on phones and at the right from 640 up. 16 up from the
-      // bottom edge, as from the sides, unless `offset` moves it.
-      className="pointer-events-none fixed inset-x-0 top-auto bottom-4 m-0 flex h-auto w-auto max-w-none justify-center overflow-visible border-none bg-transparent px-4 py-0 text-inherit sm:justify-end"
-      style={{ bottom: offset?.bottom }}
+      // coloured) undone: a band along the top or the bottom of the
+      // window, its toasts centred on phones and placed by `position` from
+      // 640 up. 16 from its edge, as from the sides, unless `offset` moves it.
+      className={cn(
+        'pointer-events-none fixed inset-x-0 m-0 flex h-auto w-auto max-w-none justify-center overflow-visible border-none bg-transparent px-4 py-0 text-inherit',
+        PLACE[position],
+      )}
+      style={fromTop ? { top: offset?.top } : { bottom: offset?.bottom }}
     >
       {shown.length > 0 && (
         <ol
@@ -484,7 +528,7 @@ export function Toaster({
               .slice(0, index)
               .reduce((sum, other) => sum + heightOf(other) + GAP, 0);
             // Behind the front toast in a closed stack: cut to its height,
-            // the words hidden, peeking out above it.
+            // the words hidden, peeking out above it (below, at the top).
             const tucked = !open && index > 0;
             return (
               <li
@@ -496,12 +540,15 @@ export function Toaster({
                 inert={tucked}
                 aria-hidden={tucked || undefined}
                 className={cn(
-                  'absolute inset-x-0 bottom-0 origin-bottom rounded-lg transition-all duration-300 ease-out motion-reduce:transition-none',
+                  // The words fade as a toast tucks behind the new one,
+                  // and back as the stack opens, as sonner's do.
+                  'absolute inset-x-0 rounded-lg transition-all duration-300 ease-out *:*:transition-opacity *:*:duration-300 motion-reduce:transition-none',
+                  fromTop ? 'top-0 origin-top' : 'bottom-0 origin-bottom',
                   tucked && 'overflow-hidden *:*:opacity-0',
                 )}
                 style={{
                   zIndex: front.length - index,
-                  translate: `0 ${-(open ? above : PEEK * index)}px`,
+                  translate: `0 ${(fromTop ? 1 : -1) * (open ? above : PEEK * index)}px`,
                   scale: open ? 1 : 1 - SHRINK * index,
                   height: tucked ? frontHeight : undefined,
                 }}
@@ -509,12 +556,24 @@ export function Toaster({
                 <div
                   ref={measure(each.id)}
                   className={cn(
-                    'duration-200 motion-reduce:animate-none',
+                    'motion-reduce:animate-none',
                     TOAST.toast,
                     TOAST.kind[each.kind],
+                    // In: a whole toast's height from its edge, as sonner's
+                    // toasts come. Out: a quick fade, done before EXIT_MS.
                     each.closing
-                      ? 'animate-out fade-out-0 slide-out-to-bottom-2'
-                      : 'animate-in fade-in-0 slide-in-from-bottom-2',
+                      ? cn(
+                          'animate-out fade-out-0 duration-200',
+                          fromTop
+                            ? 'slide-out-to-top-2'
+                            : 'slide-out-to-bottom-2',
+                        )
+                      : cn(
+                          'animate-in fade-in-0 duration-400 ease-out',
+                          fromTop
+                            ? 'slide-in-from-top'
+                            : 'slide-in-from-bottom',
+                        ),
                     classNames.toast,
                     // After the Toaster's classes: they repeat TOAST.toast,
                     // whose `px-2` undid this end padding (8 at the end, 16
