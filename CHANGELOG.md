@@ -4,6 +4,50 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.24] - 2026-11-24
+
+### Changed (breaking)
+
+- Controls are 32 tall by default, not 36: the default button and every field (input, select, combobox, date picker,
+  input group). To keep 36, pass `size="lg"`.
+- Button's 32 size is `md`, not `default` (the variant `default` keeps its name). To update: replace
+  `size="default"` with `size="md"` on `Button` and `InputGroupButton`, or leave the prop out.
+- `SelectTrigger` and `DatePicker` take `size` `xs | sm | md | lg`, and it now changes the height (before, every
+  size drew 36). Their default is `md` (32); `size="lg"` is 36.
+- `InputGroup` has no `edge` prop. The edge width of every control is the `--edge-control` token (below). To update:
+  remove `edge="thin"`, and set `--edge-control: 1px` in your stylesheet for thin edges everywhere.
+
+### Added
+
+- `size` on `Input`, `SelectTrigger`, `ComboboxInput`, `ComboboxButton`, `DatePicker` and `InputGroup`: `xs` 24,
+  `sm` 28, `md` 32 (the default), `lg` 36, the Button's heights. The text stays 14 at every size.
+- `--edge-control` (`theme.css`, 2px): the width of every control's edge and of the focus ring's edge. Set it to 1px
+  for thin edges. The `edge-control` utility draws it.
+- `--spacing-control` (32): the md height, `h-control`. Change it to make the default controls smaller or larger.
+- `--grid-unit` and the `fixed-size` utility: icons, checkboxes, radios and switches keep their size when an app
+  changes Tailwind's `--spacing`.
+- `CheckboxGroup` (`@omukhq/ui/checkbox-group`): a group of checkboxes with one value list, and a `parent` box that
+  checks or clears them all.
+- `Command` and `CommandDialog` (`@omukhq/ui/command`): a search over a list of commands, for ⌘K.
+- `Toaster` takes `position` (six places), and the stack moves as sonner's.
+- The `omuk` command (`@omukhq/cli`): copies one component at a time into an app, as files the app owns.
+  `npx @omukhq/cli init`, then `npx @omukhq/cli add button`. See the README.
+
+### Changed
+
+- Outline buttons take a light grey fill on hover; the edge no longer darkens.
+- Destructive buttons are red text on a red tint (`bg-danger-tint`), a stronger tint on hover. Solid hover colours on
+  primary and danger buttons (`--color-primary-hover`, `--color-danger-hover`).
+- An invalid field keeps a red edge and a red halo when focused (`--color-danger-ring`).
+- The checkbox tick draws like a pen stroke, and the dash from left to right, when the box changes.
+- Segmented controls use the normal font weight. Button `sm` has the `rounded-md` corners.
+
+### Fixed
+
+- Button groups: one shared seam between buttons, the hovered button's edge on top, and buttons keep their height
+  beside a separator.
+- `DatePicker` compiles in apps on TypeScript 5 (it passed `focusVisible` to `focus()` as a literal).
+
 ## [1.0.0-alpha.23] - 2026-11-23
 
 ### Changed
