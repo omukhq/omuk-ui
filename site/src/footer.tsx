@@ -9,7 +9,7 @@ import {
 import { usePath } from './router';
 
 const LINKS = [
-  { label: 'Source', href: REPO_URL },
+  { label: 'GitHub', href: REPO_URL },
   { label: 'Design rules', href: DESIGN_URL },
   { label: 'Changelog', href: CHANGELOG_URL },
   { label: 'MIT license', href: LICENSE_URL },

@@ -9,7 +9,7 @@ const VARIANTS = [
   'danger-confirm',
   'link',
 ] as const;
-const SIZES = ['xs', 'sm', 'default', 'lg'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 type Values = {
   children: string;
@@ -22,7 +22,7 @@ type Values = {
 const INITIAL: Values = {
   children: 'Save',
   variant: 'default',
-  size: 'default',
+  size: 'md',
   isLoading: false,
   disabled: false,
 };

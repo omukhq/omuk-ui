@@ -4,10 +4,12 @@ import { Playground } from '../../playground';
 
 const MODES = ['date', 'range', 'time'] as const;
 const GRANULARITIES = ['day', 'minute'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 type Values = {
   mode: (typeof MODES)[number];
   granularity: (typeof GRANULARITIES)[number];
+  size: (typeof SIZES)[number];
   visibleMonths: number;
   showClear: boolean;
   isDisabled: boolean;
@@ -17,6 +19,7 @@ type Values = {
 const INITIAL: Values = {
   mode: 'date',
   granularity: 'day',
+  size: 'md',
   visibleMonths: 1,
   showClear: false,
   isDisabled: false,
@@ -31,7 +34,10 @@ function labelOf({ mode, granularity }: Values) {
 }
 
 /** The props every mode takes, as the preview passes them. */
-type Shared = Pick<Values, 'showClear' | 'isDisabled' | 'isInvalid'> & {
+type Shared = Pick<
+  Values,
+  'size' | 'showClear' | 'isDisabled' | 'isInvalid'
+> & {
   'aria-label': string;
 };
 
@@ -113,6 +119,7 @@ function TimePreview(shared: Shared) {
 function Preview(values: Values) {
   const shared = {
     'aria-label': labelOf(values),
+    size: values.size,
     showClear: values.showClear,
     isDisabled: values.isDisabled,
     isInvalid: values.isInvalid,
@@ -143,6 +150,7 @@ function code(values: Values) {
       'granularity="minute"',
     'value={value}',
     'onChange={setValue}',
+    values.size !== 'md' && `size="${values.size}"`,
     calendar &&
       values.visibleMonths !== 1 &&
       `visibleMonths={${values.visibleMonths}}`,
@@ -164,6 +172,7 @@ export default function DatePickerPlayground() {
       controls={[
         { name: 'mode', kind: 'choice', options: MODES },
         { name: 'granularity', kind: 'choice', options: GRANULARITIES },
+        { name: 'size', kind: 'choice', options: SIZES },
         { name: 'visibleMonths', kind: 'number', min: 1, max: 2 },
         { name: 'showClear', kind: 'boolean' },
         { name: 'isDisabled', kind: 'boolean' },

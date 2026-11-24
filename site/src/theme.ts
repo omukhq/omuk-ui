@@ -61,9 +61,13 @@ function withoutTransitions(change: () => void) {
   requestAnimationFrame(() => root.removeAttribute('data-switching'));
 }
 
-export function setTheme(theme: Theme) {
+/** What the visitor picked: a theme, or the system's setting. */
+export type ThemeChoice = Theme | 'system';
+
+export function setTheme(theme: ThemeChoice) {
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    if (theme === 'system') localStorage.removeItem(THEME_STORAGE_KEY);
+    else localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
     // Not kept (a locked-down browser): the page still switches.
   }
@@ -73,4 +77,13 @@ export function setTheme(theme: Theme) {
 /** The theme on the page now. Re-renders when it changes. */
 export function useTheme(): Theme {
   return useSyncExternalStore(subscribe, current, () => 'light');
+}
+
+function choice(): ThemeChoice {
+  return stored() ?? 'system';
+}
+
+/** What the visitor picked. Re-renders when it changes. */
+export function useThemeChoice(): ThemeChoice {
+  return useSyncExternalStore(subscribe, choice, () => 'system');
 }

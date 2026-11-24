@@ -18,7 +18,7 @@ export default function InputPage() {
       </DocSection>
       <DocSection
         title="With a label"
-        description="A Label above, linked with htmlFor. The field is 36 tall: the same as a button, so they line up in a row."
+        description="A Label above, linked with htmlFor. The field is 32 tall: the same as a default button, so they line up in a row."
       >
         <Example source={fieldSource}>
           <WithLabel />
@@ -46,6 +46,13 @@ export default function InputPage() {
       >
         <PropsTable
           rows={[
+            {
+              name: 'size',
+              type: "'xs' | 'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description:
+                'The height, the same as a button of that size: 24, 28, 32 or 36.',
+            },
             {
               name: 'aria-invalid',
               type: "boolean | 'true' | 'false'",

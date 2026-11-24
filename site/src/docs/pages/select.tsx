@@ -37,6 +37,13 @@ export default function SelectPage() {
         <PropsTable
           rows={[
             {
+              name: 'size',
+              type: "'xs' | 'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description:
+                'SelectTrigger. The height, the same as a button of that size: 24, 28, 32 or 36.',
+            },
+            {
               name: 'value',
               type: 'Value | null',
               description: 'The chosen value, when the parent keeps it.',

@@ -15,7 +15,7 @@ const dist = join(import.meta.dirname, '../dist');
 const home = await Bun.file(join(dist, 'index.html')).text();
 
 /** Text for an HTML attribute or element. */
-function escape(text: string) {
+function escapeHtml(text: string) {
   return text
     .replaceAll('&', '&amp;')
     .replaceAll('"', '&quot;')
@@ -26,8 +26,8 @@ function escape(text: string) {
 /** The home page's HTML with another page's title, description and address. */
 function pageHtml(title: string, description: string, url: string) {
   const replacements: [string, string][] = [
-    [escape(HOME_TITLE), escape(title)],
-    [escape(HOME_DESCRIPTION), escape(description)],
+    [escapeHtml(HOME_TITLE), escapeHtml(title)],
+    [escapeHtml(HOME_DESCRIPTION), escapeHtml(description)],
     [`${SITE}/"`, `${url}"`],
   ];
   let html = home;

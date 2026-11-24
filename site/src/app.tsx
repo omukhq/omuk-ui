@@ -63,9 +63,21 @@ export function App() {
   );
 }
 
+/**
+ * Opened at /#install (from a docs page, a new tab, a shared link): the
+ * browser looked for the part before React drew the page, found nothing and
+ * stayed at the top. Once the home page is in, go to the part. The app
+ * screen's skeleton keeps its size, so the part does not move after.
+ */
+function goToHash(main: HTMLElement | null) {
+  if (!main || !location.hash) return;
+  const id = decodeURIComponent(location.hash.slice(1));
+  requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+}
+
 function Home() {
   return (
-    <main id="main" className="flex-1">
+    <main ref={goToHash} id="main" className="flex-1">
       <Hero />
       <Why />
       <Section

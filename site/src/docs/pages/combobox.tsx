@@ -47,6 +47,13 @@ export default function ComboboxPage() {
         <PropsTable
           rows={[
             {
+              name: 'size',
+              type: "'xs' | 'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description:
+                'ComboboxInput and ComboboxButton. The height, the same as a button of that size: 24, 28, 32 or 36.',
+            },
+            {
               name: 'items',
               type: 'Value[] | { items: Value[] }[]',
               description:

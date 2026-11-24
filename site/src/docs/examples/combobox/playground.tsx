@@ -10,7 +10,7 @@ import { Label } from '@omuk/ui/label';
 import { useId, useState } from 'react';
 import { jsx, Playground } from '../../playground';
 
-const SIZES = ['default', 'lg'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 const TIME_ZONES = [
   'Africa/Lagos',
@@ -36,7 +36,7 @@ type Values = {
 
 const INITIAL: Values = {
   placeholder: 'Search time zones',
-  size: 'lg',
+  size: 'md',
   showClear: true,
   showTrigger: true,
   autoHighlight: false,
@@ -87,7 +87,7 @@ function Preview({
 }
 
 /** The kit's own defaults: a prop at its default is left out of the code. */
-const DEFAULTS = { size: 'lg', placeholder: '' };
+const DEFAULTS = { size: 'md', placeholder: '' };
 
 /** An element's opening tag with its changed props, still open. */
 function opening(tag: string, props: Record<string, string | boolean>) {

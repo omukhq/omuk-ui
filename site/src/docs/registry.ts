@@ -159,6 +159,16 @@ export const DOCS: DocEntry[] = [
       'On or off, or partly on for a group. The whole row with its label is the target.',
   },
   {
+    slug: 'checkbox-group',
+    name: 'Checkbox group',
+    group: 'Forms',
+    file: 'checkbox-group',
+    imports: 'CheckboxGroup',
+    load: () => import('./pages/checkbox-group'),
+    description:
+      'Several checkboxes with one value, the list of the checked ones, and a box that checks them all.',
+  },
+  {
     slug: 'radio-group',
     name: 'Radio group',
     group: 'Forms',

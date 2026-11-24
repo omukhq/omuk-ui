@@ -9,7 +9,7 @@ import {
 import { useId, useState } from 'react';
 import { jsx, Playground } from '../../playground';
 
-const SIZES = ['default', 'lg'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 const REGIONS = [
   { value: 'eu', label: 'Europe (Frankfurt)' },
@@ -26,7 +26,7 @@ type Values = {
 
 const INITIAL: Values = {
   placeholder: 'Choose a region',
-  size: 'lg',
+  size: 'md',
   disabled: false,
   readOnly: false,
 };

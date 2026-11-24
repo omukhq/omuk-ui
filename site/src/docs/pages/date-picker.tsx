@@ -64,6 +64,13 @@ export default function DatePickerPage() {
                 'A day (or a day and a time), a first and a last day, or a time.',
             },
             {
+              name: 'size',
+              type: "'xs' | 'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description:
+                'The height, the same as a button of that size: 24, 28, 32 or 36.',
+            },
+            {
               name: 'granularity',
               type: "'day' | 'minute'",
               default: "'day'",

@@ -58,16 +58,10 @@ export default function InputGroupPage() {
           rows={[
             {
               name: 'size',
-              type: "'default' | 'lg'",
-              default: "'lg'",
+              type: "'xs' | 'sm' | 'md' | 'lg'",
+              default: "'md'",
               description:
-                'InputGroup. The height. Both are 36 now, the same as every field; default keeps its name for callers.',
-            },
-            {
-              name: 'edge',
-              type: "'default' | 'thin'",
-              default: "'default'",
-              description: 'InputGroup. thin gives a 1-wide edge, not 2.',
+                'InputGroup. The height, the same as a button of that size: 24, 28, 32 or 36.',
             },
             {
               name: 'stacked',
@@ -92,8 +86,8 @@ export default function InputGroupPage() {
             },
             {
               name: 'size (button)',
-              type: "'default' | 'xs' | 'icon' | 'icon-xs'",
-              default: "'default'",
+              type: "'md' | 'xs' | 'icon' | 'icon-xs'",
+              default: "'md'",
               description:
                 'InputGroupButton. A text button keeps its own size; icon and icon-xs are both a 24 square.',
             },

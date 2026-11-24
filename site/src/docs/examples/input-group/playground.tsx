@@ -8,13 +8,13 @@ import { Label } from '@omuk/ui/label';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
-const EDGES = ['default', 'thin'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 type Values = {
   label: string;
   prefix: string;
   placeholder: string;
-  edge: (typeof EDGES)[number];
+  size: (typeof SIZES)[number];
   disabled: boolean;
 };
 
@@ -22,16 +22,16 @@ const INITIAL: Values = {
   label: 'Webhook address',
   prefix: 'https://',
   placeholder: 'hooks.example.com/deploy',
-  edge: 'default',
+  size: 'md',
   disabled: false,
 };
 
-function Preview({ label, prefix, placeholder, edge, disabled }: Values) {
+function Preview({ label, prefix, placeholder, size, disabled }: Values) {
   const id = useId();
   return (
     <div className="flex w-full max-w-sm flex-col gap-1">
       <Label htmlFor={id}>{label}</Label>
-      <InputGroup edge={edge} disabled={disabled}>
+      <InputGroup size={size} disabled={disabled}>
         {prefix && (
           <InputGroupAddon>
             <InputGroupText>{prefix}</InputGroupText>
@@ -47,9 +47,10 @@ function Preview({ label, prefix, placeholder, edge, disabled }: Values) {
   );
 }
 
-function code({ label, prefix, placeholder, edge, disabled }: Values) {
+function code({ label, prefix, placeholder, size, disabled }: Values) {
   const off = disabled ? ' disabled' : '';
-  const group = `<InputGroup${edge === 'default' ? '' : ` edge="${edge}"`}${off}>`;
+  const sized = size === 'md' ? '' : ` size="${size}"`;
+  const group = `<InputGroup${sized}${off}>`;
   const input = `<InputGroupInput id="url"${placeholder ? ` placeholder="${placeholder}"` : ''}${off} />`;
   const parts = prefix
     ? ['InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText']
@@ -82,7 +83,7 @@ export default function InputGroupPlayground() {
         { name: 'label', kind: 'text' },
         { name: 'prefix', kind: 'text' },
         { name: 'placeholder', kind: 'text' },
-        { name: 'edge', kind: 'choice', options: EDGES },
+        { name: 'size', kind: 'choice', options: SIZES },
         { name: 'disabled', kind: 'boolean' },
       ]}
       render={(values) => <Preview {...values} />}

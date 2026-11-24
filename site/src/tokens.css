@@ -43,6 +43,76 @@
   --sh-comment: var(--color-muted);
 }
 
+/* The settings drawer's picks (settings.ts): each attribute on <html> sets
+   one of Omuk UI's tokens, so the whole site and every example follow.
+   Without an attribute, the kit's own token. */
+
+/* Accent: links, ticks, the caret, picked values. A 600 or 700 on the light
+   page and a 300 on the dark one, as the kit's blue, so text keeps its
+   contrast. */
+:root[data-accent="violet"] {
+  --color-accent: var(--color-violet-600);
+}
+:root[data-accent="green"] {
+  --color-accent: var(--color-green-700);
+}
+/* Amber, not orange: orange-700, the first orange dark enough for text,
+   reads as red, the danger colour (owner, 24 Nov 2026). */
+:root[data-accent="amber"] {
+  --color-accent: var(--color-amber-700);
+}
+:root[data-accent="pink"] {
+  --color-accent: var(--color-pink-600);
+}
+:root[data-theme="dark"][data-accent="violet"] {
+  --color-accent: var(--color-violet-300);
+}
+:root[data-theme="dark"][data-accent="green"] {
+  --color-accent: var(--color-green-300);
+}
+:root[data-theme="dark"][data-accent="amber"] {
+  --color-accent: var(--color-amber-300);
+}
+:root[data-theme="dark"][data-accent="pink"] {
+  --color-accent: var(--color-pink-300);
+}
+
+/* Font: Atkinson Hyperlegible (the kit's "easy read" face) or the system's
+   own. Both cost nothing until picked. */
+:root[data-font="atkinson"] {
+  --font-sans: var(--font-readable);
+}
+:root[data-font="system"] {
+  --font-sans: system-ui, sans-serif;
+}
+/* A Google font (google-font.ts): its name is in --font-google on <html>.
+   Without it (a kept pick that failed), the kit's own face. */
+:root[data-font="google"] {
+  --font-sans: var(--font-google, "IBM Plex Sans"), system-ui, sans-serif;
+}
+
+/* Edges: thin control edges, Omuk UI's one switch for every control's edge.
+   Without it, the kit's 2px. */
+:root[data-edge="thin"] {
+  --edge-control: 1px;
+}
+
+/* Control size: the height of the default button and every md field. */
+:root[data-size="sm"] {
+  --spacing-control: calc(var(--spacing) * 7);
+}
+:root[data-size="lg"] {
+  --spacing-control: calc(var(--spacing) * 9);
+}
+
+/* Spacing: Tailwind's unit, under every padding, gap and height. */
+:root[data-density="compact"] {
+  --spacing: 0.225rem;
+}
+:root[data-density="comfortable"] {
+  --spacing: 0.275rem;
+}
+
 /* A thin scrollbar with no track: hidden until the area is in use (the
    pointer over it, or the focus inside it); then a soft thumb in the text
    colour, so it reads in light and dark alike. Its space stays reserved,

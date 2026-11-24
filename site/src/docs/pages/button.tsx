@@ -38,7 +38,7 @@ export default function ButtonPage() {
       </DocSection>
       <DocSection
         title="Sizes"
-        description="36 tall by default, like every field, so a button and an input line up. Extra small (24) is for row actions in a dense table only."
+        description="32 tall by default, like every field, so a button and an input line up. Large is 36. Extra small (24) is for row actions in a dense table only."
       >
         <Example source={sizesSource}>
           <Sizes />
@@ -71,10 +71,10 @@ export default function ButtonPage() {
             },
             {
               name: 'size',
-              type: "'xs' | 'sm' | 'default' | 'lg' | 'icon-xs' | 'icon-sm' | 'icon' | 'icon-lg'",
-              default: "'default'",
+              type: "'xs' | 'sm' | 'md' | 'lg' | 'icon-xs' | 'icon-sm' | 'icon' | 'icon-lg'",
+              default: "'md'",
               description:
-                'The height: 24, 28, 36, 36. The icon sizes are squares of the same heights.',
+                'The height: xs 24, sm 28, md 32, lg 36, as the fields of the same size. The icon sizes are squares.',
             },
             {
               name: 'isLoading',

@@ -4,11 +4,13 @@ import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
 const TYPES = ['text', 'email', 'password', 'url'] as const;
+const SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 
 type Values = {
   label: string;
   placeholder: string;
   type: (typeof TYPES)[number];
+  size: (typeof SIZES)[number];
   disabled: boolean;
   'aria-invalid': boolean;
 };
@@ -17,12 +19,13 @@ const INITIAL: Values = {
   label: 'Project name',
   placeholder: 'Billing service',
   type: 'text',
+  size: 'md',
   disabled: false,
   'aria-invalid': false,
 };
 
 /** The input's own defaults: a prop at one of these is left out of the code. */
-const DEFAULTS = { placeholder: '', type: 'text' };
+const DEFAULTS = { placeholder: '', type: 'text', size: 'md' };
 
 function Preview({ label, ...props }: Values) {
   const id = useId();
@@ -42,6 +45,7 @@ export default function InputPlayground() {
         { name: 'label', kind: 'text' },
         { name: 'placeholder', kind: 'text' },
         { name: 'type', kind: 'choice', options: TYPES },
+        { name: 'size', kind: 'choice', options: SIZES },
         { name: 'disabled', kind: 'boolean' },
         { name: 'aria-invalid', kind: 'boolean' },
       ]}
