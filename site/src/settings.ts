@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { SETTINGS, type SettingName, type SettingValue } from './theme-script';
 
-// The settings drawer's picks (accent, font, edges, control size, spacing),
+// The settings drawer's picks (accent, font, edges, spacing),
 // outside React. Each is an attribute on <html> that tokens.css turns into
 // Omuk UI's tokens; THEME_SCRIPT applies the kept ones before the first
 // paint, and this keeps them in step, also with another tab.

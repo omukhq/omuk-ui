@@ -23,7 +23,6 @@ export const SETTINGS = {
     values: ['plex', 'atkinson', 'system', 'google'],
   },
   edge: { attribute: 'data-edge', values: ['regular', 'thin'] },
-  size: { attribute: 'data-size', values: ['md', 'sm', 'lg'] },
   density: {
     attribute: 'data-density',
     values: ['regular', 'compact', 'comfortable'],

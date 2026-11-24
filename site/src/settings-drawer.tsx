@@ -58,7 +58,6 @@ const LABELS: { [Name in SettingName]: Record<SettingValue<Name>, string> } = {
     google: 'Google',
   },
   edge: { regular: 'Regular', thin: 'Thin' },
-  size: { sm: 'Small', md: 'Medium', lg: 'Large' },
   density: {
     compact: 'Compact',
     regular: 'Regular',
@@ -352,11 +351,6 @@ export default function SettingsDrawer({
           <Row label="Edges" token="--edge-control">
             {(id) => (
               <Choice name="edge" order={SETTINGS.edge.values} labelId={id} />
-            )}
-          </Row>
-          <Row label="Control size" token="--spacing-control">
-            {(id) => (
-              <Choice name="size" order={['sm', 'md', 'lg']} labelId={id} />
             )}
           </Row>
           <Row label="Spacing" token="--spacing">

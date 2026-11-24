@@ -97,14 +97,6 @@
   --edge-control: 1px;
 }
 
-/* Control size: the height of the default button and every md field. */
-:root[data-size="sm"] {
-  --spacing-control: calc(var(--spacing) * 7);
-}
-:root[data-size="lg"] {
-  --spacing-control: calc(var(--spacing) * 9);
-}
-
 /* Spacing: Tailwind's unit, under every padding, gap and height. */
 :root[data-density="compact"] {
   --spacing: 0.225rem;
