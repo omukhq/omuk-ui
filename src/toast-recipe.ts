@@ -21,7 +21,7 @@ export const TOAST = {
   description: 'line-clamp-2 text-xs opacity-75',
   icon: 'flex h-8 shrink-0 items-center [&>svg]:size-4',
   actionButton:
-    'h-7 shrink-0 cursor-pointer self-center rounded-md px-2.5 text-xs outline-none inset-ring-2 inset-ring-current/25 hover:bg-current/10 focus-visible:focus-ring',
+    'h-7 shrink-0 cursor-pointer self-center rounded-md px-2.5 text-xs outline-none edge-control inset-ring-current/25 hover:bg-current/10 focus-visible:focus-ring',
   closeButton:
     'order-last grid size-8 shrink-0 cursor-pointer place-items-center self-center rounded-md opacity-70 outline-none hover:opacity-100 focus-visible:focus-ring [&>svg]:size-4',
   /** Each kind's fill and text, and its icon's colour. */

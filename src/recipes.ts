@@ -3,7 +3,7 @@
 // row and its parts. One string each, so a select, a combobox, a dropdown
 // and a context menu cannot drift apart.
 //
-// Edges are inset shadows (`inset-ring inset-ring-border`, `inset-ring-2 inset-ring-control`, …). Tailwind writes a
+// Edges are inset shadows (`inset-ring inset-ring-border`, `edge-control inset-ring-control`, …). Tailwind writes a
 // variant's rule after the plain one, and `aria-*` after `focus-visible`, so
 // a state that changes the edge AND can take the focus repeats the focus
 // ring under its own variant (`aria-checked:focus-visible:focus-ring`).
@@ -34,7 +34,7 @@ export const FIELD_TEXT_OFF = 'cursor-not-allowed text-muted';
  * edge for `aria-invalid`, which keeps the ring when focused.
  */
 export const FIELD_EDGE =
-  'inset-ring-2 inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger';
+  'edge-control inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -44,13 +44,30 @@ export const FIELD_EDGE =
  * Field with a trailing action).
  */
 export const FIELD_WRAPPER_EDGE = [
-  'inset-ring-2 inset-ring-control has-aria-invalid:inset-ring-danger',
+  'edge-control inset-ring-control has-aria-invalid:inset-ring-danger',
   'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 
 /**
+ * A one-line field's height: the Button's heights (owner, 24 Nov 2026), so
+ * a field and a button of one size line up; the middle one is `md`, the
+ * default (owner: not "default"). The text stays the
+ * field's 14 at every size (16 on phones, theme.css), so no size makes an
+ * iPhone zoom in.
+ */
+export const FIELD_SIZE = {
+  xs: 'h-6',
+  sm: 'h-7',
+  // --spacing-control (theme.css): 32, unless the app changes it.
+  md: 'h-control',
+  lg: 'h-9',
+} as const;
+
+export type FieldSize = keyof typeof FIELD_SIZE;
+
+/**
  * A field's box: input, textarea, select trigger. Its height is the
- * caller's (`h-9` for one line).
+ * caller's (FIELD_SIZE for one line).
  */
 // Disabled keeps the field's 2-wide edge, in the border colour.
 export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD_EDGE}`;
@@ -60,7 +77,7 @@ export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD
  * text): added only then, by the part that knows (owner, 18 Nov 2026).
  */
 export const FIELD_OFF =
-  'cursor-not-allowed bg-hover text-muted inset-ring-2 inset-ring-border';
+  'cursor-not-allowed bg-hover text-muted edge-control inset-ring-border';
 
 /** Popovers, menus and lists that float: page ground, small shadow. */
 export const SURFACE =

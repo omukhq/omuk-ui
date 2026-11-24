@@ -37,7 +37,9 @@ import {
   CHIP,
   FIELD,
   FIELD_OFF,
+  FIELD_SIZE,
   FIELD_WRAPPER_EDGE,
+  type FieldSize,
   MENU_SEPARATOR,
   OPTION_ROW,
   POP,
@@ -612,8 +614,8 @@ function ComboboxInput({
   size,
   ...props
 }: Omit<ComponentPropsWithRef<'input'>, 'size'> & {
-  /** The field's height, as InputGroup's: lg 36 (default), default 32. */
-  size?: React.ComponentProps<typeof InputGroup>['size'];
+  /** The height, as Button's: xs 24, sm 28, md 32 (default), lg 36. */
+  size?: FieldSize;
   /** The chevron. Default: shown, except in the list (a search field). */
   showTrigger?: boolean;
   showClear?: boolean;
@@ -630,7 +632,7 @@ function ComboboxInput({
         // The search at the top of the list: the list is the focus, so the
         // field keeps the outline edge and takes no ring.
         inPopup &&
-          'has-[input:focus-visible]:inset-ring-2 has-[input:focus-visible]:inset-ring-outline has-[input:focus-visible]:ring-0',
+          'has-[input:focus-visible]:edge-control has-[input:focus-visible]:inset-ring-outline has-[input:focus-visible]:ring-0',
         className,
       )}
     >
@@ -779,8 +781,13 @@ function ComboboxButton({
   render,
   ref,
   disabled: ownDisabled,
+  size = 'md',
   ...props
-}: ComponentPropsWithRef<'button'> & { render?: RenderProp }) {
+}: ComponentPropsWithRef<'button'> & {
+  render?: RenderProp;
+  /** The height, as Button's: xs 24, sm 28, md 32 (default), lg 36. */
+  size?: FieldSize;
+}) {
   const combobox = useCombobox();
   const merged = useMergedRef(ref, (node: HTMLButtonElement | null) => {
     combobox.searchInPopup.current = node !== null;
@@ -817,7 +824,9 @@ function ComboboxButton({
           : cn(
               FIELD,
               disabled && FIELD_OFF,
-              "flex h-9 w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              "flex w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              FIELD_SIZE[size],
+              size === 'xs' && 'px-2',
               className,
             ),
         onClick(event: React.MouseEvent) {
@@ -1107,7 +1116,7 @@ function ComboboxChips({
       'data-slot': 'combobox-chips',
       className: cn(
         // A field (DESIGN.md, section 3) that grows in height with its chips.
-        `flex min-h-9 flex-wrap items-center gap-1 rounded-md bg-page px-3 py-2 text-sm text-foreground transition-shadow ${FIELD_WRAPPER_EDGE} has-data-[slot=combobox-chip]:pl-2`,
+        `flex min-h-8 flex-wrap items-center gap-1 rounded-md bg-page px-3 py-1 text-sm text-foreground transition-shadow ${FIELD_WRAPPER_EDGE} has-data-[slot=combobox-chip]:pl-2`,
         className,
       ),
       // A press on the box, between the chips, goes to the field.

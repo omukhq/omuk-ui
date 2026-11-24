@@ -9,22 +9,25 @@ import { cn } from './utils';
 // shared code passes; each draws a design-system recipe:
 //
 //   default      primary          `bg-primary text-on-primary`, one per surface
-//   outline      secondary        `bg-page inset-ring-2 inset-ring-control`, dialogs and forms
+//   outline      secondary        `bg-page edge-control inset-ring-control`, dialogs and forms
 //   secondary    secondary        (the same; the root's grey fill has no role)
 //   ghost        ghost            toolbars, headers, menus; pressed `bg-selected`
-//   destructive  danger           `bg-page inset-ring-2 inset-ring-control text-danger`
+//   destructive  danger           `bg-danger-tint text-danger`, no edge; hover `bg-danger-tint-hover`
 //   danger-confirm                `bg-danger`, the last step of a delete only
 //   link                          `text-accent`
 //
 // Outlined buttons take the 2-wide control edge, as fields do (React
-// Spectrum's recipe, owner 18 Nov 2026), darker on hover (R7). Sizes
+// Spectrum's recipe, owner 18 Nov 2026). On hover the edge stays and a
+// light grey fill (`bg-hover`) comes in (owner, 24 Nov 2026). Sizes
 // (R48, shadcn's scale): xs 24 (`h-6`), sm 28 (`h-7`, the formatting
-// toolbar), default 36 (`h-9`; 32 until 18 Nov 2026, owner), lg 36 (`h-9`, forms and dialogs); the icon
+// toolbar), md 32, the default (`h-control`, --spacing-control in
+// theme.css: the height of every md field; owner, 24 Nov 2026: named md,
+// as the fields' sizes, not "default"), lg 36 (`h-9`, forms and dialogs); the icon
 // sizes are the same squares. xs is only for row actions and chips inside
 // dense lists and tables; on a touch screen it keeps a 32 hit area.
 //
 // Disabled is never a fade: buttons with a fill or an edge take
-// `bg-hover inset-ring-2 inset-ring-border text-muted`; ghost and link buttons stay text only
+// `bg-hover edge-control inset-ring-border text-muted`; ghost and link buttons stay text only
 // (`text-muted`, no fill, no edge). A loading button takes the disabled
 // look too (owner, 18 Nov 2026: a black button with a spinner looked as if
 // it could still be pressed): the label stays in the layout, hidden, under
@@ -36,7 +39,7 @@ import { cn } from './utils';
 
 /** Disabled or loading, for a button that has a fill or an edge. */
 const OFF_FILLED =
-  'cursor-not-allowed bg-hover text-muted inset-ring-2 inset-ring-border hover:bg-hover hover:inset-ring-border';
+  'cursor-not-allowed bg-hover text-muted edge-control inset-ring-border hover:bg-hover hover:inset-ring-border';
 
 /** Disabled, for a text-only button: no fill on hover either. */
 const OFF_TEXT =
@@ -45,24 +48,23 @@ const OFF_TEXT =
 const TEXT_ONLY = new Set(['ghost', 'link']);
 
 const buttonVariants = cva(
-  `group/button relative inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors select-none ${FOCUS} aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
+  `group/button relative inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors select-none ${FOCUS} aria-invalid:edge-control aria-invalid:inset-ring-danger [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
   {
     variants: {
       variant: {
         default: `bg-primary text-on-primary hover:bg-primary-hover`,
-        outline: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
-        secondary: `bg-page text-foreground inset-ring-2 inset-ring-control hover:inset-ring-outline aria-expanded:inset-ring-outline`,
+        outline: `bg-page text-foreground edge-control inset-ring-control hover:bg-hover aria-expanded:bg-hover`,
+        secondary: `bg-page text-foreground edge-control inset-ring-control hover:bg-hover aria-expanded:bg-hover`,
         ghost: `bg-transparent text-foreground hover:bg-hover aria-expanded:bg-hover aria-pressed:bg-selected`,
-        destructive: `bg-page text-danger inset-ring-2 inset-ring-control hover:inset-ring-danger`,
+        destructive: `bg-danger-tint text-danger hover:bg-danger-tint-hover`,
         'danger-confirm': `bg-danger text-on-primary hover:bg-danger-hover`,
         link: `text-accent underline-offset-4 hover:underline`,
       },
       size: {
-        default:
-          'h-9 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
-        xs: 'h-6 gap-1 rounded-sm px-2.5 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
-        sm: 'h-7 gap-1 px-3 text-xs font-normal',
-        lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
+        md: 'h-control px-4 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
+        xs: 'h-6 gap-1 rounded-md px-2.5 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        sm: 'h-7 gap-1 px-3.5 text-xs font-normal',
+        lg: 'h-9 px-5 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
         icon: 'size-9 squircle',
         'icon-xs':
           'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
@@ -72,7 +74,7 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
+      size: 'md',
     },
   },
 );
@@ -105,7 +107,7 @@ function pressOnKey(event: KeyboardEvent<HTMLElement>) {
 function Button({
   className,
   variant = 'default',
-  size = 'default',
+  size = 'md',
   isLoading = false,
   loadingLabel = 'Loading',
   disabled,
@@ -127,7 +129,7 @@ function Button({
       'data-slot': 'button',
       // Which size, for a container that resizes its buttons on phones
       // (@/lib/touch, PHONE_TOUCH): an icon button to a 48 square.
-      'data-size': size ?? 'default',
+      'data-size': size ?? 'md',
       'data-loading': isLoading || undefined,
       'data-disabled': off || undefined,
       type: nativeButton ? (type ?? 'button') : undefined,

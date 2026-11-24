@@ -104,7 +104,7 @@ function FieldLabel({
         'group/field-label peer/field-label flex w-fit gap-2 group-data-disabled/field:text-muted',
         // A label around a whole field is a choice card: the `inset-ring inset-ring-border`,
         // the picked edge once its control is on.
-        '[&:has(>[data-slot=field])]:w-full [&:has(>[data-slot=field])]:flex-col [&:has(>[data-slot=field])]:rounded-md [&:has(>[data-slot=field])]:inset-ring [&:has(>[data-slot=field])]:inset-ring-border [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-2 [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-accent *:data-[slot=field]:p-3',
+        '[&:has(>[data-slot=field])]:w-full [&:has(>[data-slot=field])]:flex-col [&:has(>[data-slot=field])]:rounded-md [&:has(>[data-slot=field])]:inset-ring [&:has(>[data-slot=field])]:inset-ring-border [&:has(>[data-slot=field]_[aria-checked=true])]:edge-control [&:has(>[data-slot=field]_[aria-checked=true])]:inset-ring-accent *:data-[slot=field]:p-3',
         className,
       )}
       {...props}

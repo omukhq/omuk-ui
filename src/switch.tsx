@@ -78,12 +78,12 @@ function Switch({
         'data-readonly': readOnly ? '' : undefined,
         'data-required': required ? '' : undefined,
         className: cn(
-          'peer group/switch relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
+          'peer group/switch relative fixed-size inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:focus-ring aria-invalid:edge-control aria-invalid:inset-ring-danger',
           disabled
             ? 'cursor-not-allowed bg-hover inset-ring inset-ring-border'
             : checked
               ? 'bg-accent'
-              : 'bg-page inset-ring-2 inset-ring-control',
+              : 'bg-page edge-control inset-ring-control',
           size === 'sm' ? 'h-5 w-9' : 'h-6 w-11',
           className,
         ),

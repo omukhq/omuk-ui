@@ -1,6 +1,11 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Button } from './button';
-import { FIELD_TEXT, FIELD_TEXT_OFF, FIELD_WRAPPER_EDGE } from './recipes';
+import {
+  FIELD_SIZE,
+  FIELD_TEXT,
+  FIELD_TEXT_OFF,
+  FIELD_WRAPPER_EDGE,
+} from './recipes';
 import { cn } from './utils';
 
 // DESIGN.md, section 3, Field: the group is the field's box, and the input
@@ -15,21 +20,19 @@ import { cn } from './utils';
 // caret in the text. Only the focused part rings: the field while its text
 // has focus, the button when the keyboard reaches it.
 
-// Sizes (R48, the Button's names): lg 36 (`h-9`, the default for a
-// field), default 36 too (`h-9`; 32 until 18 Nov 2026, owner). Edges: 2-wide, as every
-// field (FIELD_WRAPPER_EDGE); `thin` gives the 1-wide edge.
+// Sizes: the Button's heights (FIELD_SIZE: xs 24, sm 28, md 32, lg 36;
+// owner 24 Nov 2026). Edge: as every field (FIELD_WRAPPER_EDGE); its width is the
+// --edge-control token (theme.css), not a prop (owner, 24 Nov 2026).
 const inputGroupVariants = cva('', {
   variants: {
-    size: { default: 'h-9', lg: 'h-9' },
-    edge: { default: '', thin: 'inset-ring' },
+    size: FIELD_SIZE,
   },
-  defaultVariants: { size: 'lg', edge: 'default' },
+  defaultVariants: { size: 'md' },
 });
 
 function InputGroup({
   className,
   size,
-  edge,
   stacked = false,
   disabled = false,
   ...props
@@ -52,12 +55,12 @@ function InputGroup({
       className={cn(
         'group/input-group relative flex w-full min-w-0 items-center rounded-md bg-page text-sm text-foreground transition-shadow outline-none',
         FIELD_WRAPPER_EDGE,
-        inputGroupVariants({ size, edge }),
+        inputGroupVariants({ size }),
         '[&:has(>[data-align=inline-end])>input]:pr-2 [&:has(>[data-align=inline-start])>input]:pl-2',
         // Only when so (the group knows): a field at rest carries none.
         stacked &&
           'h-auto flex-col [&:has(>[data-align=block-end])>input]:pt-3 [&:has(>[data-align=block-start])>input]:pb-3',
-        disabled && 'bg-hover text-muted inset-ring-2 inset-ring-border',
+        disabled && 'bg-hover text-muted edge-control inset-ring-border',
         className,
       )}
       {...props}
@@ -108,7 +111,7 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm', {
   variants: {
     size: {
       xs: 'h-6 gap-1 rounded-sm px-2',
-      default: '',
+      md: '',
       // Every icon button in a field is 24 (owner, 18 Nov 2026): the
       // combobox's chevron and clear, the date picker's, a search's. `icon`
       // stays as a name for callers.
@@ -119,7 +122,7 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm', {
   },
   // A text button in a field takes its own size; an icon button is 24.
   defaultVariants: {
-    size: 'default',
+    size: 'md',
   },
 });
 
@@ -127,7 +130,7 @@ function InputGroupButton({
   className,
   type = 'button',
   variant = 'ghost',
-  size = 'default',
+  size = 'md',
   onMouseDown,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, 'size' | 'type'> &

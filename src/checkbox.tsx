@@ -1,10 +1,11 @@
-import { CheckIcon, MinusIcon } from 'lucide-react';
 import {
   type ComponentPropsWithRef,
   type KeyboardEvent,
   type MouseEvent,
+  use,
   useState,
 } from 'react';
+import { CheckboxGroupContext, parentState } from './checkbox-group';
 import { mergeProps, type RenderProp, useRender } from './render';
 import { cn } from './utils';
 
@@ -18,11 +19,11 @@ import { cn } from './utils';
 // hover fill and the plain 1-wide `inset-ring inset-ring-border`, the tick muted.
 
 const BOX =
-  'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-page text-on-primary inset-ring-2 inset-ring-control outline-none transition-colors after:absolute after:-inset-x-3 after:-inset-y-2';
+  'peer relative fixed-size inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-page text-on-primary edge-control inset-ring-control outline-none transition-colors after:absolute after:-inset-x-3 after:-inset-y-2';
 
 /** Focus and invalid: state the browser and a form set, so always on. */
 const STATES =
-  'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger';
+  'focus-visible:focus-ring aria-invalid:edge-control aria-invalid:inset-ring-danger';
 
 // Checked (or some checked) and disabled are added only when so: the box
 // knows its own state, and a box at rest carries none of their classes.
@@ -50,33 +51,99 @@ type CheckboxProps = Omit<
   required?: boolean;
   /** The form field's name. Without it, no native input is drawn. */
   name?: string;
-  /** What the form sends when the box is on (the browser's default: "on"). */
+  /**
+   * What the form sends when the box is on (the browser's default: "on").
+   * In a CheckboxGroup, the value this box stands for: the group checks it.
+   */
   value?: string;
+  /**
+   * In a CheckboxGroup: the box that checks or clears every value in the
+   * group's `allValues`; checked when all are, a dash when some are.
+   */
+  parent?: boolean;
   render?: RenderProp;
 };
+
+/** The marks, each one stroke as written with a pen. */
+const MARKS = {
+  // Down the short arm from the left, then up the long one to the top right
+  // (lucide's check runs the other way).
+  tick: 'M4 12l5 5L20 6',
+  // Some checked: left to right.
+  dash: 'M5 12h14',
+} as const;
+
+/**
+ * The tick or the dash. `drawn` draws it (`animate-tick`, theme.css); else
+ * it shows at once.
+ */
+function Mark({ shape, drawn }: { shape: keyof typeof MARKS; drawn: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={3}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className="size-3"
+    >
+      <path
+        d={MARKS[shape]}
+        pathLength={1}
+        className={drawn ? 'animate-tick' : undefined}
+      />
+    </svg>
+  );
+}
 
 function Checkbox({
   className,
   checked: controlled,
   defaultChecked = false,
   onCheckedChange,
-  indeterminate = false,
-  disabled = false,
+  indeterminate: ownMixed = false,
+  disabled: ownDisabled = false,
   readOnly = false,
   required = false,
-  name,
+  name: ownName,
   value,
+  parent = false,
   form,
   render,
   ...props
 }: CheckboxProps) {
   const [own, setOwn] = useState(defaultChecked);
-  const checked = controlled ?? own;
+  // In a CheckboxGroup, the group decides: a parent box from all the
+  // values, any other from its own value.
+  const group = use(CheckboxGroupContext);
+  const fromParent =
+    group && parent ? parentState(group.value, group.allValues) : null;
+  const fromGroup =
+    group && !parent && value !== undefined
+      ? group.value.includes(value)
+      : undefined;
+  const checked = fromParent?.checked ?? fromGroup ?? controlled ?? own;
+  const indeterminate = fromParent?.mixed ?? ownMixed;
+  const disabled = ownDisabled || (group?.disabled ?? false);
+  // A parent box stands for no value of its own: it sends nothing.
+  const name = parent ? undefined : (ownName ?? group?.name);
   const state = indeterminate
     ? 'data-indeterminate'
     : checked
       ? 'data-checked'
       : 'data-unchecked';
+  // The mark is drawn once the box's look has changed since it mounted: a
+  // click on it, or a parent box turning to a dash as its group changes. A
+  // box that starts checked or mixed shows its mark at once. (Set during
+  // render, as React's derived-state pattern: no effect.)
+  const [shown, setShown] = useState(state);
+  const [changed, setChanged] = useState(false);
+  if (shown !== state) {
+    setShown(state);
+    setChanged(true);
+  }
   const button = useRender(
     'button',
     mergeProps(
@@ -106,8 +173,11 @@ function Checkbox({
         },
         onClick(event: MouseEvent) {
           if (readOnly || event.defaultPrevented) return;
-          const next = !checked;
+          // A mixed parent checks them all, as a click on an empty box.
+          const next = indeterminate ? true : !checked;
           onCheckedChange?.(next, { reason: 'none', event: event.nativeEvent });
+          if (group && parent) group.setAll(next);
+          else if (group && value !== undefined) group.toggle(value, next);
           setOwn(next);
         },
         children:
@@ -117,12 +187,13 @@ function Checkbox({
               {...{ [state]: '' }}
               className="grid place-content-center text-current transition-none"
             >
-              {/* The header checkbox of a part-selected page: a dash, not a tick. */}
-              {indeterminate ? (
-                <MinusIcon className="size-3" strokeWidth={3} />
-              ) : (
-                <CheckIcon className="size-3" strokeWidth={3} />
-              )}
+              {/* The header checkbox of a part-selected page: a dash, not a
+                  tick. A key per shape, so a new mark draws from its start. */}
+              <Mark
+                key={indeterminate ? 'dash' : 'tick'}
+                shape={indeterminate ? 'dash' : 'tick'}
+                drawn={changed}
+              />
             </span>
           ) : null,
       },

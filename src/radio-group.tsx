@@ -114,9 +114,9 @@ function RadioGroupItem({
       data-checked={checked ? '' : undefined}
       data-unchecked={checked ? undefined : ''}
       className={cn(
-        'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-page inset-ring-2 inset-ring-control outline-none transition-colors before:absolute before:-inset-2',
+        'peer relative fixed-size inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-page edge-control inset-ring-control outline-none transition-colors before:absolute before:-inset-2',
         // No hover edge, as fields (owner, 18 Nov 2026).
-        'focus-visible:focus-ring aria-invalid:inset-ring-2 aria-invalid:inset-ring-danger',
+        'focus-visible:focus-ring aria-invalid:edge-control aria-invalid:inset-ring-danger',
         // Picked and disabled only when so (the radio knows).
         checked && 'bg-accent inset-ring-accent',
         disabled && 'cursor-not-allowed bg-hover inset-ring inset-ring-border',

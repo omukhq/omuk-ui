@@ -71,6 +71,13 @@
   /* The danger fill under the pointer: a step darker. Red at 90% on white
      read as a washed pink, and an edge crossing flashed. */
   --color-danger-hover: var(--color-red-700);
+  /* The destructive button: red text on a red tint, the tint a step
+     stronger under the pointer (owner, 24 Nov 2026). Solid, not a see-through
+     red, so nothing behind it shows. */
+  --color-danger-tint: var(--color-red-100);
+  --color-danger-tint-hover: var(--color-red-200);
+  /* The focus halo of an invalid field: red, as its edge (owner, 24 Nov 2026). */
+  --color-danger-ring: var(--color-red-200);
   --color-success: var(--color-green-700);  /* 4.9:1 on white; Tailwind's green-600 is 3.2:1 */
   --color-warning: var(--color-amber-700);
   --color-info: var(--color-blue-600);
@@ -107,6 +114,10 @@
      Spacing steps: 0.5 1 2 3 4 6 8 12 16. Control heights: h-10 (40) h-8 (32) h-7 (28, formatting toolbar) h-6 (24, row actions). */
   /* The read views' text column (boards 13 and 14): about 75 characters a line. max-w-reading */
   --container-reading: 720px;
+  /* The md control's height (`h-control`): the default button and every md
+     field, 32. One token, so an app can make its default controls smaller
+     or larger in one place (owner, 24 Nov 2026). */
+  --spacing-control: calc(var(--spacing) * 8);
 
   /* 3 · Type — seven interface sizes, each with its line height. text-base is Tailwind's own
      (16px, 1.5); the others differ from Tailwind's and are set here. Tailwind's larger sizes
@@ -203,6 +214,9 @@
     --color-found: var(--color-yellow-800);
     --color-danger: var(--color-red-300);     /* red-400 is 3.6:1 on a card */
     --color-danger-hover: var(--color-red-200);
+    --color-danger-tint: var(--color-red-950);
+    --color-danger-tint-hover: var(--color-red-900);
+    --color-danger-ring: var(--color-red-900);
     --color-success: var(--color-green-400);
     --color-warning: var(--color-amber-400);
     --color-info: var(--color-blue-300);
@@ -228,11 +242,49 @@
 }
 
 /*
-  Edges are Tailwind's own inset rings: `inset-ring inset-ring-border` (1px, things you look at),
-  `inset-ring-2 inset-ring-control` (2px, things you click, type in or tick), `hover:inset-ring-outline`.
+  Edges are inset rings: `inset-ring inset-ring-border` (1px, things you look at),
+  `edge-control inset-ring-control` (things you click, type in or tick), `hover:inset-ring-outline`.
   Rings, focus and shadows share one box-shadow, so `inset-ring shadow-sm focus-visible:focus-ring` all show together.
   focus-ring is the one custom helper: every control, checkbox, radio and switch uses focus-visible:focus-ring.
 */
+
+/* The width of a control's edge: buttons with an edge, fields, checkboxes,
+   radios, switches. One switch for all of them (owner, 24 Nov 2026): 2px by
+   default; set it to 1px in the app's stylesheet for thin edges. */
+:root {
+  --edge-control: 2px;
+}
+
+/* `inset-ring-2`, with its width from --edge-control. cn (utils.ts) counts
+   it as a ring width, so a later `inset-ring` or `inset-ring-2` replaces it. */
+@utility edge-control {
+  --tw-inset-ring-shadow: inset 0 0 0 var(--edge-control)
+    var(--tw-inset-ring-color, currentcolor);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+
+/* Fixed sizes. An app may change Tailwind's --spacing for a tighter or
+   looser layout; marks keep their size (owner, 24 Nov 2026): every icon, and
+   the checkbox, radio and switch (`fixed-size`). They measure with
+   --grid-unit, Tailwind's own unit, so `size-4` stays 16 there. An SVG
+   sizes itself, so the base rule fixes every icon, the tick and the
+   spinner without a class. */
+:root {
+  --grid-unit: 0.25rem;
+}
+
+@utility fixed-size {
+  --spacing: var(--grid-unit);
+}
+
+@layer base {
+  :where(svg) {
+    --spacing: var(--grid-unit);
+  }
+}
+
 /* squircle: the whole square as one smooth curve (radius 50% + corner-shape), on square things only — icon
   buttons, app and team tiles, icon tiles. Never on wide or round shapes: 50% makes a wide box a pill.
   It is the element's radius: no rounded-* beside it (cn treats it as one, packages/shared/src/utils.ts). Browsers
@@ -301,6 +353,24 @@
     animation: none;
   }
 }
+/* A tick drawn as with a pen (owner, 24 Nov 2026): down the short arm, then
+   up the long one, slowing a little at the turn. On an SVG path with
+   pathLength="1" (checkbox.tsx). Reduced motion: the tick at once. */
+@keyframes tick-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@utility animate-tick {
+  stroke-dasharray: 1;
+  animation: tick-draw 240ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
 @utility fade-in-* {
   --tw-enter-opacity: calc(--value(integer) * 1%);
 }
@@ -359,14 +429,26 @@
   }
 }
 
-/* The focus: a 2-wide edge in the outline colour (fields and outlined
-   buttons are 2-wide, React Spectrum's recipe, owner 18 Nov 2026) and the
-   outer ring. */
+/* The focus: an edge in the outline colour, as wide as the control edge
+   (--edge-control: 2-wide, or 1-wide when edges are thin; owner, 24 Nov
+   2026), and the 3-wide outer ring, which marks the focus at either width. */
 @utility focus-ring {
   outline: none;
-  --tw-inset-ring-shadow: inset 0 0 0 var(--line-strong) var(--color-outline);
-  --tw-ring-shadow: 0 0 0 var(--ring) var(--color-control);
+  --tw-inset-ring-shadow: inset 0 0 0 var(--edge-control) var(--focus-edge, var(--color-outline));
+  --tw-ring-shadow: 0 0 0 var(--ring) var(--focus-halo, var(--color-control));
   box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+/* An invalid field keeps red when focused: a red edge and a red halo, not
+   the grey ring. Set on the field, and on the box that holds it directly
+   (an input group draws the ring on its box). Only a direct child counts, so
+   a form with an invalid field does not turn its other rings red. */
+@layer base {
+  [aria-invalid="true"],
+  :has(> [aria-invalid="true"]) {
+    --focus-edge: var(--color-danger);
+    --focus-halo: var(--color-danger-ring);
+  }
 }
 
 

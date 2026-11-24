@@ -24,6 +24,8 @@ import { type Align, type Box, boxOf, type Side } from './position';
 import {
   FIELD,
   FIELD_OFF,
+  FIELD_SIZE,
+  type FieldSize,
   MENU_SEPARATOR,
   OPTION_ROW,
   POP,
@@ -343,7 +345,7 @@ function SelectValue({
 
 function SelectTrigger({
   className,
-  size = 'lg',
+  size = 'md',
   children,
   render,
   nativeButton: _nativeButton,
@@ -351,8 +353,8 @@ function SelectTrigger({
   ref,
   ...props
 }: ComponentPropsWithRef<'button'> & {
-  /** R48, the Button's names: both 36 since 18 Nov 2026 (owner); kept for callers. */
-  size?: 'default' | 'lg';
+  /** The height, as Button's: xs 24, sm 28, md 32 (default), lg 36. */
+  size?: FieldSize;
   render?: RenderProp;
   nativeButton?: boolean;
 }) {
@@ -392,7 +394,8 @@ function SelectTrigger({
           // A button, so the theme's field size (16 on phones) does not
           // reach it, and it does not need to: nothing is typed into it.
           "flex w-fit items-center justify-between gap-2 px-3 text-sm whitespace-nowrap aria-expanded:focus-ring data-placeholder:text-muted *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-          'h-9',
+          FIELD_SIZE[size],
+          size === 'xs' && 'px-2',
           className,
         ),
         onClick(event: React.MouseEvent) {

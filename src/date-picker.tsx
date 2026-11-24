@@ -18,7 +18,7 @@ import {
 } from './date/locale';
 import { InputGroupButton } from './input-group';
 import { PopupFrame, popupState, usePopupRoot } from './popup';
-import { POP, SURFACE } from './recipes';
+import { FIELD_SIZE, type FieldSize, POP, SURFACE } from './recipes';
 import { cn } from './utils';
 
 // One date component (the date pickers plan): `mode` is `date` (a day, or
@@ -37,8 +37,8 @@ type PickerBase = {
   locale?: string;
   /** Where "today" is. Default: the browser's time zone. */
   timeZone?: string;
-  /** The field's height: 36 for both (owner, 18 Nov 2026); kept for callers. */
-  size?: 'default' | 'lg';
+  /** The height, as Button's: xs 24, sm 28, md 32 (default), lg 36. */
+  size?: FieldSize;
   isDisabled?: boolean;
   isReadOnly?: boolean;
   isRequired?: boolean;
@@ -196,13 +196,13 @@ function PickerShell({
         aria-describedby={error ? errorId : undefined}
         aria-disabled={disabled || undefined}
         data-slot="date-picker"
-        data-size={base.size ?? 'lg'}
+        data-size={base.size ?? 'md'}
         className={cn(
           // A field's box (DESIGN.md, Field): the 2-wide edge, the focus ring
           // while a part has the focus, danger when invalid.
           'relative flex w-full min-w-0 items-center gap-1 rounded-md bg-page pl-3 text-sm text-foreground transition-shadow',
-          'inset-ring-2 inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
-          'h-9',
+          'edge-control inset-ring-control has-[[data-segment]:focus]:focus-ring aria-invalid:inset-ring-danger', // design-ok: selectors, not values
+          FIELD_SIZE[base.size ?? 'md'],
           root ? 'pr-1' : 'pr-3',
           disabled && 'bg-hover text-muted inset-ring-border',
         )}
@@ -292,13 +292,20 @@ function PickerShell({
           className="isolate z-50"
           // The day takes the focus; its ring shows only when the calendar
           // was opened from the keyboard (React Aria's).
-          initialFocus={(popupEl) =>
+          initialFocus={(popupEl) => {
+            // A variable, not a literal: TypeScript before 6 has no
+            // `focusVisible` in FocusOptions, and an app that copied this
+            // file (omuk add) may use one. The browser reads it either way.
+            const options = {
+              preventScroll: false,
+              focusVisible: root.how === 'keyboard',
+            };
             popupEl
               .querySelector<HTMLElement>(
                 '[data-slot=calendar] button[tabindex="0"]',
               )
-              ?.focus({ focusVisible: root.how === 'keyboard' })
-          }
+              ?.focus(options);
+          }}
           finalFocus={calendarButton}
           onDismiss={(reason, event) => {
             if (
