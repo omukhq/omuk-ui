@@ -111,9 +111,7 @@ function DialogFooter({
     >
       {children}
       {showCloseButton && (
-        <ModalClose render={<Button size="lg" variant="outline" />}>
-          Close
-        </ModalClose>
+        <ModalClose render={<Button variant="outline" />}>Close</ModalClose>
       )}
     </div>
   );

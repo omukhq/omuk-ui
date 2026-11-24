@@ -26,7 +26,7 @@ type SwitchProps = Omit<
   ComponentPropsWithRef<'button'>,
   'value' | 'defaultChecked' | 'defaultValue' | 'onChange'
 > & {
-  size?: 'sm' | 'default';
+  size?: 'sm' | 'md';
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (
@@ -44,7 +44,7 @@ type SwitchProps = Omit<
 
 function Switch({
   className,
-  size = 'default',
+  size = 'md',
   checked: controlled,
   defaultChecked = false,
   onCheckedChange,

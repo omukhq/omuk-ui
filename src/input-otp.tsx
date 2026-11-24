@@ -52,7 +52,7 @@ function InputOTPSlot({
       className={cn(
         // Each digit a field of its own (DESIGN.md, Field): the 2-wide control
         // edge, the field's focus ring on the active one, danger when invalid.
-        'relative flex size-9 items-center justify-center rounded-md bg-page text-base edge-control inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
+        'relative flex size-control items-center justify-center rounded-md bg-page text-base edge-control inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
         className,
       )}
       {...props}

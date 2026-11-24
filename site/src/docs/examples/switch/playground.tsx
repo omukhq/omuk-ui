@@ -3,7 +3,7 @@ import { Switch } from '@omuk/ui/switch';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
-const SIZES = ['default', 'sm'] as const;
+const SIZES = ['md', 'sm'] as const;
 
 type Values = {
   label: string;
@@ -14,13 +14,13 @@ type Values = {
 
 const INITIAL: Values = {
   label: 'Lock production',
-  size: 'default',
+  size: 'md',
   disabled: false,
   readOnly: false,
 };
 
 /** The switch's own defaults: a prop at one of these is left out of the code. */
-const DEFAULTS = { size: 'default' };
+const DEFAULTS = { size: 'md' };
 
 function Preview({ label, ...props }: Values) {
   const id = useId();

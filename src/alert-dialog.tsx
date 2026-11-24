@@ -45,10 +45,10 @@ function AlertDialogOverlay({
 
 function AlertDialogContent({
   className,
-  size = 'default',
+  size = 'md',
   ...props
 }: React.ComponentProps<typeof ModalPopup> & {
-  size?: 'default' | 'sm';
+  size?: 'sm' | 'md';
 }) {
   return (
     <AlertDialogPortal>
@@ -61,7 +61,7 @@ function AlertDialogContent({
         className={cn(
           MODAL,
           'group/alert-dialog-content max-w-xs',
-          size === 'default' && 'sm:max-w-lg',
+          size === 'md' && 'sm:max-w-lg',
           className,
         )}
         {...props}
@@ -147,7 +147,6 @@ function AlertDialogAction({
 }: React.ComponentProps<typeof Button>) {
   return (
     <Button
-      size="lg"
       data-slot="alert-dialog-action"
       className={cn(className)}
       {...props}
@@ -158,7 +157,7 @@ function AlertDialogAction({
 function AlertDialogCancel({
   className,
   variant = 'outline',
-  size = 'lg',
+  size,
   ...props
 }: React.ComponentProps<typeof ModalClose> &
   Pick<React.ComponentProps<typeof Button>, 'variant' | 'size'>) {

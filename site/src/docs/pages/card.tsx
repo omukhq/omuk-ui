@@ -38,8 +38,8 @@ export default function CardPage() {
           rows={[
             {
               name: 'size',
-              type: "'default' | 'sm'",
-              default: "'default'",
+              type: "'sm' | 'md'",
+              default: "'md'",
               description:
                 'Card: the padding and the gap between the parts, 16 or 12.',
             },

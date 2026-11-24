@@ -13,7 +13,7 @@ import { Button } from '@omuk/ui/button';
 import { useState } from 'react';
 import { Playground } from '../../playground';
 
-const SIZES = ['default', 'sm'] as const;
+const SIZES = ['md', 'sm'] as const;
 const VARIANTS = ['default', 'danger-confirm'] as const;
 
 type Values = {
@@ -30,7 +30,7 @@ const INITIAL: Values = {
   description: 'Its environments and secrets go too. You cannot undo this.',
   actionLabel: 'Delete',
   cancelLabel: 'Cancel',
-  size: 'default',
+  size: 'md',
   variant: 'danger-confirm',
 };
 

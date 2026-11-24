@@ -96,7 +96,7 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default:
-          'gap-0.5 rounded-lg bg-hover p-1 group-data-horizontal/tabs:h-9',
+          'gap-0.5 rounded-lg bg-hover p-1 group-data-horizontal/tabs:h-control',
         line: 'gap-1 group-data-horizontal/tabs:w-full group-data-horizontal/tabs:justify-start group-data-horizontal/tabs:border-b',
       },
     },
@@ -115,7 +115,7 @@ const ListVariantContext = createContext<ListVariant>('default');
 
 const TRIGGER: Record<ListVariant, string> = {
   default: 'h-full flex-1 rounded-md px-3 text-foreground',
-  line: 'h-9 -mb-px border-y-2 border-transparent px-3',
+  line: 'h-control -mb-px border-y-2 border-transparent px-3',
 };
 
 /**

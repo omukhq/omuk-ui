@@ -4,6 +4,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.26] - 2026-11-24
+
+### Changed (breaking)
+
+- Every component's default size is `md`, and no size is named `default`. To update: replace `size="default"` with
+  `size="md"` on `Card`, `AlertDialogContent`, `Switch` and `Segmented`, or leave the prop out.
+- `Segmented` takes `size` `sm | md | lg` (28, 32, 36), and it now changes the height (before, every size drew 36).
+  Its default is `md` (32). To keep 36, pass `size="lg"`.
+- These are 32 now, not 36: the icon button (`size="icon"`), the tabs list and its tabs, the dialog's Close button,
+  `AlertDialogAction` and `AlertDialogCancel`, the OTP digit boxes and the pagination ellipsis. For 36, pass
+  `size="lg"` to a dialog button, or `size="icon-lg"` to an icon button.
+
 ## [1.0.0-alpha.25] - 2026-11-24
 
 ### Changed

@@ -13,19 +13,19 @@ const cardVariants = cva(
   {
     variants: {
       size: {
-        default: 'gap-4 p-4',
         sm: 'gap-3 p-3',
+        md: 'gap-4 p-4',
       },
     },
-    defaultVariants: { size: 'default' },
+    defaultVariants: { size: 'md' },
   },
 );
 
 function Card({
   className,
-  size = 'default',
+  size = 'md',
   ...props
-}: React.ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
+}: React.ComponentProps<'div'> & { size?: 'sm' | 'md' }) {
   return (
     <div
       data-slot="card"

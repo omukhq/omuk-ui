@@ -117,7 +117,7 @@ function PaginationEllipsis({
       aria-hidden
       data-slot="pagination-ellipsis"
       className={cn(
-        'flex size-9 items-center justify-center text-muted',
+        'flex size-control items-center justify-center text-muted',
         className,
       )}
       {...props}

@@ -56,6 +56,12 @@ export default function SegmentedPage() {
                 'Segmented: called with the new value. Not called when the chosen segment is pressed again.',
             },
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Segmented: the height, the Button’s: 28, 32 or 36.',
+            },
+            {
               name: 'aria-label',
               type: 'string',
               description:

@@ -17,12 +17,14 @@ const segmentedVariants = cva(
   'inline-flex w-fit items-stretch gap-0.5 rounded-lg bg-hover p-1',
   {
     variants: {
+      // The Button's heights (owner, 24 Nov 2026): md, the default, is 32.
       size: {
+        sm: 'h-7 p-0.5',
+        md: 'h-control',
         lg: 'h-9',
-        default: 'h-9',
       },
     },
-    defaultVariants: { size: 'lg' },
+    defaultVariants: { size: 'md' },
   },
 );
 
@@ -63,6 +65,7 @@ function Segmented({
       <div
         role="radiogroup"
         data-slot="segmented"
+        data-size={size ?? 'md'}
         className={cn(segmentedVariants({ size }), className)}
         onKeyDown={moveAndPick}
         {...props}
@@ -87,7 +90,7 @@ function SegmentedItem({
       tabIndex={chosen || segmented.value === null ? 0 : -1}
       data-slot="segmented-item"
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm whitespace-nowrap text-foreground outline-none transition-colors focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm in-data-[size=sm]:px-2 in-data-[size=sm]:text-xs whitespace-nowrap text-foreground outline-none transition-colors focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Chosen and disabled only when so (the item knows).
         // The hover fill only on the others: it would cover the raised one.
         chosen ? 'bg-raised shadow-sm' : 'hover:bg-hover',

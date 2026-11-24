@@ -14,11 +14,13 @@ The rules every Omuk UI component follows, and that an app built with it should 
    `bg-[#eee]`, `shadow-[…]`). Only the theme's classes. `theme.css` is the only file with raw values.
 2. **Spacing steps** (padding, margin, gap): `0.5 1 2 3 4 6 8 12 16` (2, 4, 8, 12, 16, 24, 32, 48, 64 px). Never 5, 7, 9, 10, 11, 14.
    Heights and square sizes have their own list (rule 3).
-3. **Heights:** Tailwind's own sizes, nothing custom: `h-9` 36 (large buttons, menu rows, tabs, table headers) ·
-   `h-8` 32 (default buttons and every field: input, select, combobox, the date picker, input group; headers, filter
-   rows, list rows) · `h-7` 28 (toolbars) · `h-6` 24 (row actions and chips in dense lists and tables only).
-   Square buttons use `size-*` with the same numbers. Components expose these as `size="lg|default|sm|xs"` (shadcn's
-   names: 36 / 32 / 28 / 24, icon-only `icon-lg|icon|icon-sm|icon-xs`); only the component maps name → class. A
+3. **Heights:** Tailwind's own sizes, nothing custom: `h-9` 36 (large buttons, menu rows, table headers) ·
+   `h-8` 32 (default buttons and every field: input, select, combobox, the date picker, input group; segmented
+   controls, tabs, dialog buttons, icon buttons, OTP digits; headers, filter rows, list rows) · `h-7` 28 (toolbars) ·
+   `h-6` 24 (row actions and chips in dense lists and tables only). Square buttons use `size-*` with the same
+   numbers. Components expose these as `size="lg|md|sm|xs"` (36 / 32 / 28 / 24, icon-only
+   `icon-lg|icon|icon-sm|icon-xs`); only the component maps name → class. Every component's default size is `md`;
+   no size is named `default` (owner, 24 Nov 2026). A
    default button and a field are the same height, so they line up side by side (owner, 24 Nov 2026). 32 is also
    the height of list rows and calendar days.
    Never a form or dialog button below md.
@@ -171,11 +173,12 @@ the component together.
 ### Segmented control
 - Track `inline-flex gap-0.5 p-1 rounded-lg bg-hover`
 - Segment `px-3 rounded-md`, normal weight (owner, 24 Nov 2026: medium read heavy beside field text); chosen
-  `bg-raised shadow-sm`, so the fill alone marks it and no label changes width. Height: track = control size.
+  `bg-raised shadow-sm`, so the fill alone marks it and no label changes width. Height: track = control size,
+  `size` sm 28 (track `p-0.5`, segments `px-2 text-xs`) · md 32, the default · lg 36.
 - Use when a setting picks one of a few (a view, the theme, a width, a text size).
 
 ### Tabs
-- List `flex gap-1 border-b`; tab `h-9 px-3 font-medium text-muted`; selected `text-foreground border-b-2 border-accent`.
+- List `flex gap-1 border-b`; tab `h-8 px-3 font-medium text-muted`; selected `text-foreground border-b-2 border-accent`.
 
 ### Popover · menu
 - Container `p-1 rounded-lg bg-page shadow-sm`, width a multiple of 64.
@@ -315,7 +318,7 @@ the component together.
   Icons only for done (`circle-check`), working (`loader-circle`) and error (`circle-alert`). Plain toasts leave after
   5 s (paused on hover/focus); errors stay until closed. Stack newest at the bottom, 3 visible, 8 apart.
 - **Phone width (< 640):** top bar 56 with `size-12` buttons; the sidebar is a drawer at 85% over the scrim; popovers
-  become bottom sheets, their controls at the usual 36; tables scroll inside the page margins; dashboard: stat cards
+  become bottom sheets, their controls at the usual 32; tables scroll inside the page margins; dashboard: stat cards
   2 × 2, one chart, tables become lists.
 
 ## 7. Before you finish any UI change

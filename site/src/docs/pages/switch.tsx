@@ -63,8 +63,8 @@ export default function SwitchPage() {
             },
             {
               name: 'size',
-              type: "'default' | 'sm'",
-              default: "'default'",
+              type: "'sm' | 'md'",
+              default: "'md'",
               description: 'The track: 44 by 24, or 36 by 20.',
             },
             {

@@ -60,8 +60,8 @@ export default function AlertDialogPage() {
             },
             {
               name: 'size',
-              type: "'default' | 'sm'",
-              default: "'default'",
+              type: "'sm' | 'md'",
+              default: "'md'",
               description:
                 'AlertDialogContent: sm is narrow, and its footer puts the two buttons side by side.',
             },

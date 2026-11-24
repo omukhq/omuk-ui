@@ -10,7 +10,7 @@ import {
 } from '@omuk/ui/card';
 import { Playground } from '../../playground';
 
-const SIZES = ['default', 'sm'] as const;
+const SIZES = ['md', 'sm'] as const;
 
 type Values = {
   size: (typeof SIZES)[number];
@@ -21,7 +21,7 @@ type Values = {
 };
 
 const INITIAL: Values = {
-  size: 'default',
+  size: 'md',
   title: 'Monthly report',
   description: 'Sent to the team on the first of each month.',
   action: 'Weekly',
