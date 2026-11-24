@@ -4,6 +4,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.27] - 2026-11-24
+
+### Changed
+
+- Button `sm` has 12 side padding again, not 10.
+
 ### Changed (breaking)
 
 - The md height is Tailwind's `h-8` (and `size-8` for the md icon button) again, not `h-control`.

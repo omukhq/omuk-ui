@@ -62,13 +62,12 @@ const buttonVariants = cva(
         link: `text-accent underline-offset-4 hover:underline`,
       },
       size: {
-        xs: 'h-6 gap-1 rounded-md px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
-        sm: 'h-7 gap-1 px-2.5 text-xs font-normal',
+        xs: 'h-6 px-2 text-xs gap-1 rounded-md pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        sm: 'h-7 px-3 text-xs gap-1 font-normal',
         md: 'h-8 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
         lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
         icon: 'size-8 squircle',
-        'icon-xs':
-          'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        'icon-xs': `size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1`,
         'icon-sm': 'size-7 squircle',
         'icon-lg': 'size-9 squircle',
       },
