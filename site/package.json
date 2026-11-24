@@ -4,12 +4,13 @@
   "type": "module",
   "description": "ui.omuk.dev: the public home page of Omuk UI.",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build && bun scripts/pages.ts",
+    "dev": "bun ../scripts/registry.ts && vite dev",
+    "build": "bun ../scripts/registry.ts && vite build && bun scripts/pages.ts",
     "preview": "vite preview",
     "test": "bun test",
     "typecheck": "tsc --noEmit -p .",
     "classes": "bun scripts/canonical-classes.ts",
+    "fonts": "bun scripts/google-fonts.ts",
     "check:classes": "bun scripts/canonical-classes.ts --check",
     "check": "bun run typecheck && bun run test && bun run check:classes"
   },

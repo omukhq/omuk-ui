@@ -1,3 +1,7 @@
 node_modules/
 *.tsbuildinfo
 .DS_Store
+# Made from src/ by scripts/registry.ts (the site's build runs it).
+site/public/r/
+# The CLI's build (cli/package.json, prepublishOnly).
+cli/dist/

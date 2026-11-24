@@ -13,5 +13,5 @@
     "esModuleInterop": true
   },
   "files": ["./bun-env.d.ts"],
-  "include": ["src"]
+  "include": ["src", "scripts", "cli/src"]
 }

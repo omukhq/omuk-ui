@@ -61,6 +61,29 @@ bun add @omukhq/ui@1.0.0-alpha.23
 
 Then load the tokens and fonts in your stylesheet ([Tokens and fonts](#tokens-and-fonts)).
 
+### Or copy one component at a time
+
+The `omuk` command copies a component into your app as source files that you own. It also copies the files that
+the component imports, and installs its npm packages. You can then change the files as you like.
+
+```bash
+npx @omukhq/cli init          # omuk.json, and the tokens and fonts
+npx @omukhq/cli add button    # button.tsx and the files it needs
+npx @omukhq/cli list          # every component; yours are marked
+```
+
+- `init` puts the files in `src/components/ui` (or `components/ui`). Use `--dir <folder>` for another folder. It
+  prints two `@import` lines for your stylesheet.
+- `add` installs the npm packages with your package manager (bun, pnpm, yarn or npm). Use `--no-install` to only
+  print the command, and `--dry-run` to only see the changes.
+- The files import each other with relative paths, so they need no path alias.
+- Run `add` again to get a newer version. omuk updates each file that you did not change. It keeps each file that
+  you changed. Use `--overwrite` to replace those files too.
+- `omuk.json` records each component, its version and each file that omuk wrote.
+
+Both ways come from the same source files. Use the package if you want updates by version, and the command if you
+want to own and change the code.
+
 ## Use
 
 Import each component from its own path:
@@ -81,7 +104,7 @@ There is no index file. Each component is a separate export (see `package.json`)
 | Group | Components |
 |---|---|
 | Actions | Button, Button group, Segmented control, Chip |
-| Forms | Field, Input, Input group, Textarea, Select, Combobox, Checkbox, Radio group, Switch, One-time code input, Label |
+| Forms | Field, Input, Input group, Textarea, Select, Combobox, Checkbox, Checkbox group, Radio group, Switch, One-time code input, Label |
 | Dates | Date picker (a day, a day and a time, a range, a time), Calendar |
 | Overlays | Dialog, Alert dialog, Modal, Drawer, Popover, Tooltip, Dropdown menu, Context menu, Prompt |
 | Feedback | Toast (Sonner), Spinner, Skeleton, Status |
@@ -207,6 +230,8 @@ To release:
 | `bun test` | Runs the tests, including the token check. |
 | `bun run typecheck` | Checks the types. |
 | `bun run lint` | Runs Biome. |
+| `bun run registry` | Writes the registry that `omuk` reads to `site/public/r/` (the site's build runs it). |
+| `bun run cli` | Builds the `omuk` command to `cli/dist/omuk.js`. |
 
 ## License
 

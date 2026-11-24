@@ -25,7 +25,10 @@
     "toast"
   ],
   "scripts": {
-    "test": "bun test",
+    "dev": "bun --cwd site dev",
+    "registry": "bun scripts/registry.ts",
+    "cli": "bun --cwd cli run build",
+    "test": "bun test && bun test ./scripts ./cli",
     "typecheck": "tsc --noEmit -p .",
     "lint": "biome check",
     "format": "biome format --write",
@@ -50,6 +53,7 @@
     "./calendar": "./src/calendar.tsx",
     "./card": "./src/card.tsx",
     "./checkbox": "./src/checkbox.tsx",
+    "./checkbox-group": "./src/checkbox-group.tsx",
     "./chip": "./src/chip.tsx",
     "./combobox": "./src/combobox.tsx",
     "./command": "./src/command.tsx",
