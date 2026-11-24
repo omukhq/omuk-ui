@@ -1,6 +1,6 @@
 {
   "name": "@omukhq/ui",
-  "version": "1.0.0-alpha.24",
+  "version": "1.0.0-alpha.25",
   "license": "MIT",
   "type": "module",
   "description": "React 19 components, design tokens and fonts for Tailwind CSS 4. Accessible, themeable, light and dark mode, one import per component.",

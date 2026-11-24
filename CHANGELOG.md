@@ -4,6 +4,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.25] - 2026-11-24
+
+### Changed
+
+- Button's side padding is smaller at every size: `xs` 8, `sm` 10, `md` 12, `lg` 16 (were 10, 14, 16, 20). The
+  heights do not change.
+
 ## [1.0.0-alpha.24] - 2026-11-24
 
 ### Changed (breaking)

@@ -61,10 +61,10 @@ const buttonVariants = cva(
         link: `text-accent underline-offset-4 hover:underline`,
       },
       size: {
-        md: 'h-control px-4 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
-        xs: 'h-6 gap-1 rounded-md px-2.5 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
-        sm: 'h-7 gap-1 px-3.5 text-xs font-normal',
-        lg: 'h-9 px-5 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
+        xs: 'h-6 gap-1 rounded-md px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
+        sm: 'h-7 gap-1 px-2.5 text-xs font-normal',
+        md: 'h-control px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
+        lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
         icon: 'size-9 squircle',
         'icon-xs':
           'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
