@@ -20,7 +20,7 @@ const segmentedVariants = cva(
       // The Button's heights (owner, 24 Nov 2026): md, the default, is 32.
       size: {
         sm: 'h-7 p-0.5',
-        md: 'h-control',
+        md: 'h-8',
         lg: 'h-9',
       },
     },

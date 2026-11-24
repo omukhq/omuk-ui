@@ -20,8 +20,8 @@ import { cn } from './utils';
 // Spectrum's recipe, owner 18 Nov 2026). On hover the edge stays and a
 // light grey fill (`bg-hover`) comes in (owner, 24 Nov 2026). Sizes
 // (R48, shadcn's scale): xs 24 (`h-6`), sm 28 (`h-7`, the formatting
-// toolbar), md 32, the default (`h-control`, --spacing-control in
-// theme.css: the height of every md field; owner, 24 Nov 2026: named md,
+// toolbar), md 32, the default (`h-8`, the height of every md field;
+// Tailwind's own scale, no custom height: owner, 24 Nov 2026; named md,
 // as the fields' sizes, not "default"), lg 36 (`h-9`); the icon sizes are
 // the same squares, `icon` the md one (32). Every component's default size
 // is md (owner, 24 Nov 2026), dialogs and forms too. xs is only for row actions and chips inside
@@ -64,9 +64,9 @@ const buttonVariants = cva(
       size: {
         xs: 'h-6 gap-1 rounded-md px-2 text-xs pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
         sm: 'h-7 gap-1 px-2.5 text-xs font-normal',
-        md: 'h-control px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
+        md: 'h-8 px-3 [&:has(>[data-icon=inline-start])]:pl-2 [&:has(>[data-icon=inline-end])]:pr-2',
         lg: 'h-9 px-4 [&:has(>[data-icon=inline-start])]:pl-3 [&:has(>[data-icon=inline-end])]:pr-3',
-        icon: 'size-control squircle',
+        icon: 'size-8 squircle',
         'icon-xs':
           'size-6 squircle pointer-coarse:after:absolute pointer-coarse:after:-inset-1',
         'icon-sm': 'size-7 squircle',

@@ -114,10 +114,6 @@
      Spacing steps: 0.5 1 2 3 4 6 8 12 16. Control heights: h-10 (40) h-8 (32) h-7 (28, formatting toolbar) h-6 (24, row actions). */
   /* The read views' text column (boards 13 and 14): about 75 characters a line. max-w-reading */
   --container-reading: 720px;
-  /* The md control's height (`h-control`): the default button and every md
-     field, 32. One token, so an app can make its default controls smaller
-     or larger in one place (owner, 24 Nov 2026). */
-  --spacing-control: calc(var(--spacing) * 8);
 
   /* 3 · Type — seven interface sizes, each with its line height. text-base is Tailwind's own
      (16px, 1.5); the others differ from Tailwind's and are set here. Tailwind's larger sizes

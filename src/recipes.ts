@@ -58,8 +58,7 @@ export const FIELD_WRAPPER_EDGE = [
 export const FIELD_SIZE = {
   xs: 'h-6',
   sm: 'h-7',
-  // --spacing-control (theme.css): 32, unless the app changes it.
-  md: 'h-control',
+  md: 'h-8',
   lg: 'h-9',
 } as const;
 

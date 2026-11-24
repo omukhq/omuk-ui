@@ -113,7 +113,7 @@ the component together.
 
 ### Button
 - Base: `inline-flex items-center gap-2 rounded-md font-medium focus-visible:focus-ring`
-- Size prop → classes: lg `h-9 px-4` · md, the default, `h-control px-3` (32, `--spacing-control`; named md as the fields' sizes, owner 24 Nov 2026) · sm `h-7 px-2 text-xs` (the base `rounded-md`, owner 23 Nov 2026) · xs `h-6 px-2 text-xs`.
+- Size prop → classes: lg `h-9 px-4` · md, the default, `h-8 px-3` (32; Tailwind's own heights, no custom one; named md as the fields' sizes, owner 24 Nov 2026) · sm `h-7 px-2 text-xs` (the base `rounded-md`, owner 23 Nov 2026) · xs `h-6 px-2 text-xs`.
   Icon-only: `icon-lg/icon/icon-sm/icon-xs`, `size-9/8/7/6 p-0`, so the 16 icon stays 16.
   With a leading icon, the left padding drops one step (`pl-3` / `pl-2`).
 - Variant:

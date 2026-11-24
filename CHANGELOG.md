@@ -4,6 +4,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+### Changed (breaking)
+
+- The md height is Tailwind's `h-8` (and `size-8` for the md icon button) again, not `h-control`.
+  `--spacing-control` is gone: no component uses a custom height (owner, 24 Nov 2026). To update: replace
+  `h-control` with `h-8` and `size-control` with `size-8`, and drop an override of `--spacing-control`.
+
+### Fixed
+
+- A caller's height on an md Button (`h-auto`, `h-9`) replaces its `h-8` again. tailwind-merge did not know
+  `h-control`, so both stayed and the md height won (Markpad's starter cards drew 32 tall).
+
 ## [1.0.0-alpha.26] - 2026-11-24
 
 ### Changed (breaking)
