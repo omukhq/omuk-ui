@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { FormValue } from './form-value';
 import {
   type OpenChangeDetails,
   PopupFrame,
@@ -274,13 +275,13 @@ function Select<Value>({
     >
       {children}
       {name && (
-        <input
+        <FormValue
           ref={inputRef}
-          type="hidden"
           name={name}
           value={formValue}
           required={required}
           disabled={disabled}
+          focusTarget={() => root.trigger}
         />
       )}
     </SelectContext>

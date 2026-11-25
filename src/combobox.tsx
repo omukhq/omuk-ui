@@ -17,6 +17,7 @@ import {
   useState,
 } from 'react';
 import { Button } from './button';
+import { FormValue } from './form-value';
 import {
   InputGroup,
   InputGroupAddon,
@@ -351,12 +352,12 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
       {children}
       {name &&
         (selected.length ? selected : [null]).map((item, at) => (
-          <input
+          <FormValue
             key={at}
-            type="hidden"
             name={name}
             required={required}
             disabled={disabled}
+            focusTarget={() => input.current}
             value={
               item == null
                 ? ''

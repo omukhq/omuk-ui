@@ -16,6 +16,7 @@ import {
   type HourCycle,
   hourCycleOf,
 } from './date/locale';
+import { FormValue } from './form-value';
 import { InputGroupButton } from './input-group';
 import { PopupFrame, popupState, usePopupRoot } from './popup';
 import { FIELD_SIZE, type FieldSize, POP, SURFACE } from './recipes';
@@ -28,6 +29,14 @@ import { cn } from './utils';
 // them; the calendar button inside the field opens a Calendar.
 
 export type { DateRange };
+
+/**
+ * The picker's first typed part, next to its form value: where the focus
+ * goes when the form reports that a required date is empty.
+ */
+function firstPart(input: HTMLInputElement) {
+  return input.parentElement?.querySelector<HTMLElement>('[data-segment]');
+}
 
 /** A shortcut beside the range calendar: "Last 7 days". */
 export type DatePreset = { label: string; range: DateRange };
@@ -434,11 +443,11 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
       }
       hidden={
         props.name && (
-          <input
-            type="hidden"
+          <FormValue
             name={props.name}
             value={value ?? ''}
             required={props.isRequired}
+            focusTarget={firstPart}
           />
         )
       }
@@ -588,17 +597,19 @@ function RangePicker(props: RangeModeProps) {
       hidden={
         <>
           {props.startName && (
-            <input
-              type="hidden"
+            <FormValue
               name={props.startName}
               value={value?.start ?? ''}
+              required={props.isRequired}
+              focusTarget={firstPart}
             />
           )}
           {props.endName && (
-            <input
-              type="hidden"
+            <FormValue
               name={props.endName}
               value={value?.end ?? ''}
+              required={props.isRequired}
+              focusTarget={firstPart}
             />
           )}
         </>
