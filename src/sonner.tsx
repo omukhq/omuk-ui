@@ -465,7 +465,7 @@ export function Toaster({
   }
 
   // Newest first: the front of the stack.
-  const front = [...shown].reverse();
+  const front = shown.toReversed();
   const heightOf = (each: Toast) => heights.get(each.id) ?? FIRST_HEIGHT;
   const frontHeight = front[0] ? heightOf(front[0]) : FIRST_HEIGHT;
   const listHeight = open
