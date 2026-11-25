@@ -3,7 +3,10 @@ import {
   createContext,
   type PointerEvent,
   type ReactNode,
+  type RefObject,
   use,
+  useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -34,6 +37,13 @@ const DELAY = 600;
 /** After a group's tooltip closes, the next one opens with no delay for this long. */
 const GROUP_WINDOW = 400;
 
+/**
+ * How long a tooltip stays after the pointer leaves its trigger: time to
+ * cross the gap onto the tooltip, which then stays while the pointer is on
+ * it (WCAG 1.4.13; Modern Web Guidance, interest-triggered-tooltips).
+ */
+const HOVER_GRACE = 100;
+
 /** One tooltip, as its group sees it. */
 type Member = { closeInstantly: () => void };
 
@@ -50,6 +60,12 @@ type TooltipState = ReturnType<typeof usePopupRoot> & {
   /** Closing without its exit animation: another of the group opened. */
   instant: boolean;
   member: Member;
+  /** The id of the text the trigger is described by, on the page always. */
+  descriptionId: string;
+  /** The wait to show or hide, one for the trigger and the tooltip. */
+  timer: RefObject<ReturnType<typeof setTimeout> | undefined>;
+  /** Hides after the grace time: the pointer left the trigger or the tooltip. */
+  leave: RefObject<((event: Event) => void) | undefined>;
 };
 
 const TooltipContext = createContext<TooltipState | null>(null);
@@ -93,6 +109,9 @@ function Tooltip({
     root.setOpen(false, 'group');
   };
   if (root.open && instant) setInstant(false);
+  const descriptionId = useId();
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const leave = useRef<(event: Event) => void>(undefined);
   return (
     <TooltipContext
       value={{
@@ -101,6 +120,9 @@ function Tooltip({
         status: disabled ? 'closed' : root.status,
         instant,
         member,
+        descriptionId,
+        timer,
+        leave,
       }}
     >
       {children}
@@ -126,10 +148,22 @@ function TooltipTrigger({
 }: TooltipTriggerProps) {
   const tooltip = useTooltip();
   const timing = use(TimingContext);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const timer = tooltip.timer;
   // Pressed: no tooltip again until the pointer leaves.
   const pressed = useRef(false);
-  const merged = useMergedRef(ref, tooltip.setTrigger);
+  const own = useRef<HTMLElement | null>(null);
+  const merged = useMergedRef(useMergedRef(ref, tooltip.setTrigger), own);
+  // Described by the tooltip's text, unless that text is already its name
+  // (an icon button named "Copy" with the tooltip "Copy"): read twice
+  // otherwise (Modern Web Guidance, interest-triggered-tooltips).
+  const [repeatsName, setRepeatsName] = useState(false);
+  useLayoutEffect(() => {
+    const name = own.current?.getAttribute('aria-label')?.trim();
+    const text = document
+      .getElementById(tooltip.descriptionId)
+      ?.textContent?.trim();
+    setRepeatsName(Boolean(name) && name === text);
+  });
 
   function later(ms: number, then: () => void) {
     clearTimeout(timer.current);
@@ -164,6 +198,14 @@ function TooltipTrigger({
       group && (group.showing || Date.now() - group.closedAt < GROUP_WINDOW);
     return warm ? 0 : (delay ?? timing?.delay ?? DELAY);
   }
+  /** The wait before it hides: at least the time to reach the tooltip. */
+  const hideDelay = Math.max(
+    closeDelay ?? timing?.closeDelay ?? 0,
+    HOVER_GRACE,
+  );
+  // The tooltip calls this when the pointer leaves it.
+  tooltip.leave.current = (event: Event) =>
+    later(hideDelay, () => hide(event, 'trigger-hover'));
 
   return useRender(
     'button',
@@ -171,6 +213,7 @@ function TooltipTrigger({
       {
         ref: merged,
         'data-slot': 'tooltip-trigger',
+        'aria-describedby': repeatsName ? undefined : tooltip.descriptionId,
         ...triggerState(tooltip.open),
         onPointerEnter(event: PointerEvent<HTMLElement>) {
           if (event.pointerType === 'touch' || pressed.current) return;
@@ -179,10 +222,7 @@ function TooltipTrigger({
         },
         onPointerLeave(event: PointerEvent<HTMLElement>) {
           pressed.current = false;
-          const native = event.nativeEvent;
-          later(closeDelay ?? timing?.closeDelay ?? 0, () =>
-            hide(native, 'trigger-hover'),
-          );
+          tooltip.leave.current?.(event.nativeEvent);
         },
         onPointerDown(event: PointerEvent<HTMLElement>) {
           pressed.current = true;
@@ -222,30 +262,42 @@ function TooltipContent({
 }) {
   const tooltip = useTooltip();
   return (
-    <PopupFrame
-      root={tooltip}
-      kind="tooltip"
-      placement={{ side, align, sideOffset, alignOffset }}
-      finalFocus={false}
-      className="isolate z-50"
-    >
-      <div
-        data-slot="tooltip-content"
-        data-side={side}
-        data-align={align}
-        data-instant={tooltip.instant ? '' : undefined}
-        {...popupState(tooltip.open)}
-        // DESIGN.md's tooltip (recipes.ts). No arrow.
-        className={cn(
-          TOOLTIP,
-          'z-50 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-instant:animate-none',
-          className,
-        )}
-        {...props}
-      >
+    <>
+      {/* The text the trigger is described by, there while the tooltip is
+          closed too: a reference to a part that is not on the page names
+          nothing. Hidden, so it is read only through the trigger. */}
+      <span id={tooltip.descriptionId} hidden>
         {children}
-      </div>
-    </PopupFrame>
+      </span>
+      <PopupFrame
+        root={tooltip}
+        kind="tooltip"
+        placement={{ side, align, sideOffset, alignOffset }}
+        finalFocus={false}
+        className="isolate z-50"
+      >
+        <div
+          role="tooltip"
+          data-slot="tooltip-content"
+          // The pointer on the tooltip keeps it; leaving it starts the wait.
+          onPointerEnter={() => clearTimeout(tooltip.timer.current)}
+          onPointerLeave={(event) => tooltip.leave.current?.(event.nativeEvent)}
+          data-side={side}
+          data-align={align}
+          data-instant={tooltip.instant ? '' : undefined}
+          {...popupState(tooltip.open)}
+          // DESIGN.md's tooltip (recipes.ts). No arrow.
+          className={cn(
+            TOOLTIP,
+            'z-50 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-instant:animate-none',
+            className,
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </PopupFrame>
+    </>
   );
 }
 

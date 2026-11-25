@@ -162,6 +162,7 @@ function Button({
         <>
           <span className="invisible contents">{children}</span>
           <Spinner
+            role="img"
             aria-label={loadingLabel}
             className="absolute inset-0 m-auto text-current"
           />

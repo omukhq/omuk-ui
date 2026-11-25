@@ -396,6 +396,44 @@
     animation: none;
   }
 }
+/* The spinner (spinner.tsx): the ring turns, and the arc grows, travels
+   and shrinks, as the SVG animation it had. Reduced motion: the ring turns
+   slowly, the arc stays still (Modern Web Guidance, spinner: slower, not
+   stopped, so it still says "busy"). */
+@keyframes spinner-turn {
+  to {
+    rotate: 1turn;
+  }
+}
+@keyframes spinner-arc {
+  0% {
+    stroke-dasharray: 0 150;
+    stroke-dashoffset: 0;
+  }
+  47.5% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -16;
+  }
+  95%,
+  100% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -59;
+  }
+}
+@utility animate-spinner {
+  animation: spinner-turn 2s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 6s;
+  }
+}
+@utility animate-spinner-arc {
+  stroke-dasharray: 42 150;
+  animation: spinner-arc 1.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 @utility fade-in-* {
   --tw-enter-opacity: calc(--value(integer) * 1%);
 }
