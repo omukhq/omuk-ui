@@ -78,9 +78,12 @@ export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD
 export const FIELD_OFF =
   'cursor-not-allowed bg-hover text-muted edge-control inset-ring-border';
 
-/** Popovers, menus and lists that float: page ground, small shadow. */
+/**
+ * Popovers, menus and lists that float: page ground, small shadow; an
+ * outline in forced colours, where the shadow is gone (`forced-edge`).
+ */
 export const SURFACE =
-  'rounded-lg bg-page p-1 text-sm text-foreground shadow-sm';
+  'rounded-lg bg-page p-1 text-sm text-foreground shadow-sm forced-edge';
 
 /** How a floating surface comes and goes. */
 export const POP =
@@ -128,7 +131,7 @@ export const CHIP =
  * `p-6 rounded-xl bg-page shadow-lg gap-4`.
  */
 export const MODAL_BOX =
-  'grid gap-4 rounded-xl bg-page p-6 text-sm text-foreground shadow-lg';
+  'grid gap-4 rounded-xl bg-page p-6 text-sm text-foreground shadow-lg forced-edge';
 
 /** A modal: its look, centred, 16 from the window's sides on a phone. */
 export const MODAL = `${MODAL_BOX} fixed inset-x-4 top-1/2 z-50 mx-auto w-auto -translate-y-1/2 outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95`;
@@ -150,4 +153,4 @@ export const MODAL_DESCRIPTION =
  * text-on-primary text-xs`; a shortcut after the text in the outline colour.
  */
 export const TOOLTIP =
-  'inline-flex w-fit max-w-xs items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-on-primary [&_kbd]:text-outline';
+  'inline-flex w-fit max-w-xs items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-on-primary forced-edge [&_kbd]:text-outline';

@@ -268,7 +268,7 @@ function DrawerContent({
           // drag; a top or bottom one leaves the drag to its content.
           style={horizontal ? { touchAction: 'pan-y' } : undefined}
           className={cn(
-            'pointer-events-auto flex flex-col bg-page text-sm text-foreground shadow-lg outline-none will-change-transform',
+            'pointer-events-auto flex flex-col bg-page text-sm text-foreground shadow-lg outline-none forced-edge will-change-transform',
             'transition-transform duration-400 ease-out',
             POPUP_BY_DIRECTION[direction],
             className,

@@ -9,7 +9,7 @@ import { cn } from './utils';
 // keeps a gap to it.
 
 const cardVariants = cva(
-  'group/card flex flex-col overflow-hidden rounded-lg bg-raised text-sm text-foreground shadow-sm',
+  'group/card flex flex-col overflow-hidden rounded-lg bg-raised text-sm text-foreground shadow-sm forced-edge',
   {
     variants: {
       size: {
