@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Button } from './button';
+import { useFieldControl } from './field-context';
 import {
   FIELD_SIZE,
   FIELD_TEXT,
@@ -172,6 +173,7 @@ function InputGroupInput({
   className,
   ...props
 }: React.ComponentProps<'input'>) {
+  const field = useFieldControl(props);
   return (
     <input
       data-slot="input-group-control"
@@ -182,6 +184,7 @@ function InputGroupInput({
         className,
       )}
       {...props}
+      {...field}
     />
   );
 }
@@ -190,6 +193,7 @@ function InputGroupTextarea({
   className,
   ...props
 }: React.ComponentProps<'textarea'>) {
+  const field = useFieldControl(props);
   return (
     <textarea
       data-slot="input-group-control"
@@ -200,6 +204,7 @@ function InputGroupTextarea({
         className,
       )}
       {...props}
+      {...field}
     />
   );
 }

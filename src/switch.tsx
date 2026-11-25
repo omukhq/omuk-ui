@@ -1,5 +1,6 @@
 import { CheckIcon } from 'lucide-react';
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import { useFieldControl } from './field-context';
 import { mergeProps, type RenderProp, useRender } from './render';
 import { cn } from './utils';
 
@@ -123,7 +124,7 @@ function Switch({
           </span>
         ),
       },
-      props,
+      { ...props, ...useFieldControl(props) },
     ),
     render,
   );

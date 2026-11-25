@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useFieldControl } from './field-context';
 import { FormValue } from './form-value';
 import {
   type OpenChangeDetails,
@@ -435,7 +436,7 @@ function SelectTrigger({
           </>
         ),
       },
-      props,
+      { ...props, ...useFieldControl(props) },
     ),
     render,
   );

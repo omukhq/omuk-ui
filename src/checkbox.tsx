@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { CheckboxGroupContext, parentState } from './checkbox-group';
+import { useFieldControl } from './field-context';
 import { mergeProps, type RenderProp, useRender } from './render';
 import { cn } from './utils';
 
@@ -197,7 +198,7 @@ function Checkbox({
             </span>
           ) : null,
       },
-      props,
+      { ...props, ...useFieldControl(props) },
     ),
     render,
   );

@@ -1,4 +1,5 @@
-import type { ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, useLayoutEffect, useRef } from 'react';
+import { useMergedRef } from './render';
 
 type FormValueProps = Omit<
   ComponentPropsWithRef<'input'>,
@@ -9,6 +10,11 @@ type FormValueProps = Omit<
    * error. Gets this input, for a control found next to it in the page.
    */
   focusTarget: (input: HTMLInputElement) => HTMLElement | null | undefined;
+  /**
+   * The control's own error (a `validate` result): the form does not send
+   * while there is one, as with a native check.
+   */
+  error?: string | null;
 };
 
 /**
@@ -19,9 +25,20 @@ type FormValueProps = Omit<
  * select-menu-interaction). The browser focuses this input to show its
  * message; the input hands the focus on to the visible control.
  */
-export function FormValue({ focusTarget, ...props }: FormValueProps) {
+export function FormValue({
+  focusTarget,
+  error,
+  ref,
+  ...props
+}: FormValueProps) {
+  const own = useRef<HTMLInputElement | null>(null);
+  const merged = useMergedRef(ref, own);
+  useLayoutEffect(() => {
+    own.current?.setCustomValidity(error ?? '');
+  }, [error]);
   return (
     <input
+      ref={merged}
       {...props}
       aria-hidden
       tabIndex={-1}

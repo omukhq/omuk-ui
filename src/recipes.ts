@@ -31,10 +31,13 @@ export const FIELD_TEXT_OFF = 'cursor-not-allowed text-muted';
  * 2-wide `control` edge, as React Spectrum's field (owner, 18 Nov 2026;
  * 1-wide from alpha.2 to alpha.10), the same on hover (owner: no hover
  * edge on fields), the field's focus ring on focus, and the 2-wide danger
- * edge for `aria-invalid`, which keeps the ring when focused.
+ * edge for `aria-invalid`, which keeps the ring when focused. A native
+ * check (`required`, `type="email"`, `pattern`) shows the same edge once
+ * the person has changed the field or sent the form (`:user-invalid`), not
+ * at page load (Modern Web Guidance, validate-input-after-interaction).
  */
 export const FIELD_EDGE =
-  'edge-control inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger';
+  'edge-control inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger user-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -44,7 +47,7 @@ export const FIELD_EDGE =
  * Field with a trailing action).
  */
 export const FIELD_WRAPPER_EDGE = [
-  'edge-control inset-ring-control has-aria-invalid:inset-ring-danger',
+  'edge-control inset-ring-control has-aria-invalid:inset-ring-danger has-user-invalid:inset-ring-danger',
   'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 

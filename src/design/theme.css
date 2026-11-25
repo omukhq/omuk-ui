@@ -512,7 +512,9 @@
    a form with an invalid field does not turn its other rings red. */
 @layer base {
   [aria-invalid="true"],
-  :has(> [aria-invalid="true"]) {
+  :has(> [aria-invalid="true"]),
+  :user-invalid,
+  :has(> :user-invalid) {
     --focus-edge: var(--color-danger);
     --focus-halo: var(--color-danger-ring);
   }

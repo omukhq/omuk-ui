@@ -1,3 +1,4 @@
+import { useFieldControl } from './field-context';
 import { FIELD, FIELD_OFF } from './recipes';
 import { cn } from './utils';
 
@@ -8,6 +9,7 @@ import { cn } from './utils';
 // and such a line wraps anywhere.
 
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+  const field = useFieldControl(props);
   return (
     <textarea
       data-slot="textarea"
@@ -18,6 +20,7 @@ function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
         className,
       )}
       {...props}
+      {...field}
     />
   );
 }

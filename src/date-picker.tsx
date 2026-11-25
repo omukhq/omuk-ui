@@ -360,6 +360,7 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
   const [own, setOwn] = useState(props.defaultValue ?? null);
   const value = props.value === undefined ? own : props.value;
   const [touched, setTouched] = useState(false);
+  const [interacted, setInteracted] = useState(false);
   const dateProps = isTime ? null : props;
   const root = usePopupRoot({
     open: dateProps?.isOpen,
@@ -373,6 +374,7 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
 
   function set(next: string | null) {
     setOwn(next);
+    setInteracted(true);
     props.onChange?.(next);
   }
 
@@ -393,7 +395,11 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
     if (close) root.setOpen(false, 'item-press');
   }
 
-  const error = props.validate?.(value) ?? null;
+  // The form knows the problem at once; the person sees it only once they
+  // have changed the field or sent the form (as :user-invalid): a
+  // `validate` that rejects null would otherwise show at page load.
+  const problem = props.validate?.(value) ?? null;
+  const error = value === null && !interacted ? null : problem;
 
   return (
     <PickerShell
@@ -447,7 +453,9 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
             name={props.name}
             value={value ?? ''}
             required={props.isRequired}
+            error={problem}
             focusTarget={firstPart}
+            onInvalid={() => setInteracted(true)}
           />
         )
       }
@@ -478,6 +486,7 @@ function RangePicker(props: RangeModeProps) {
   // The value changed from outside ("Clear all", a link): show it. Our own
   // change (a null for a half-typed or backwards range) keeps the typing.
   const emitted = useRef<DateRange | null | undefined>(undefined);
+  const [interacted, setInteracted] = useState(false);
   const [seen, setSeen] = useState(value);
   if (value !== seen) {
     setSeen(value);
@@ -500,6 +509,7 @@ function RangePicker(props: RangeModeProps) {
   }
 
   function typed(end: 'start' | 'end', day: string | null) {
+    setInteracted(true);
     const next = { ...draft, [end]: day };
     const start = parseDay(next.start);
     const last = parseDay(next.end);
@@ -513,6 +523,7 @@ function RangePicker(props: RangeModeProps) {
   }
 
   function pick(range: DateRange) {
+    setInteracted(true);
     setDraft(range);
     set(range);
     if (props.shouldCloseOnSelect ?? true) root.setOpen(false, 'item-press');
@@ -523,7 +534,9 @@ function RangePicker(props: RangeModeProps) {
   const backwards = Boolean(
     typedStart && typedEnd && compareDays(typedStart, typedEnd) > 0,
   );
-  const error = props.validate?.(value) ?? null;
+  // As one date: no error for an empty range until it is changed or sent.
+  const problem = props.validate?.(value) ?? null;
+  const error = value === null && !interacted ? null : problem;
   const field = (end: 'start' | 'end') => (
     <DateSegments
       kind="date"
@@ -601,7 +614,9 @@ function RangePicker(props: RangeModeProps) {
               name={props.startName}
               value={value?.start ?? ''}
               required={props.isRequired}
+              error={problem}
               focusTarget={firstPart}
+              onInvalid={() => setInteracted(true)}
             />
           )}
           {props.endName && (
@@ -610,6 +625,7 @@ function RangePicker(props: RangeModeProps) {
               value={value?.end ?? ''}
               required={props.isRequired}
               focusTarget={firstPart}
+              onInvalid={() => setInteracted(true)}
             />
           )}
         </>

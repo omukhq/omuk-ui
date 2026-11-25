@@ -1,4 +1,11 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useCallback, useId, useMemo, useState } from 'react';
+import {
+  FieldContext,
+  type FieldPart,
+  type FieldState,
+  useFieldPart,
+} from './field-context';
 import { Label } from './label';
 import { Separator } from './separator';
 import { cn } from './utils';
@@ -67,19 +74,40 @@ const fieldVariants = cva('group/field flex w-full', {
   },
 });
 
+/**
+ * A label, a control, and its description and error. The control inside
+ * names the description and the error in `aria-describedby` by itself, and
+ * is invalid while the error shows (field-context.ts).
+ */
 function Field({
   className,
   orientation = 'vertical',
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
+  const [parts, setParts] = useState<FieldState['parts']>([]);
+  const add = useCallback(
+    (id: string, part: FieldPart) =>
+      setParts((now) => [
+        ...now.filter((each) => each.id !== id),
+        { id, part },
+      ]),
+    [],
+  );
+  const remove = useCallback(
+    (id: string) => setParts((now) => now.filter((each) => each.id !== id)),
+    [],
+  );
+  const field = useMemo(() => ({ parts, add, remove }), [parts, add, remove]);
   return (
-    <div
-      role="group"
-      data-slot="field"
-      data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
-      {...props}
-    />
+    <FieldContext value={field}>
+      <div
+        role="group"
+        data-slot="field"
+        data-orientation={orientation}
+        className={cn(fieldVariants({ orientation }), className)}
+        {...props}
+      />
+    </FieldContext>
   );
 }
 
@@ -125,9 +153,17 @@ function FieldTitle({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FieldDescription({ className, ...props }: React.ComponentProps<'p'>) {
+function FieldDescription({
+  className,
+  id: ownId,
+  ...props
+}: React.ComponentProps<'p'>) {
+  const autoId = useId();
+  const id = ownId ?? autoId;
+  useFieldPart(id, 'description', true);
   return (
     <p
+      id={id}
       data-slot="field-description"
       className={cn(
         'text-left text-xs leading-normal font-normal text-muted group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-2',
@@ -187,19 +223,30 @@ function errorContent(
   );
 }
 
+/**
+ * The field's error. Not a live region of its own: the control names it in
+ * `aria-describedby` and turns invalid, so a screen reader reads it with
+ * the field (Modern Web Guidance, accessible-error-announcement: an alert
+ * per message is not read out reliably). After a failed submit, the app
+ * moves the focus to the first invalid field.
+ */
 function FieldError({
   className,
   children,
   errors,
+  id: ownId,
   ...props
 }: React.ComponentProps<'div'> & {
   errors?: Array<{ message?: string } | undefined>;
 }) {
+  const autoId = useId();
+  const id = ownId ?? autoId;
   const content = errorContent(children, errors);
+  useFieldPart(id, 'error', Boolean(content));
   if (!content) return null;
   return (
     <div
-      role="alert"
+      id={id}
       data-slot="field-error"
       className={cn('text-xs font-normal text-danger', className)}
       {...props}

@@ -1,3 +1,4 @@
+import { useFieldControl } from './field-context';
 import { FIELD, FIELD_OFF, FIELD_SIZE, type FieldSize } from './recipes';
 import { cn } from './utils';
 
@@ -12,6 +13,7 @@ type InputProps = Omit<React.ComponentProps<'input'>, 'size'> & {
 };
 
 function Input({ className, type, size = 'md', ...props }: InputProps) {
+  const field = useFieldControl(props);
   return (
     <input
       type={type}
@@ -26,6 +28,7 @@ function Input({ className, type, size = 'md', ...props }: InputProps) {
         className,
       )}
       {...props}
+      {...field}
     />
   );
 }
