@@ -9,7 +9,7 @@ import {
 import { filterCommands } from './command-filter';
 import { Dialog, DialogContent, DialogTitle } from './dialog';
 import { MENU_SEPARATOR, ROW, SECTION_LABEL, SHORTCUT } from './recipes';
-import { cn } from './utils';
+import { cn, isComposing } from './utils';
 
 // A command menu: a search field over a list of commands, for ⌘K. Type to
 // narrow the list; the arrow keys, Home and End move the highlight; Enter
@@ -95,6 +95,8 @@ function Command({
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    // Every key belongs to the input method while it composes.
+    if (isComposing(event.nativeEvent)) return;
     const index = active ? enabled.indexOf(active) : -1;
     const last = enabled.length - 1;
     if (event.key === 'ArrowDown') {
@@ -109,11 +111,7 @@ function Command({
     } else if (event.key === 'End' && event.ctrlKey) {
       event.preventDefault();
       highlight(enabled[last]);
-    } else if (
-      event.key === 'Enter' &&
-      active &&
-      !event.nativeEvent.isComposing
-    ) {
+    } else if (event.key === 'Enter' && active) {
       event.preventDefault();
       choose(active);
     }

@@ -49,7 +49,7 @@ import {
   TICK_SLOT,
 } from './recipes';
 import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
-import { cn } from './utils';
+import { cn, isComposing } from './utils';
 
 // A combobox: a text field that filters a list of options under it
 // (WAI-ARIA combobox with a listbox popup). The focus stays in the field;
@@ -458,7 +458,7 @@ function useInputProps(
         if (combobox.openOnInputClick && !combobox.open) open(event, 'chosen');
       },
       onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-        if (event.nativeEvent.isComposing) return;
+        if (isComposing(event.nativeEvent)) return;
         const { open: isOpen, highlighted } = combobox;
         switch (event.key) {
           case 'ArrowDown':

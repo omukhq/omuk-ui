@@ -9,6 +9,7 @@
 import { type ReactNode, type RefObject, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type Box, boxOf, type Placement, place } from './position';
+import { isComposing } from './utils';
 
 export type InteractionType = 'mouse' | 'touch' | 'pen' | 'keyboard' | '';
 
@@ -155,7 +156,7 @@ function top() {
 
 /** Escape closes the newest popup, and only that one. */
 function onEscape(event: KeyboardEvent) {
-  if (event.key !== 'Escape' || event.isComposing) return;
+  if (event.key !== 'Escape' || isComposing(event)) return;
   const layer = top();
   if (!layer) return;
   if (!layer.passive) {
@@ -217,13 +218,26 @@ export function swallowClick() {
   );
 }
 
-/** Resolves when the element's animations (and its children's) have ended. */
+/** The longest a close waits for its exit animation. */
+const EXIT_LIMIT_MS = 2000;
+
+/**
+ * Resolves when the element's animations (and its children's) have ended.
+ * An endless one (a spinning icon on a busy button, a pulse) never ends,
+ * so it is left out, and the wait has a limit: without one the popup never
+ * closed and the page stayed inert (Modern Web Guidance,
+ * animate-to-from-top-layer).
+ */
 export function animationsDone(element: HTMLElement) {
-  return Promise.all(
-    element
-      .getAnimations({ subtree: true })
-      .map((animation) => animation.finished.catch(() => undefined)),
-  );
+  const finite = element
+    .getAnimations({ subtree: true })
+    .filter(
+      (animation) => animation.effect?.getTiming().iterations !== Infinity,
+    );
+  return Promise.race([
+    Promise.allSettled(finite.map((animation) => animation.finished)),
+    new Promise((done) => setTimeout(done, EXIT_LIMIT_MS)),
+  ]);
 }
 
 export function focusTarget(

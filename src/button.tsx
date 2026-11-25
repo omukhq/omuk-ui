@@ -180,4 +180,4 @@ function isTrue(value: unknown): boolean {
 }
 
 export type { ButtonProps };
-export { Button, buttonVariants };
+export { Button, buttonVariants, OFF_TEXT as buttonOffText };

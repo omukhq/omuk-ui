@@ -385,6 +385,32 @@ export function Toaster({
     () => new Map(),
   );
   const list = useRef<HTMLOListElement>(null);
+  // Where the focus was before it came into the toasts.
+  const cameFrom = useRef<HTMLElement | null>(null);
+
+  /**
+   * Closes a toast from a press inside it. When it had the focus, the
+   * focus goes on to another toast's first button, else back to where it
+   * came from, not to the page's start (Modern Web Guidance,
+   * persistent-toast-notifications).
+   */
+  function closeFrom(target: HTMLElement, id: Toast['id']) {
+    const item = target.closest('li');
+    const hadFocus = Boolean(item?.contains(document.activeElement));
+    dismiss(id);
+    if (!hadFocus) return;
+    const others = [
+      ...(list.current?.querySelectorAll<HTMLElement>(
+        'li:not([data-closing])',
+      ) ?? []),
+    ].filter((each) => each !== item);
+    const next = others
+      .map((each) => each.querySelector<HTMLElement>('button'))
+      .find(Boolean);
+    next?.focus();
+    // No other toast, or it cannot take the focus yet (still tucked).
+    if (!next || document.activeElement !== next) cameFrom.current?.focus();
+  }
 
   // Nothing left: the next toast starts in a closed stack.
   if (open && shown.length === 0) setOpen(false);
@@ -507,7 +533,9 @@ export function Toaster({
             // A phone has no hover: a tap opens the stack.
             if (event.pointerType === 'touch' && !open) expand(true);
           }}
-          onFocus={() => {
+          onFocus={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              cameFrom.current = event.relatedTarget as HTMLElement | null;
             setOpen(true);
             hold('focus', true);
           }}
@@ -621,7 +649,8 @@ export function Toaster({
                       )}
                       onClick={(event) => {
                         each.action?.onClick(event);
-                        if (!event.defaultPrevented) dismiss(each.id);
+                        if (!event.defaultPrevented)
+                          closeFrom(event.currentTarget, each.id);
                       }}
                     >
                       {each.action.label}
@@ -632,7 +661,9 @@ export function Toaster({
                       type="button"
                       aria-label="Close toast"
                       className={cn(TOAST.closeButton, classNames.closeButton)}
-                      onClick={() => dismiss(each.id)}
+                      onClick={(event) =>
+                        closeFrom(event.currentTarget, each.id)
+                      }
                     >
                       <XIcon strokeWidth={1.5} />
                     </button>

@@ -23,3 +23,14 @@ const twMerge = extendTailwindMerge({
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Whether a key press belongs to an input method (Japanese, Chinese,
+ * Korean) still composing text, so Enter or an arrow is the IME's, not
+ * ours. Safari ends the composition before the confirming Enter's keydown
+ * (`isComposing` false), but gives it keyCode 229 (Modern Web Guidance,
+ * ime-safe-enter-submit).
+ */
+export function isComposing(event: KeyboardEvent) {
+  return event.isComposing || event.keyCode === 229;
+}
