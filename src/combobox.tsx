@@ -12,12 +12,11 @@ import {
   type ReactNode,
   type RefObject,
   use,
-  useCallback,
-  useEffect,
   useId,
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './button';
 import { FormValue } from './form-value';
 import {
@@ -133,12 +132,9 @@ type ComboboxState = PopupRoot & {
   list: RefObject<HTMLDivElement | null>;
   /** A ComboboxButton is the field: the search sits in the list. */
   searchInPopup: RefObject<boolean>;
-  /** Puts a part's text in the combobox's status region, to be read out. */
-  announce: (source: Announcer, text: string) => void;
+  /** The status region, on the page from the start: what is put in it is read out. */
+  region: HTMLDivElement | null;
 };
-
-/** The parts that speak through the status region. */
-type Announcer = 'status' | 'empty';
 
 const ComboboxContext = createContext<ComboboxState | null>(null);
 
@@ -255,18 +251,11 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const list = useRef<HTMLDivElement | null>(null);
   const searchInPopup = useRef(false);
 
-  // What ComboboxStatus and ComboboxEmpty say. They mount with the list, and
-  // a live region that appears already filled is often not read out; this
-  // one is on the page from the start, so a change in it is.
-  const [messages, setMessages] = useState<Record<Announcer, string>>({
-    status: '',
-    empty: '',
-  });
-  const announce = useCallback((source: Announcer, text: string) => {
-    setMessages((now) =>
-      now[source] === text ? now : { ...now, [source]: text },
-    );
-  }, []);
+  // Where ComboboxStatus and ComboboxEmpty are read out. They mount with
+  // the list, and a live region that appears already filled is often not
+  // read out; this one is on the page from the start, so text they put in
+  // it (a portal) is.
+  const [region, setRegion] = useState<HTMLDivElement | null>(null);
 
   function type(
     text: string,
@@ -367,13 +356,11 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
         input,
         list,
         searchInPopup,
-        announce,
+        region,
       }}
     >
       {children}
-      <div role="status" className="sr-only">
-        {[messages.status, messages.empty].filter(Boolean).join(' ')}
-      </div>
+      <div ref={setRegion} role="status" className="sr-only" />
       {name &&
         (selected.length ? selected : [null]).map((item, at) => (
           <FormValue
@@ -895,40 +882,33 @@ function ComboboxButton({
  * "12 results". Put it in ComboboxContent; it takes no room while empty.
  * Base UI's Status. Use `className="sr-only"` to only announce it.
  */
-/**
- * Copies a part's text into the combobox's status region on each render,
- * and takes it out when the part goes (the list closes).
- */
-function useAnnounced(source: Announcer) {
-  const { announce } = useCombobox();
-  const element = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    announce(source, element.current?.textContent?.trim() ?? '');
-  });
-  useEffect(() => () => announce(source, ''), [announce, source]);
-  return element;
-}
-
 function ComboboxStatus({
   className,
   render,
-  ref,
+  children,
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
-  const merged = useMergedRef(ref, useAnnounced('status'));
-  return useRender(
+  const { region } = useCombobox();
+  const shown = useRender(
     'div',
     {
-      // Shown here, read out from the combobox's status region.
-      ref: merged,
       'data-slot': 'combobox-status',
       className: cn(
         'flex items-center gap-2 px-3 py-2 text-sm text-muted empty:hidden [&_svg]:size-4',
         className,
       ),
       ...props,
+      // Shown here, read out from the combobox's status region.
+      'aria-hidden': true,
+      children,
     },
     render,
+  );
+  return (
+    <>
+      {shown}
+      {region && children ? createPortal(children, region) : null}
+    </>
   );
 }
 
@@ -1100,26 +1080,31 @@ function ComboboxEmpty({
   className,
   children,
   render,
-  ref,
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
   const combobox = useCombobox();
-  const merged = useMergedRef(ref, useAnnounced('empty'));
-  return useRender(
+  const said = combobox.empty ? children : null;
+  const shown = useRender(
     'div',
     {
-      // Shown when the list empties; read out from the combobox's status
-      // region.
-      ref: merged,
       'data-slot': 'combobox-empty',
       className: cn(
         'hidden w-full justify-center py-2 text-center text-sm text-muted group-data-empty/combobox-content:flex',
         className,
       ),
       ...props,
-      children: combobox.empty ? children : null,
+      // Shown when the list empties; read out from the combobox's status
+      // region.
+      'aria-hidden': true,
+      children: said,
     },
     render,
+  );
+  return (
+    <>
+      {shown}
+      {combobox.region && said ? createPortal(said, combobox.region) : null}
+    </>
   );
 }
 
