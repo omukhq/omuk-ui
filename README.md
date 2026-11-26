@@ -221,6 +221,16 @@ To release:
 4. Push the commit and the tag.
 5. Run `bun publish`. It publishes with the `alpha` dist-tag (`publishConfig` in `package.json`), so `latest` stays
    free for `1.0.0`.
+6. Run `bun scripts/update-apps.ts` to move the apps that use Omuk UI to the new version. Run it with `--dry-run`
+   first to see what it will do. For each app's repo, it:
+   - makes a branch;
+   - sets the version and runs `bun install`;
+   - runs the repo's checks and commits;
+   - on GitHub, opens a pull request (a draft when the checks fail) with the changelog since the app's version.
+
+   It merges nothing. It skips a repo with uncommitted changes, or one that is not on its main branch. The list
+   of apps is on your machine, not in this repo: `~/.config/omuk-ui/apps.json`, for example
+   `{ "root": "~/codes", "skip": ["old-app"], "checks": { "an-app": "bun run check:push" } }`.
 
 ## Commands
 
