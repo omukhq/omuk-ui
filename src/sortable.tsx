@@ -91,6 +91,14 @@ function Sortable({
   const list = useRef<HTMLUListElement>(null);
   const labels = useRef(new Map<string, string>());
   const instructionsId = useId();
+  // Stops listening for Escape when a pointer drag ends.
+  const stopEscape = useRef<(() => void) | null>(null);
+
+  function endDrag() {
+    stopEscape.current?.();
+    stopEscape.current = null;
+    setDrag(null);
+  }
 
   function commit(from: number, to: number) {
     if (from === to) return;
@@ -115,7 +123,25 @@ function Sortable({
       );
       if (from < 0 || !items) return;
       event.preventDefault();
-      event.currentTarget.setPointerCapture(event.pointerId);
+      const handle = event.currentTarget;
+      const pointerId = event.pointerId;
+      handle.setPointerCapture(pointerId);
+      // Escape puts the item back. The handle does not take the focus on a
+      // pointer press, so the key is heard on the document, first, and
+      // goes no further (a dialog around the list stays open).
+      function onEscape(key: globalThis.KeyboardEvent) {
+        if (key.key !== 'Escape') return;
+        key.preventDefault();
+        key.stopPropagation();
+        if (handle.hasPointerCapture(pointerId)) {
+          handle.releasePointerCapture(pointerId);
+        }
+        endDrag();
+      }
+      stopEscape.current?.();
+      document.addEventListener('keydown', onEscape, true);
+      stopEscape.current = () =>
+        document.removeEventListener('keydown', onEscape, true);
       const spans = [...items].map((item) => {
         const rect = item.getBoundingClientRect();
         return { top: rect.top, height: rect.height };
@@ -138,11 +164,11 @@ function Sortable({
     drop(event) {
       if (!drag || event.pointerId !== drag.pointerId) return;
       // In one render: the new order, and no offsets or animation.
-      setDrag(null);
+      endDrag();
       commit(drag.from, drag.to);
     },
     cancel() {
-      setDrag(null);
+      endDrag();
     },
     step(value, by) {
       const from = order.indexOf(value);

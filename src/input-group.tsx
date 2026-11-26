@@ -199,7 +199,8 @@ function InputGroupTextarea({
       data-slot="input-group-control"
       className={cn(
         FIELD_TEXT,
-        'flex field-sizing-content min-h-16 flex-1 resize-none rounded-none px-3 py-2',
+        // As Textarea: grows up to 320; without field-sizing, drag it taller.
+        'flex field-sizing-content min-h-16 max-h-80 flex-1 resize-none rounded-none px-3 py-2 not-supports-[field-sizing:content]:resize-y',
         props.disabled && FIELD_TEXT_OFF,
         className,
       )}

@@ -55,8 +55,8 @@ export const FIELD_WRAPPER_EDGE = [
  * A one-line field's height: the Button's heights (owner, 24 Nov 2026), so
  * a field and a button of one size line up; the middle one is `md`, the
  * default (owner: not "default"). The text stays the
- * field's 14 at every size (16 on phones, theme.css), so no size makes an
- * iPhone zoom in.
+ * field's 14 at every size and width (owner, 18 Nov 2026; theme.css). An
+ * iPhone zooms in on a field under 16 when it takes the focus.
  */
 export const FIELD_SIZE = {
   xs: 'h-6',
@@ -116,7 +116,7 @@ export const SECTION_LABEL = 'px-3 pt-2 pb-1 text-xs font-medium text-muted';
 export const MENU_SEPARATOR = 'mx-2 my-1 h-px bg-border';
 
 /** A shortcut at the end of a row: plain text, small, muted. */
-export const SHORTCUT = 'ml-auto pl-4 text-xs text-muted';
+export const SHORTCUT = 'ms-auto ps-4 text-xs text-muted';
 
 /** The tick's slot: an icon wide, the accent tick inside when picked. */
 export const TICK_SLOT =

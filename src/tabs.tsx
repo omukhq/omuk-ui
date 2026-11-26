@@ -251,7 +251,9 @@ function TabsTrigger({
         role: 'tab',
         id: partId(tabs, 'tab', value),
         'aria-selected': active,
-        'aria-controls': active ? partId(tabs, 'panel', value) : undefined,
+        // No aria-controls: the panel follows the tab at once (automatic
+        // activation), names itself by the tab, and screen readers do
+        // little with the link (Modern Web Guidance, tabs).
         tabIndex: active ? 0 : -1,
         // Focusable when disabled, so the arrow keys can pass it.
         'aria-disabled': disabled || undefined,

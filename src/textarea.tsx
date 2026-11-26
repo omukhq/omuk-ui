@@ -16,7 +16,9 @@ function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
       className={cn(
         FIELD,
         props.disabled && FIELD_OFF,
-        'flex field-sizing-content w-full min-w-0 min-h-16 px-3 py-2 wrap-anywhere',
+        // Grows up to 320, then scrolls. A browser without field-sizing
+        // keeps a fixed height: there the person drags it taller.
+        'flex field-sizing-content w-full min-w-0 min-h-16 max-h-80 resize-none px-3 py-2 wrap-anywhere not-supports-[field-sizing:content]:resize-y',
         className,
       )}
       {...props}

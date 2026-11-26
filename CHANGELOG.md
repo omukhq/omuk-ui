@@ -10,6 +10,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   it light, set `data-theme="light"` on `<html>`.
 - Text sizes are in rem (`text-sm` is `0.875rem`), so they follow the reader's browser font size. At the default
   16px they are the same as before.
+- `Card` is an `<article>` and `CardTitle` an `<h3>` (new prop `level`, 2 to 6). A ref on them is an `HTMLElement`
+  and an `HTMLHeadingElement` now.
+- `ListRow current={true}` sets `aria-current="true"`, not `"page"`. Pass `current="page"` for a link to the open
+  page.
+- `Textarea` and `InputGroupTextarea` grow up to 320 and then scroll; `Textarea` has no resize handle where the
+  browser sizes it to its text.
 
 ### Changed
 
@@ -45,6 +51,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 - Input OTP: the slots turn red when the input is invalid (`aria-invalid`, a Field error or a failed native check).
   The caret blinks again (`animate-caret-blink` was not defined).
 - Segmented: the chosen segment's fill slides to the new one (anchor positioning; without it, no slide).
+- A loading Button keeps the focus (it is `aria-disabled`, not `disabled`) and still does not send its form.
+- Toasts: a screen reader reads the toast's words, not its buttons, and reads a repeated toast again.
+- Table: the scroll box is in the Tab order, and named by the caption, while the table is wider than it.
+- Sortable: Escape puts the item back during a pointer drag too.
+- The chip's remove button is 24 to press. Menu shortcuts sit at the end in right-to-left pages too.
+- The token check also finds `color()`, `hwb()`, colour keywords and rem values.
+- Tabs have no `aria-controls`.
 
 ## [1.0.0-alpha.27] - 2026-11-24
 

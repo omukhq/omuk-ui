@@ -28,8 +28,12 @@ const LEVELS = [
 ].map((width) => width && `${width} before:-mr-2 before:shrink-0`);
 
 type ListRowProps = RenderProps<'button'> & {
-  /** Where you are: the open doc, the current heading. */
-  current?: boolean;
+  /**
+   * Where you are: the open doc, the current heading. `true` says "the
+   * current one" (aria-current="true"); name the kind when there is one:
+   * 'page' for a link to the open page, 'location' for the heading in view.
+   */
+  current?: boolean | 'page' | 'location' | 'step' | 'date' | 'time';
   /** How deep in the tree the row is (0 at the top). */
   level?: number;
 };
@@ -45,7 +49,7 @@ function ListRow({
     'button',
     {
       type: render ? undefined : 'button',
-      'aria-current': current ? 'page' : undefined,
+      'aria-current': current === true ? 'true' : current || undefined,
       'data-slot': 'list-row',
       className: cn(
         "flex h-8 w-full min-w-0 items-center gap-2 rounded-md px-3 text-left text-sm text-foreground outline-none transition-colors select-none hover:bg-hover focus-visible:focus-ring disabled:text-muted [&_svg]:shrink-0 [&_svg]:text-muted [&_svg:not([class*='size-'])]:size-4",

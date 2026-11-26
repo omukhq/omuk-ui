@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { cn } from './utils';
 
 // DESIGN.md, section 8, Tables: the head is `text-xs font-semibold
@@ -7,6 +8,35 @@ import { cn } from './utils';
 // inset shadows on the cells (a `<tr>` does not draw one everywhere), so
 // they never change a row's size.
 
+/**
+ * The scroll box, while the table is wider than it: in the Tab order (the
+ * keys scroll it) and a region named by the table's caption. While the
+ * table fits, a plain box: no empty Tab stop.
+ */
+function scrollBox(node: HTMLDivElement | null, captionId: string) {
+  if (!node) return;
+  const box = node;
+  function update() {
+    const caption = box.querySelector('caption');
+    if (caption && !caption.id) caption.id = captionId;
+    const scrolls = box.scrollWidth > box.clientWidth;
+    if (scrolls) {
+      box.tabIndex = 0;
+      box.setAttribute('role', 'region');
+      if (caption) box.setAttribute('aria-labelledby', caption.id);
+    } else {
+      box.removeAttribute('tabindex');
+      box.removeAttribute('role');
+      box.removeAttribute('aria-labelledby');
+    }
+  }
+  update();
+  const watch = new ResizeObserver(update);
+  watch.observe(box);
+  if (box.firstElementChild) watch.observe(box.firstElementChild);
+  return () => watch.disconnect();
+}
+
 function Table({
   className,
   containerClassName,
@@ -15,10 +45,15 @@ function Table({
   /** On the scroll box around the table: a frame, a radius. */
   containerClassName?: string;
 }) {
+  const captionId = `${useId()}-caption`;
   return (
     <div
+      ref={(node) => scrollBox(node, captionId)}
       data-slot="table-container"
-      className={cn('relative w-full overflow-x-auto', containerClassName)}
+      className={cn(
+        'relative w-full overflow-x-auto rounded-sm outline-none focus-visible:focus-ring',
+        containerClassName,
+      )}
     >
       <table
         data-slot="table"
