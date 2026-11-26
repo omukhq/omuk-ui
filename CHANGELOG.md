@@ -58,6 +58,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 - The chip's remove button is 24 to press. Menu shortcuts sit at the end in right-to-left pages too.
 - The token check also finds `color()`, `hwb()`, colour keywords and rem values.
 - Tabs have no `aria-controls`.
+- Date and time fields: a phone opens its keyboard on a part and types into it (the text a phone keyboard sends in
+  `beforeinput`). Paste fills every part from ISO text ("2026-12-04", "14:30") or the numbers in the field's order
+  ("4/12/2026", "2:30 PM"); text that does not fit changes nothing.
 
 ## [1.0.0-alpha.27] - 2026-11-24
 

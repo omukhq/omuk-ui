@@ -737,7 +737,8 @@
   /* Fields are 14 (text-sm) at every width, as the 36 controls around them
      (owner, 18 Nov 2026; phones had 16). An iPhone zooms the page in when a
      field under 16 takes the focus; Android does not. */
-  input, textarea, select, [contenteditable="true"]:not(.cm-content) {
+  /* Not a date field's parts: editable too, they take their field's size. */
+  input, textarea, select, [contenteditable="true"]:not(.cm-content, [data-segment]) {
     font-size: var(--text-sm);
   }
 }
