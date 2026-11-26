@@ -1,6 +1,6 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { Label } from '@omuk/ui/label';
-import { Switch } from '@omuk/ui/switch';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { Label } from 'omuk-ui/label';
+import { Switch } from 'omuk-ui/switch';
 import { useId } from 'react';
 
 export default function LabelWithControl() {

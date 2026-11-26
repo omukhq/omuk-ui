@@ -7,11 +7,11 @@ import { Section } from './section';
 // files the app owns (cli/ in the kit). Both come from the same source.
 
 const STYLES = `@import "tailwindcss";
-@import "../node_modules/@omuk/ui/src/design/theme.css";
-@import "../node_modules/@omuk/ui/src/design/fonts.css";
-@source "../node_modules/@omuk/ui/src";`;
+@import "../node_modules/omuk-ui/src/design/theme.css";
+@import "../node_modules/omuk-ui/src/design/fonts.css";
+@source "../node_modules/omuk-ui/src";`;
 
-const USE = `import { Button } from '@omuk/ui/button';
+const USE = `import { Button } from 'omuk-ui/button';
 
 <Button isLoading={saving} loadingLabel="Saving" onClick={save}>
   Save
@@ -22,8 +22,8 @@ type Step = { title: string; text: string; code: string; label: string };
 const PACKAGE_STEPS: Step[] = [
   {
     title: 'Add the package',
-    text: 'From npm, at an exact version, under the name the imports use. It needs React 19, React DOM 19 and Tailwind CSS 4. The @omuk scope on npm is not mine, so never install @omuk/ui plainly.',
-    code: `${INSTALL_LINE}\n\n# package.json\n"@omuk/ui": "npm:${NPM_PACKAGE}@${VERSION}"`,
+    text: 'From npm, at an exact version. It needs React 19, React DOM 19 and Tailwind CSS 4.',
+    code: `${INSTALL_LINE}\n\n# package.json\n"${NPM_PACKAGE}": "${VERSION}"`,
     label: 'Copy the install command',
   },
   {

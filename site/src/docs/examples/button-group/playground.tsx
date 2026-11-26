@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { ButtonGroup, ButtonGroupSeparator } from '@omuk/ui/button-group';
+import { Button } from 'omuk-ui/button';
+import { ButtonGroup, ButtonGroupSeparator } from 'omuk-ui/button-group';
 import { Fragment } from 'react';
 import { Playground } from '../../playground';
 
@@ -45,8 +45,8 @@ function code({ orientation, variant, buttons, separators }: Values) {
     ? 'ButtonGroup, ButtonGroupSeparator'
     : 'ButtonGroup';
   return [
-    "import { Button } from '@omuk/ui/button';",
-    `import { ${parts} } from '@omuk/ui/button-group';`,
+    "import { Button } from 'omuk-ui/button';",
+    `import { ${parts} } from 'omuk-ui/button-group';`,
     '',
     open,
     ...rows,

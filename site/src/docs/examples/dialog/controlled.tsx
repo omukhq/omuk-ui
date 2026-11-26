@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@omuk/ui/dialog';
+} from 'omuk-ui/dialog';
 import { useState } from 'react';
 
 export default function DialogControlled() {

@@ -1,4 +1,4 @@
-import { cn } from '@omuk/ui/utils';
+import { cn } from 'omuk-ui/utils';
 import {
   CHANGELOG_URL,
   DESIGN_URL,

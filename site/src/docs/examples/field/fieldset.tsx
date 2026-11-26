@@ -1,4 +1,4 @@
-import { Checkbox } from '@omuk/ui/checkbox';
+import { Checkbox } from 'omuk-ui/checkbox';
 import {
   Field,
   FieldDescription,
@@ -6,7 +6,7 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from '@omuk/ui/field';
+} from 'omuk-ui/field';
 import { useId } from 'react';
 
 const ENVIRONMENTS = ['Development', 'Staging', 'Production'];

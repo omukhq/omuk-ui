@@ -30,7 +30,7 @@ export type DocEntry = {
   load?: () => Promise<{ default: ComponentType }>;
 };
 
-/** The import line a page shows: `import { Button } from '@omuk/ui/button';`. */
+/** The import line a page shows: `import { Button } from 'omuk-ui/button';`. */
 export function importLine(entry: DocEntry) {
   const names =
     entry.imports ??
@@ -38,7 +38,7 @@ export function importLine(entry: DocEntry) {
       .split('-')
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join('');
-  return `import { ${names} } from '@omuk/ui/${entry.file}';`;
+  return `import { ${names} } from 'omuk-ui/${entry.file}';`;
 }
 
 export const DOCS: DocEntry[] = [

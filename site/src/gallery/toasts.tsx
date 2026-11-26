@@ -1,17 +1,17 @@
 import { useSyncExternalStore } from 'react';
 
 // The toaster loads with the first toast: `withToast` imports
-// @omuk/ui/sonner, then <LazyToaster /> draws it. A toast sent before the
+// omuk-ui/sonner, then <LazyToaster /> draws it. A toast sent before the
 // toaster draws waits in sonner's store, so none is lost.
 
-type Sonner = typeof import('@omuk/ui/sonner');
+type Sonner = typeof import('omuk-ui/sonner');
 
 let sonner: Sonner | null = null;
 let loading: Promise<Sonner> | null = null;
 const listeners = new Set<() => void>();
 
 function load(): Promise<Sonner> {
-  loading ??= import('@omuk/ui/sonner').then((module) => {
+  loading ??= import('omuk-ui/sonner').then((module) => {
     sonner = module;
     for (const listener of listeners) listener();
     return module;

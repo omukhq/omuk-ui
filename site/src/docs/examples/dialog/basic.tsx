@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Dialog,
   DialogClose,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@omuk/ui/dialog';
+} from 'omuk-ui/dialog';
 
 export default function DialogBasic() {
   return (

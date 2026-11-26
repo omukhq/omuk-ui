@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Popover,
   PopoverContent,
@@ -6,7 +6,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from '@omuk/ui/popover';
+} from 'omuk-ui/popover';
 import { jsx, Playground } from '../../playground';
 
 const SIDES = [
@@ -44,7 +44,7 @@ function code({ title, description, ...placement }: Values) {
       </PopoverHeader>
     </div>
   `;
-  return `import { Button } from '@omuk/ui/button';
+  return `import { Button } from 'omuk-ui/button';
 import {
   Popover,
   PopoverContent,
@@ -52,7 +52,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from '@omuk/ui/popover';
+} from 'omuk-ui/popover';
 
 <Popover>
   <PopoverTrigger render={<Button variant="outline" />}>

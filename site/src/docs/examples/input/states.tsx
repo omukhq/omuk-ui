@@ -1,4 +1,4 @@
-import { Input } from '@omuk/ui/input';
+import { Input } from 'omuk-ui/input';
 
 export default function InputStates() {
   return (

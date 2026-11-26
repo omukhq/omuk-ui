@@ -3,7 +3,7 @@ import {
   type DatePreset,
   type DateRange,
   useToday,
-} from '@omuk/ui/date-picker';
+} from 'omuk-ui/date-picker';
 import { useState } from 'react';
 
 /** A day as ISO text ("2026-11-18"), in the browser's time zone. */

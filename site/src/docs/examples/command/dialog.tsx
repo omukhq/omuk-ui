@@ -1,6 +1,6 @@
-import { Button } from '@omuk/ui/button';
-import { CommandDialog, type CommandItem } from '@omuk/ui/command';
 import { FolderIcon, KeyRoundIcon, MoonIcon, SunIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { CommandDialog, type CommandItem } from 'omuk-ui/command';
 import { useState } from 'react';
 
 export default function CommandDialogExample() {

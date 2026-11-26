@@ -4,7 +4,7 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from '@omuk/ui/pagination';
+} from 'omuk-ui/pagination';
 import { type MouseEvent, useState } from 'react';
 
 const TOTAL = 134;

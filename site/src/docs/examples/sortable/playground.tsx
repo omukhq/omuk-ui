@@ -1,4 +1,4 @@
-import { Sortable, SortableHandle, SortableItem } from '@omuk/ui/sortable';
+import { Sortable, SortableHandle, SortableItem } from 'omuk-ui/sortable';
 import { useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -51,7 +51,7 @@ function code({ items, hint, disabled, ...props }: Values) {
     ' />',
   ];
   const names = STEPS.slice(0, items).map((step) => `'${step}'`);
-  return `import { Sortable, SortableHandle, SortableItem } from '@omuk/ui/sortable';
+  return `import { Sortable, SortableHandle, SortableItem } from 'omuk-ui/sortable';
 
 const [steps, setSteps] = useState([${names.join(', ')}]);
 

@@ -1,10 +1,10 @@
-import { cn } from '@omuk/ui/utils';
 import {
   HouseIcon,
   LayoutGridIcon,
   SearchIcon,
   Settings2Icon,
 } from 'lucide-react';
+import { cn } from 'omuk-ui/utils';
 import type { ComponentProps, ReactNode } from 'react';
 import { FIRST_DOC } from './docs/registry';
 import { openDocsNav } from './docs-nav-store';

@@ -1,11 +1,11 @@
+import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
 import {
   Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
-} from '@omuk/ui/card';
-import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
+} from 'omuk-ui/card';
 
 const STATS = [
   { label: 'Visitors', value: '12,480', change: 8, period: 'last week' },

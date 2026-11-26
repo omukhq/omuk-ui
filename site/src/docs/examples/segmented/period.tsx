@@ -1,4 +1,4 @@
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
 
 export default function SegmentedPeriod() {
   return (

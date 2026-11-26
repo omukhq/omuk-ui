@@ -1,4 +1,4 @@
-import { Avatar } from '@omuk/ui/avatar';
+import { Avatar } from 'omuk-ui/avatar';
 import { jsx, Playground } from '../../playground';
 
 const KINDS = ['person', 'app', 'team'] as const;
@@ -37,7 +37,7 @@ export default function AvatarPlayground() {
         </Avatar>
       )}
       code={({ children, ...props }) =>
-        `import { Avatar } from '@omuk/ui/avatar';\n\n${jsx('Avatar', props, DEFAULTS, children)}`
+        `import { Avatar } from 'omuk-ui/avatar';\n\n${jsx('Avatar', props, DEFAULTS, children)}`
       }
     />
   );

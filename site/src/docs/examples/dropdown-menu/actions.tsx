@@ -1,4 +1,10 @@
-import { Button } from '@omuk/ui/button';
+import {
+  ChevronDownIcon,
+  CopyIcon,
+  PencilIcon,
+  Trash2Icon,
+} from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,13 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
-import {
-  ChevronDownIcon,
-  CopyIcon,
-  PencilIcon,
-  Trash2Icon,
-} from 'lucide-react';
+} from 'omuk-ui/dropdown-menu';
 
 export default function DropdownMenuActions() {
   return (

@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -8,7 +8,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@omuk/ui/drawer';
+} from 'omuk-ui/drawer';
 
 const DIRECTIONS = [
   { direction: 'left', label: 'From the left' },

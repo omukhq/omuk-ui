@@ -1,11 +1,11 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
+} from 'omuk-ui/dropdown-menu';
 import { jsx, Playground } from '../../playground';
 
 const SIDES = [
@@ -42,14 +42,14 @@ function code({ variant, disabled, ...placement }: Values) {
     <DropdownMenuSeparator />
     ${jsx('DropdownMenuItem', { variant }, { variant: 'default' }, 'Delete')}
   `;
-  return `import { Button } from '@omuk/ui/button';
+  return `import { Button } from 'omuk-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
+} from 'omuk-ui/dropdown-menu';
 
 <DropdownMenu>
   <DropdownMenuTrigger render={<Button variant="outline" />}>

@@ -1,5 +1,5 @@
-import { ListRow, ListRowMeta } from '@omuk/ui/list-row';
 import { ArchiveIcon, FileTextIcon, InboxIcon, StarIcon } from 'lucide-react';
+import { ListRow, ListRowMeta } from 'omuk-ui/list-row';
 import { useState } from 'react';
 
 const FOLDERS = [

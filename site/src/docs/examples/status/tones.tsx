@@ -1,4 +1,4 @@
-import { Status } from '@omuk/ui/status';
+import { Status } from 'omuk-ui/status';
 
 export default function StatusTones() {
   return (

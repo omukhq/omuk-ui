@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@omuk/ui/pagination';
+} from 'omuk-ui/pagination';
 import { type MouseEvent, useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -139,7 +139,7 @@ function code({ pages, page, siblings, numbers }: Values) {
     : '';
   return `import {
   ${imports.join(',\n  ')},
-} from '@omuk/ui/pagination';
+} from 'omuk-ui/pagination';
 import { type MouseEvent, useState } from 'react';
 
 const LAST_PAGE = ${last};${numbers ? HELPER : ''}

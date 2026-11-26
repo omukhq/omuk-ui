@@ -34,7 +34,7 @@ It follows five promises. Every component keeps them, and a test checks most of 
    open while its action runs, and shows the error there if it fails.
 2. **No number by hand.** Every colour, size, radius and space is a named token. A test fails the moment a component
    writes `13px` or `#eee`. Dark mode, or a new brand colour, is one file.
-3. **A page pays only for what it shows.** There is no index file. `@omuk/ui/button` is the button and nothing else,
+3. **A page pays only for what it shows.** There is no index file. `omuk-ui/button` is the button and nothing else,
    so a sign-in page never downloads a date picker.
 4. **Ours all the way down.** No headless library underneath and no second layer of class names. We started on
    wrappers around one, and every fix waited on code we did not own. Now, when something is wrong, it is our bug, and
@@ -47,15 +47,18 @@ It runs our apps in production. We made it public, under the MIT license, so tha
 
 ## Install
 
-Install from npm with an exact version, under the name the imports use (`@omuk/ui/button`):
+Install from npm with an exact version:
 
 ```bash
-bun add @omuk/ui@npm:omuk-ui@1.0.0-alpha.31
+bun add omuk-ui@1.0.0-alpha.31
 ```
 
 - Pin the exact version: until `1.0.0`, any alpha can break the API. See [Versions](#versions).
-- The npm package is `omuk-ui`; the line above installs it as `@omuk/ui`. The `@omuk` scope on npm is not ours, so
-  never install `@omuk/ui` plainly. Versions up to alpha.30 were briefly on npm as `@omukhq/ui`; that name is gone.
+- The package is `omuk-ui`, and the imports use the same name (`omuk-ui/button`).
+- The `@omuk` scope on npm is not ours, so never install `@omuk/ui`.
+- Versions up to alpha.30 were briefly on npm as `@omukhq/ui`. That name is gone.
+- An older app that imports `@omuk/ui/…` can keep those imports while it moves: install it as
+  `"@omuk/ui": "npm:omuk-ui@<version>"`.
 - Peer dependencies: `react` 19, `react-dom` 19 and `tailwindcss` 4.
 - The package is TypeScript source. Vite and Astro compile it as is. In Next.js, add it to `transpilePackages`.
 - A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.31`.
@@ -90,8 +93,8 @@ want to own and change the code.
 Import each component from its own path:
 
 ```tsx
-import { Button } from '@omuk/ui/button';
-import { toast } from '@omuk/ui/sonner';
+import { Button } from 'omuk-ui/button';
+import { toast } from 'omuk-ui/sonner';
 
 <Button isLoading={saving} loadingLabel="Saving" onClick={save}>
   Save
@@ -114,11 +117,11 @@ There is no index file. Each component is a separate export (see `package.json`)
 
 ### Prompts: alerts, modals and drawers from code
 
-`@omuk/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in
+`omuk-ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in
 the app, inside the providers that the prompts' content needs.
 
 ```tsx
-import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
+import { PromptProvider, usePrompt } from 'omuk-ui/prompt';
 
 const prompt = usePrompt();
 
@@ -156,7 +159,7 @@ const name = await prompt.open<string>({
 One component for a day, a day and a time, a range or a time. The value is ISO text, and its type follows `mode`:
 
 ```tsx
-import { DatePicker } from '@omuk/ui/date-picker';
+import { DatePicker } from 'omuk-ui/date-picker';
 
 <DatePicker value={day} onChange={setDay} />                                 // "2026-11-18"
 <DatePicker granularity="minute" value={at} onChange={setAt} />              // "2026-11-18T14:30"
@@ -169,7 +172,7 @@ import { DatePicker } from '@omuk/ui/date-picker';
 - Options: `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `firstDayOfWeek`, `timeZone` (for "today"),
   `locale`, `hourCycle`, `validate`, `name` (`startName`, `endName` for a range), `size`.
 - For a filter: `placeholder` (shown until the field is used), `prefix` ("Updated:") and `showClear`.
-- `@omuk/ui/calendar` is the calendar alone, for one day or a range.
+- `omuk-ui/calendar` is the calendar alone, for one day or a range.
 - Gregorian only; no time zone in the value; no seconds.
 
 ## Tokens and fonts
@@ -179,9 +182,9 @@ relative to the stylesheet:
 
 ```css
 @import "tailwindcss";
-@import "../node_modules/@omuk/ui/src/design/theme.css";
-@import "../node_modules/@omuk/ui/src/design/fonts.css";
-@source "../node_modules/@omuk/ui/src";
+@import "../node_modules/omuk-ui/src/design/theme.css";
+@import "../node_modules/omuk-ui/src/design/fonts.css";
+@source "../node_modules/omuk-ui/src";
 ```
 
 - `theme.css` holds every token: colours for light and dark mode, sizes, radii, shadows.

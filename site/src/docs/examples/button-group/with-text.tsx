@@ -1,6 +1,6 @@
-import { Button } from '@omuk/ui/button';
-import { ButtonGroup, ButtonGroupText } from '@omuk/ui/button-group';
-import { Input } from '@omuk/ui/input';
+import { Button } from 'omuk-ui/button';
+import { ButtonGroup, ButtonGroupText } from 'omuk-ui/button-group';
+import { Input } from 'omuk-ui/input';
 
 export default function ButtonGroupWithText() {
   return (

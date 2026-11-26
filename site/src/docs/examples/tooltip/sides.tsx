@@ -1,10 +1,10 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@omuk/ui/tooltip';
+} from 'omuk-ui/tooltip';
 
 const SIDES = [
   { side: 'top', label: 'Top' },

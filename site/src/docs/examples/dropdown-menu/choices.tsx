@@ -1,4 +1,5 @@
-import { Button } from '@omuk/ui/button';
+import { ChevronDownIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,8 +12,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
-import { ChevronDownIcon } from 'lucide-react';
+} from 'omuk-ui/dropdown-menu';
 import { useState } from 'react';
 
 export default function DropdownMenuChoices() {

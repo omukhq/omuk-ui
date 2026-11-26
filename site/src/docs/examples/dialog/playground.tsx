@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Dialog,
   DialogClose,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@omuk/ui/dialog';
+} from 'omuk-ui/dialog';
 import { Playground } from '../../playground';
 
 type Values = {
@@ -28,7 +28,7 @@ const INITIAL: Values = {
 
 function code(values: Values) {
   const close = values.showCloseButton ? '' : ' showCloseButton={false}';
-  return `import { Button } from '@omuk/ui/button';
+  return `import { Button } from 'omuk-ui/button';
 import {
   Dialog,
   DialogClose,
@@ -38,7 +38,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@omuk/ui/dialog';
+} from 'omuk-ui/dialog';
 
 <Dialog>
   <DialogTrigger render={<Button variant="outline" />}>

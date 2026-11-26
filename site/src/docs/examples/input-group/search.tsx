@@ -1,10 +1,10 @@
+import { SearchIcon, XIcon } from 'lucide-react';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@omuk/ui/input-group';
-import { SearchIcon, XIcon } from 'lucide-react';
+} from 'omuk-ui/input-group';
 import { useState } from 'react';
 
 export default function InputGroupSearch() {

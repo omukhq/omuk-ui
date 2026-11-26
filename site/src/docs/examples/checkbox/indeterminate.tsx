@@ -1,5 +1,5 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { Label } from '@omuk/ui/label';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 const SECRETS = ['DATABASE_URL', 'STRIPE_KEY', 'MAIL_PASSWORD'];

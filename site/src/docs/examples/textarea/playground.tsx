@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { Textarea } from '@omuk/ui/textarea';
+import { Label } from 'omuk-ui/label';
+import { Textarea } from 'omuk-ui/textarea';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -46,8 +46,8 @@ export default function TextareaPlayground() {
       render={(values) => <Preview {...values} />}
       code={({ label, ...props }) =>
         [
-          "import { Label } from '@omuk/ui/label';",
-          "import { Textarea } from '@omuk/ui/textarea';",
+          "import { Label } from 'omuk-ui/label';",
+          "import { Textarea } from 'omuk-ui/textarea';",
           '',
           '<div className="flex flex-col gap-1">',
           `  <Label htmlFor="notes">${label}</Label>`,

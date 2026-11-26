@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Card,
   CardAction,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@omuk/ui/card';
+} from 'omuk-ui/card';
 import { Playground } from '../../playground';
 
 const SIZES = ['md', 'sm'] as const;
@@ -43,7 +43,7 @@ function code({ size, title, description, action, footer }: Values) {
     action && `<CardAction>${action}</CardAction>`,
   ];
   const buttonImport = footer
-    ? "import { Button } from '@omuk/ui/button';\n"
+    ? "import { Button } from 'omuk-ui/button';\n"
     : '';
   const footerPart = footer
     ? `
@@ -54,7 +54,7 @@ function code({ size, title, description, action, footer }: Values) {
     : '';
   return `${buttonImport}import {
   ${parts.join(',\n  ')},
-} from '@omuk/ui/card';
+} from 'omuk-ui/card';
 
 <Card${size === 'sm' ? ' size="sm"' : ''} className="w-full max-w-md">
   <CardHeader>

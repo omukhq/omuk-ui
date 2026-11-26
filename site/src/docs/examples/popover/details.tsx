@@ -1,4 +1,5 @@
-import { Button } from '@omuk/ui/button';
+import { InfoIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 import {
   Popover,
   PopoverClose,
@@ -7,8 +8,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from '@omuk/ui/popover';
-import { InfoIcon } from 'lucide-react';
+} from 'omuk-ui/popover';
 
 export default function PopoverDetails() {
   return (

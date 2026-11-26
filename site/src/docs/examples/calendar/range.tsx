@@ -1,4 +1,4 @@
-import { Calendar, type DateRange } from '@omuk/ui/calendar';
+import { Calendar, type DateRange } from 'omuk-ui/calendar';
 import { useState } from 'react';
 
 export default function CalendarRange() {

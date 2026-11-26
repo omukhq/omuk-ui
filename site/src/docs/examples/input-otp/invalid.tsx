@@ -1,6 +1,6 @@
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@omuk/ui/input-otp';
-import { Label } from '@omuk/ui/label';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from 'omuk-ui/input-otp';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 // The code that the server would accept, for this example only.

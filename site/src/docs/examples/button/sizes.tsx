@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
 import { SettingsIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 
 export default function ButtonSizes() {
   return (

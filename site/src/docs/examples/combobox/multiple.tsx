@@ -9,8 +9,8 @@ import {
   ComboboxList,
   ComboboxValue,
   useComboboxAnchor,
-} from '@omuk/ui/combobox';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/combobox';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 const ENVIRONMENTS = [

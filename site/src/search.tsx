@@ -1,5 +1,5 @@
-import { CommandDialog, type CommandItem } from '@omuk/ui/command';
 import { MoonIcon, SunIcon } from 'lucide-react';
+import { CommandDialog, type CommandItem } from 'omuk-ui/command';
 import { DOCS_BY_NAME, preloadPage } from './docs/registry';
 import { navigate } from './router';
 import { setTheme } from './theme';

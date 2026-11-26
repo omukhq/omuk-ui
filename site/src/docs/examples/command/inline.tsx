@@ -1,4 +1,4 @@
-import { Command, type CommandItem } from '@omuk/ui/command';
+import { Command, type CommandItem } from 'omuk-ui/command';
 import { useState } from 'react';
 
 const FRUITS = ['Apple', 'Banana', 'Cherry', 'Mango', 'Orange', 'Pear'];

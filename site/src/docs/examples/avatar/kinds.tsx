@@ -1,5 +1,5 @@
-import { Avatar } from '@omuk/ui/avatar';
 import { BoxIcon } from 'lucide-react';
+import { Avatar } from 'omuk-ui/avatar';
 
 export default function AvatarKinds() {
   return (

@@ -1,6 +1,6 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { CheckboxGroup } from '@omuk/ui/checkbox-group';
-import { Label } from '@omuk/ui/label';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { CheckboxGroup } from 'omuk-ui/checkbox-group';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
@@ -66,9 +66,9 @@ function code({ parent, disabled }: Values) {
     `  <Label htmlFor="${event}">${event}</Label>`,
   ]);
   return [
-    "import { Checkbox } from '@omuk/ui/checkbox';",
-    "import { CheckboxGroup } from '@omuk/ui/checkbox-group';",
-    "import { Label } from '@omuk/ui/label';",
+    "import { Checkbox } from 'omuk-ui/checkbox';",
+    "import { CheckboxGroup } from 'omuk-ui/checkbox-group';",
+    "import { Label } from 'omuk-ui/label';",
     '',
     ...group,
     ...all,

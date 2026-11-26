@@ -1,11 +1,11 @@
-import { Button } from '@omuk/ui/button';
+import { BoldIcon, ItalicIcon, LinkIcon, UnderlineIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@omuk/ui/tooltip';
-import { BoldIcon, ItalicIcon, LinkIcon, UnderlineIcon } from 'lucide-react';
+} from 'omuk-ui/tooltip';
 
 const TOOLS = [
   { name: 'Bold', keys: '⌘B', Icon: BoldIcon },

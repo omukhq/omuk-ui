@@ -1,4 +1,4 @@
-import { Badge } from '@omuk/ui/badge';
+import { Badge } from 'omuk-ui/badge';
 import { jsx, Playground } from '../../playground';
 
 const VARIANTS = [
@@ -31,7 +31,7 @@ export default function BadgePlayground() {
       ]}
       render={({ children, ...props }) => <Badge {...props}>{children}</Badge>}
       code={({ children, ...props }) =>
-        `import { Badge } from '@omuk/ui/badge';\n\n${jsx('Badge', props, INITIAL, children)}`
+        `import { Badge } from 'omuk-ui/badge';\n\n${jsx('Badge', props, INITIAL, children)}`
       }
     />
   );

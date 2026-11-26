@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@omuk/ui/card';
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/card';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 export default function CardSettings() {

@@ -1,3 +1,4 @@
+import { FileXIcon } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,9 +10,8 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@omuk/ui/alert-dialog';
-import { Button } from '@omuk/ui/button';
-import { FileXIcon } from 'lucide-react';
+} from 'omuk-ui/alert-dialog';
+import { Button } from 'omuk-ui/button';
 import { useState } from 'react';
 
 export default function AlertDialogDiscard() {

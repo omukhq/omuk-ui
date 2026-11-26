@@ -1,6 +1,6 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { CheckboxGroup } from '@omuk/ui/checkbox-group';
-import { Label } from '@omuk/ui/label';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { CheckboxGroup } from 'omuk-ui/checkbox-group';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 
 const ENVIRONMENTS = [

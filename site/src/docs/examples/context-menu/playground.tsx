@@ -5,7 +5,7 @@ import {
   ContextMenuLabel,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@omuk/ui/context-menu';
+} from 'omuk-ui/context-menu';
 import { jsx, Playground } from '../../playground';
 
 const VARIANTS = ['default', 'destructive'] as const;
@@ -35,7 +35,7 @@ function code({ label, variant, disabled, inset }: Values) {
   ContextMenuLabel,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@omuk/ui/context-menu';
+} from 'omuk-ui/context-menu';
 
 <ContextMenu>
   <ContextMenuTrigger

@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { Switch } from '@omuk/ui/switch';
+import { Label } from 'omuk-ui/label';
+import { Switch } from 'omuk-ui/switch';
 import { useId } from 'react';
 
 export default function SwitchStates() {

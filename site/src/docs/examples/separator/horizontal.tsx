@@ -1,4 +1,4 @@
-import { Separator } from '@omuk/ui/separator';
+import { Separator } from 'omuk-ui/separator';
 
 export default function SeparatorHorizontal() {
   return (

@@ -1,4 +1,4 @@
-import { Chip } from '@omuk/ui/chip';
+import { Chip } from 'omuk-ui/chip';
 import { useState } from 'react';
 
 const INVITES = [

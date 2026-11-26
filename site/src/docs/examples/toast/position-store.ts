@@ -1,4 +1,4 @@
-import type { ToastPosition } from '@omuk/ui/sonner';
+import type { ToastPosition } from 'omuk-ui/sonner';
 import { useSyncExternalStore } from 'react';
 
 // The toast page's one Toaster takes its place from here: the playground

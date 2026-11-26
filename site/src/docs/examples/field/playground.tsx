@@ -4,8 +4,8 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@omuk/ui/field';
-import { Input } from '@omuk/ui/input';
+} from 'omuk-ui/field';
+import { Input } from 'omuk-ui/input';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
@@ -73,8 +73,8 @@ function code({ label, description, error, orientation, disabled }: Values) {
     'FieldLabel',
   ].filter(Boolean);
   return [
-    `import { ${parts.join(', ')} } from '@omuk/ui/field';`,
-    "import { Input } from '@omuk/ui/input';",
+    `import { ${parts.join(', ')} } from 'omuk-ui/field';`,
+    "import { Input } from 'omuk-ui/input';",
     '',
     '<FieldGroup>',
     `  <${field}>`,

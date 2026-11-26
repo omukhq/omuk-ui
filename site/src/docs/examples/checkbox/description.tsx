@@ -1,10 +1,10 @@
-import { Checkbox } from '@omuk/ui/checkbox';
+import { Checkbox } from 'omuk-ui/checkbox';
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
-} from '@omuk/ui/field';
+} from 'omuk-ui/field';
 import { useId } from 'react';
 
 export default function CheckboxWithDescription() {

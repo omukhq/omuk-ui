@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@omuk/ui/alert-dialog';
-import { Button } from '@omuk/ui/button';
+} from 'omuk-ui/alert-dialog';
+import { Button } from 'omuk-ui/button';
 import { useState } from 'react';
 
 function wait(ms: number) {

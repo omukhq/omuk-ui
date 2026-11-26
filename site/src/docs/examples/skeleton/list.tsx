@@ -1,5 +1,5 @@
-import { Skeleton } from '@omuk/ui/skeleton';
-import { cn } from '@omuk/ui/utils';
+import { Skeleton } from 'omuk-ui/skeleton';
+import { cn } from 'omuk-ui/utils';
 
 // One width for each row's name, so the list does not look like a grid.
 const NAME_WIDTHS = ['w-40', 'w-28', 'w-36'];

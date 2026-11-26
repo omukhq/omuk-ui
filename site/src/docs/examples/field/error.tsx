@@ -1,5 +1,5 @@
-import { Field, FieldError, FieldLabel } from '@omuk/ui/field';
-import { Input } from '@omuk/ui/input';
+import { Field, FieldError, FieldLabel } from 'omuk-ui/field';
+import { Input } from 'omuk-ui/input';
 import { useId, useState } from 'react';
 
 function errorsFor(name: string) {

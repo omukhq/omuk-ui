@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -8,7 +8,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@omuk/ui/drawer';
+} from 'omuk-ui/drawer';
 import { Playground } from '../../playground';
 
 const DIRECTIONS = ['left', 'right', 'top', 'bottom'] as const;
@@ -32,7 +32,7 @@ function code(values: Values) {
     values.direction === INITIAL.direction
       ? ''
       : ` direction="${values.direction}"`;
-  return `import { Button } from '@omuk/ui/button';
+  return `import { Button } from 'omuk-ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -42,7 +42,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@omuk/ui/drawer';
+} from 'omuk-ui/drawer';
 
 <Drawer${direction}>
   <DrawerTrigger render={<Button variant="outline" />}>

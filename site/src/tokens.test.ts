@@ -3,8 +3,8 @@
 // kit's own check (hex, colour functions, px, font-family), plus rem and
 // arbitrary Tailwind values (`p-[13px]`; only `[var(--…)]` is allowed).
 import { describe, expect, test } from 'bun:test';
-import { literalsIn } from '@omuk/ui/token-check';
 import { Glob } from 'bun';
+import { literalsIn } from 'omuk-ui/token-check';
 
 const SITE_LITERALS: [string, RegExp][] = [
   ['rem value', /\b\d+(\.\d+)?rem\b/],

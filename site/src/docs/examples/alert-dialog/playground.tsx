@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@omuk/ui/alert-dialog';
-import { Button } from '@omuk/ui/button';
+} from 'omuk-ui/alert-dialog';
+import { Button } from 'omuk-ui/button';
 import { useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -74,8 +74,8 @@ function code(values: Values) {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@omuk/ui/alert-dialog';
-import { Button } from '@omuk/ui/button';
+} from 'omuk-ui/alert-dialog';
+import { Button } from 'omuk-ui/button';
 
 <AlertDialog open={open} onOpenChange={setOpen}>
   <AlertDialogTrigger render={<Button variant="outline" />}>

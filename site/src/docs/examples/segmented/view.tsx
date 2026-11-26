@@ -1,5 +1,5 @@
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
 import { CalendarIcon, KanbanIcon, ListIcon } from 'lucide-react';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
 import { useState } from 'react';
 
 export default function SegmentedView() {

@@ -1,11 +1,11 @@
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@omuk/ui/input-group';
-import { Label } from '@omuk/ui/label';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
+} from 'omuk-ui/input-group';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 export default function InputGroupPassword() {

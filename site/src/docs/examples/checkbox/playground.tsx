@@ -1,5 +1,5 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { Label } from '@omuk/ui/label';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -42,8 +42,8 @@ export default function CheckboxPlayground() {
       render={(values) => <Preview {...values} />}
       code={({ label, ...props }) =>
         [
-          "import { Checkbox } from '@omuk/ui/checkbox';",
-          "import { Label } from '@omuk/ui/label';",
+          "import { Checkbox } from 'omuk-ui/checkbox';",
+          "import { Label } from 'omuk-ui/label';",
           '',
           '<div className="flex items-center gap-2">',
           `  ${jsx('Checkbox', { id: 'remember', defaultChecked: true, ...props }, {})}`,

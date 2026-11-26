@@ -1,4 +1,4 @@
-import { Chip } from '@omuk/ui/chip';
+import { Chip } from 'omuk-ui/chip';
 
 export default function ChipTags() {
   return (

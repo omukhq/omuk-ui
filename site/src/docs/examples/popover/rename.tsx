@@ -1,13 +1,13 @@
-import { Button } from '@omuk/ui/button';
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
+import { PencilIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTitle,
   PopoverTrigger,
-} from '@omuk/ui/popover';
-import { PencilIcon } from 'lucide-react';
+} from 'omuk-ui/popover';
 import { type FormEvent, useState } from 'react';
 
 export default function PopoverRename() {

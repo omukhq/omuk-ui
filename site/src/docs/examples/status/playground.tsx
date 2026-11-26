@@ -1,4 +1,4 @@
-import { Status } from '@omuk/ui/status';
+import { Status } from 'omuk-ui/status';
 import { jsx, Playground } from '../../playground';
 
 const TONES = ['success', 'warning', 'danger', 'muted'] as const;
@@ -28,7 +28,7 @@ export default function StatusPlayground() {
         <Status {...props}>{children}</Status>
       )}
       code={({ children, ...props }) =>
-        `import { Status } from '@omuk/ui/status';\n\n${jsx('Status', props, DEFAULTS, children)}`
+        `import { Status } from 'omuk-ui/status';\n\n${jsx('Status', props, DEFAULTS, children)}`
       }
     />
   );

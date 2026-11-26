@@ -1,4 +1,4 @@
-import { Skeleton } from '@omuk/ui/skeleton';
+import { Skeleton } from 'omuk-ui/skeleton';
 import { lazy, Suspense } from 'react';
 import { BottomNav } from './bottom-nav';
 import { FIRST_DOC } from './docs/registry';

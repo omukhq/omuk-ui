@@ -8,7 +8,7 @@ type OutputBundle = Rolldown.OutputBundle;
 
 // ui.omuk.dev: the home page of Omuk UI. It shows the kit from this repo's
 // own src/, not from a release, so the page always shows what the next tag
-// will hold. `@omuk/ui/button` is ../src/button.tsx, as the package's
+// will hold. `omuk-ui/button` is ../src/button.tsx, as the package's
 // "exports" map says.
 
 const KIT = join(import.meta.dirname, '../src');
@@ -184,7 +184,7 @@ export default defineConfig({
     charsetFirst(),
   ],
   resolve: {
-    alias: [{ find: /^@omuk\/ui\/(.*)$/, replacement: `${KIT}/$1` }],
+    alias: [{ find: /^omuk-ui\/(.*)$/, replacement: `${KIT}/$1` }],
     dedupe: SHARED,
   },
 });

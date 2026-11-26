@@ -5,8 +5,8 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from '@omuk/ui/combobox';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/combobox';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 const TIME_ZONES = [

@@ -1,5 +1,5 @@
-import { Badge } from '@omuk/ui/badge';
 import { LockIcon } from 'lucide-react';
+import { Badge } from 'omuk-ui/badge';
 
 export default function BadgeInContext() {
   return (

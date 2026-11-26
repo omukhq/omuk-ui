@@ -1,4 +1,4 @@
-import { Skeleton } from '@omuk/ui/skeleton';
+import { Skeleton } from 'omuk-ui/skeleton';
 import { jsx, Playground } from '../../playground';
 
 // The values are whole class names, so Tailwind finds them in this file.
@@ -36,7 +36,7 @@ export default function SkeletonPlayground() {
       ]}
       render={(values) => <Skeleton className={classes(values)} />}
       code={(values) =>
-        `import { Skeleton } from '@omuk/ui/skeleton';\n\n${jsx('Skeleton', { className: classes(values) }, {})}`
+        `import { Skeleton } from 'omuk-ui/skeleton';\n\n${jsx('Skeleton', { className: classes(values) }, {})}`
       }
     />
   );

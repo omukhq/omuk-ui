@@ -1,5 +1,5 @@
-import { Spinner } from '@omuk/ui/spinner';
-import { cn } from '@omuk/ui/utils';
+import { Spinner } from 'omuk-ui/spinner';
+import { cn } from 'omuk-ui/utils';
 import { jsx, Playground } from '../../playground';
 
 // The values are whole class names, so Tailwind finds them in this file.
@@ -40,7 +40,7 @@ export default function SpinnerPlayground() {
       )}
       code={(values) => {
         const className = classes(values);
-        return `import { Spinner } from '@omuk/ui/spinner';\n\n${jsx(
+        return `import { Spinner } from 'omuk-ui/spinner';\n\n${jsx(
           'Spinner',
           {
             ...(className && { className }),

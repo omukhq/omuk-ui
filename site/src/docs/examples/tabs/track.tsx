@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@omuk/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'omuk-ui/tabs';
 import { useState } from 'react';
 
 const SNIPPETS: Record<string, string> = {

@@ -1,8 +1,8 @@
-import { Button } from '@omuk/ui/button';
-import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
-import { Skeleton } from '@omuk/ui/skeleton';
-import { cn } from '@omuk/ui/utils';
 import { ChevronLeftIcon, ChevronRightIcon, PanelLeftIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { PromptProvider, usePrompt } from 'omuk-ui/prompt';
+import { Skeleton } from 'omuk-ui/skeleton';
+import { cn } from 'omuk-ui/utils';
 import {
   type ComponentType,
   type LazyExoticComponent,

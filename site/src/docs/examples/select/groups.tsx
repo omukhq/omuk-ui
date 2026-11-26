@@ -7,7 +7,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from '@omuk/ui/select';
+} from 'omuk-ui/select';
 
 const ZONES = [
   {

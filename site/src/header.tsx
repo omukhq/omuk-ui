@@ -1,6 +1,6 @@
-import { Button } from '@omuk/ui/button';
-import { cn } from '@omuk/ui/utils';
 import { SearchIcon, Settings2Icon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { cn } from 'omuk-ui/utils';
 import { FIRST_DOC } from './docs/registry';
 import { openDocsNav } from './docs-nav-store';
 import { GithubMark } from './github-mark';

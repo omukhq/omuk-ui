@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@omuk/ui/table';
+} from 'omuk-ui/table';
 import { Playground } from '../../playground';
 
 const INVOICES = [
@@ -112,7 +112,7 @@ function code({ rows, selected, framed, footer, caption }: Values) {
     : '';
   return `import {
   ${parts.join(',\n  ')},
-} from '@omuk/ui/table';
+} from 'omuk-ui/table';
 
 ${root}${captionPart}
   <TableHeader>

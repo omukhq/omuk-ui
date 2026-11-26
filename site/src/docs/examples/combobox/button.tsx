@@ -10,8 +10,8 @@ import {
   ComboboxLabel,
   ComboboxList,
   ComboboxValue,
-} from '@omuk/ui/combobox';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/combobox';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 
 type Region = { label: string; items: string[] };

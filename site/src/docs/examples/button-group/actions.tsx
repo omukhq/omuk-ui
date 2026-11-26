@@ -1,6 +1,6 @@
-import { Button } from '@omuk/ui/button';
-import { ButtonGroup } from '@omuk/ui/button-group';
 import { CopyIcon, DownloadIcon, Share2Icon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { ButtonGroup } from 'omuk-ui/button-group';
 
 export default function ButtonGroupActions() {
   return (

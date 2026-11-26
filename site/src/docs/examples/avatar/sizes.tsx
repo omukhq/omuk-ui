@@ -1,4 +1,4 @@
-import { Avatar } from '@omuk/ui/avatar';
+import { Avatar } from 'omuk-ui/avatar';
 
 export default function AvatarSizes() {
   return (

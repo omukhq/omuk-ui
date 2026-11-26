@@ -1,10 +1,10 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@omuk/ui/tooltip';
+} from 'omuk-ui/tooltip';
 import { jsx, Playground } from '../../playground';
 
 const SIDES = [
@@ -34,13 +34,13 @@ const INITIAL: Values = {
 };
 
 function code({ content, delay, ...placement }: Values) {
-  return `import { Button } from '@omuk/ui/button';
+  return `import { Button } from 'omuk-ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@omuk/ui/tooltip';
+} from 'omuk-ui/tooltip';
 
 ${jsx(
   'TooltipProvider',

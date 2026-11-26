@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
 import { CheckIcon, CopyIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
 import { useRef, useState } from 'react';
 
 /**
