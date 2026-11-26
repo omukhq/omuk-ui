@@ -1,6 +1,6 @@
 {
   "name": "omuk-ui",
-  "version": "1.0.0-alpha.31",
+  "version": "1.0.0-alpha.32",
   "license": "MIT",
   "type": "module",
   "description": "React 19 components, design tokens and fonts for Tailwind CSS 4. Accessible, themeable, light and dark mode, one import per component.",
@@ -32,13 +32,18 @@
     "typecheck": "tsc --noEmit -p .",
     "lint": "biome check",
     "format": "biome format --write",
-    "check": "bun run lint && bun run typecheck && bun run test"
+    "check": "bun run lint && bun run typecheck && bun run test",
+    "prepublishOnly": "bun run cli"
   },
   "sideEffects": false,
+  "bin": {
+    "omuk": "cli/dist/omuk.js"
+  },
   "files": [
     "src",
     "!src/**/*.test.ts",
     "!src/**/*.test.tsx",
+    "cli/dist/omuk.js",
     "CHANGELOG.md"
   ],
   "publishConfig": {
