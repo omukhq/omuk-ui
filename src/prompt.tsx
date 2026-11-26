@@ -1,3 +1,5 @@
+'use client';
+
 import { useSyncExternalStore } from 'react';
 import { snapshot, subscribe } from './prompt-store';
 

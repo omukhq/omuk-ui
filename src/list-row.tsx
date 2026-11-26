@@ -1,3 +1,5 @@
+'use client';
+
 import type { ComponentProps } from 'react';
 import { type RenderProps, useRender } from './render';
 import { cn } from './utils';

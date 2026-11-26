@@ -1,3 +1,5 @@
+'use client';
+
 import { cva, type VariantProps } from 'class-variance-authority';
 import { type RenderProps, useRender } from './render';
 import { Separator } from './separator';

@@ -1,3 +1,5 @@
+'use client';
+
 import { CheckIcon } from 'lucide-react';
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
 import { useFieldControl } from './field-context';

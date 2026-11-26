@@ -1,3 +1,5 @@
+'use client';
+
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import {
   type ComponentPropsWithRef,

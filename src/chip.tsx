@@ -1,3 +1,5 @@
+'use client';
+
 import { XIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { CHIP } from './recipes';

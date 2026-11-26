@@ -4,6 +4,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.29] - 2026-11-26
+
+### Added
+
+- Every exported component that runs in the browser (hooks, context, event handlers) starts with `'use client'`, so
+  a Next.js server component can import it. Components without them (`Card`, `Label`, `Skeleton`, `Spinner`,
+  `Status`, `Avatar`, `Pagination`) stay server components. Vite ignores the line. A test checks each file.
+
+### Documentation
+
+- An app that sets a colour role (`--color-primary`, …) must set it on `:root, [data-theme]`, as the kit does, not
+  in Tailwind's `@theme`. Since alpha.28 the kit sets its roles after `@theme`, so a role set there loses to the
+  kit's in both modes. Write the value as `light-dark(<light>, <dark>)` when it differs between the modes.
+
 ## [1.0.0-alpha.28] - 2026-11-26
 
 ### Changed (breaking)

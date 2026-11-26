@@ -1,3 +1,5 @@
+'use client';
+
 // The modal dialog both dialog.tsx and alert-dialog.tsx draw, on the native
 // <dialog>: showModal() puts it in the top layer, makes the page behind it
 // inert and traps the focus; close() gives the focus back.

@@ -1,3 +1,5 @@
+'use client';
+
 // The menu both dropdown-menu.tsx and context-menu.tsx draw, as Base UI's
 // Menu is for its two: one set of items, so a context menu's items work in
 // a dropdown and the other way round (the sidebar's row menu does that).
