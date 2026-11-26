@@ -27,7 +27,7 @@
   "scripts": {
     "dev": "bun --cwd site dev",
     "registry": "bun scripts/registry.ts",
-    "cli": "bun --cwd cli run build",
+    "cli": "bun run --cwd cli build",
     "test": "bun test && bun test ./scripts ./cli",
     "typecheck": "tsc --noEmit -p .",
     "lint": "biome check",
