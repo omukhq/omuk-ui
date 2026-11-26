@@ -55,6 +55,29 @@ const EMPTY_TEXT: Record<SegmentType, string> = {
   dayPeriod: '',
 };
 
+/**
+ * The caret at the end of a focused part. A phone's keyboard sends Delete
+ * (`beforeinput`) only when there is text before the caret; a new text in
+ * the part (React's) and a tap put the caret at its start.
+ */
+function caretToEnd(part: HTMLElement) {
+  if (document.activeElement !== part) return;
+  const selection = getSelection();
+  if (!selection) return;
+  const text = part.textContent ?? '';
+  const { focusNode, focusOffset } = selection;
+  // Already there: no new selection, so no selectionchange loop.
+  if (
+    selection.isCollapsed &&
+    ((focusNode === part && focusOffset === part.childNodes.length) ||
+      (focusNode?.parentNode === part && focusOffset === text.length))
+  ) {
+    return;
+  }
+  selection.selectAllChildren(part);
+  selection.collapseToEnd();
+}
+
 /** The part's name in the language ("day", "Tag"), for screen readers. */
 function partName(locale: string, type: SegmentType): string {
   try {
@@ -221,7 +244,9 @@ export function DateSegments({
     buffer.current = '';
     const current = segments[type];
     if (current === undefined) {
-      if (back) moveFrom(target, -1);
+      // After the frame: Chrome on Android deletes for its keyboard anyway,
+      // and its caret, put back in this part, would bring the focus back.
+      if (back) requestAnimationFrame(() => moveFrom(target, -1));
       return;
     }
     const shorter =
@@ -272,8 +297,9 @@ export function DateSegments({
 
   /**
    * What a phone's keyboard types: the text comes in `beforeinput`, not in
-   * the key event. The browser does not change the part (React draws it);
-   * the text goes through the same typing as a key. Native, from the
+   * the key event. The text goes through the same typing as a key; what
+   * the browser changes anyway (Android) the part's `input` listener puts
+   * back. Native, from the
    * part's ref: React's onBeforeInput is a different event.
    */
   function onBeforeInput(type: SegmentType, event: InputEvent) {
@@ -321,16 +347,47 @@ export function DateSegments({
           // Editable, so a phone opens its keyboard on a tap (React Aria's
           // parts are too); every change goes through our handlers, which
           // stop the browser's own. A new ref each render: the listener
-          // sees this render's parts.
+          // sees this render's parts, and the caret goes back to the end.
           <span
             key={type}
             ref={(node) => {
               if (!node) return;
+              const part: HTMLElement = node;
+              // React's text node, and the text this render drew in it.
+              const drawn = part.firstChild;
+              const shown = text(type);
+              caretToEnd(part);
               function listener(event: Event) {
                 onBeforeInput(type, event as InputEvent);
               }
-              node.addEventListener('beforeinput', listener);
-              return () => node.removeEventListener('beforeinput', listener);
+              // Chrome on Android changes the text for its keyboard's
+              // Delete and letters even when `beforeinput` is stopped.
+              // The change was handled there: put React's text back.
+              function onInput() {
+                if (
+                  drawn instanceof Text &&
+                  (part.childNodes.length !== 1 || part.firstChild !== drawn)
+                ) {
+                  part.replaceChildren(drawn);
+                }
+                if (drawn instanceof Text && drawn.data !== shown) {
+                  drawn.data = shown;
+                }
+                caretToEnd(part);
+              }
+              // A tap places the caret after its pointer events: put it
+              // back at the end when the selection moves.
+              function onSelection() {
+                caretToEnd(part);
+              }
+              part.addEventListener('beforeinput', listener);
+              part.addEventListener('input', onInput);
+              document.addEventListener('selectionchange', onSelection);
+              return () => {
+                part.removeEventListener('beforeinput', listener);
+                part.removeEventListener('input', onInput);
+                document.removeEventListener('selectionchange', onSelection);
+              };
             }}
             role="spinbutton"
             tabIndex={disabled ? undefined : 0}
@@ -356,7 +413,8 @@ export function DateSegments({
               'focus:bg-accent focus:text-on-accent',
               disabled && 'text-muted',
             )}
-            onFocus={() => {
+            onFocus={(event) => {
+              caretToEnd(event.currentTarget);
               if (finishYear()) update(segments);
               buffer.current = '';
             }}
