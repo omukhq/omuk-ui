@@ -1,5 +1,6 @@
 import { Skeleton } from '@omuk/ui/skeleton';
 import { lazy, Suspense } from 'react';
+import { BottomNav } from './bottom-nav';
 import { FIRST_DOC } from './docs/registry';
 import { Footer } from './footer';
 import { Header } from './header';
@@ -8,6 +9,7 @@ import { Install } from './install';
 import { usePath } from './router';
 import { setSearchOpen, useSearch } from './search-store';
 import { Section } from './section';
+import { setSettingsOpen, useSettings } from './settings-store';
 import { Why } from './why';
 
 // The site: the home page at /, a component's page at /docs/<slug>. The
@@ -18,6 +20,7 @@ import { Why } from './why';
 const AppScreen = lazy(() => import('./gallery/app-screen'));
 const DocsLayout = lazy(() => import('./docs/layout'));
 const Search = lazy(() => import('./search'));
+const SettingsDrawer = lazy(() => import('./settings-drawer'));
 
 /** ⌘K's search, mounted once it first opens. */
 function SearchHost() {
@@ -26,6 +29,21 @@ function SearchHost() {
   return (
     <Suspense fallback={null}>
       <Search open={open} onOpenChange={setSearchOpen} />
+    </Suspense>
+  );
+}
+
+/**
+ * The settings drawer, mounted once it first opens (the header's button or
+ * the phone's bottom bar), and kept after, so it can slide out when it
+ * closes.
+ */
+function SettingsHost() {
+  const { open, loaded } = useSettings();
+  if (!loaded) return null;
+  return (
+    <Suspense fallback={null}>
+      <SettingsDrawer open={open} onOpenChange={setSettingsOpen} />
     </Suspense>
   );
 }
@@ -40,7 +58,11 @@ export function App() {
   const path = usePath();
   const inDocs = path === '/docs' || path.startsWith('/docs/');
   return (
-    <div id="top" className="flex min-h-dvh flex-col overflow-x-clip">
+    // Room for the phone's bottom bar, so it covers no content.
+    <div
+      id="top"
+      className="flex min-h-dvh flex-col overflow-x-clip pb-bottom-nav md:pb-0"
+    >
       <a
         href="#main"
         className="sr-only rounded-md bg-primary px-3 py-2 text-on-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50"
@@ -58,7 +80,9 @@ export function App() {
         <Home />
       )}
       <Footer />
+      <BottomNav />
       <SearchHost />
+      <SettingsHost />
     </div>
   );
 }

@@ -37,5 +37,8 @@ export async function withToast(send: (toast: Sonner['toast']) => void) {
 /** The toaster, once a toast has loaded it. One on the page. */
 export function LazyToaster() {
   const loaded = useSyncExternalStore(subscribe, snapshot, snapshot);
-  return loaded ? <loaded.Toaster /> : null;
+  // Above the phone's bottom bar (tokens.css, --toast-bottom).
+  return loaded ? (
+    <loaded.Toaster offset={{ bottom: 'var(--toast-bottom)' }} />
+  ) : null;
 }

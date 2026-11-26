@@ -27,6 +27,25 @@
   --spacing-gutter: clamp(1rem, 4vw, 2rem);
   /* The docs sidebar: the window's height under the 56px header. */
   --spacing-sidebar: calc(100dvh - 3.5rem);
+  /* The phone's gesture bar or buttons, over the page's bottom edge
+     (viewport-fit=cover). */
+  --spacing-safe-bottom: env(safe-area-inset-bottom);
+  /* The phone's bottom bar (bottom-nav.tsx): its 64, and the gesture bar
+     under it. The page keeps this much room at its foot. */
+  --spacing-bottom-nav: calc(var(--spacing) * 16 + var(--spacing-safe-bottom));
+}
+
+/* The toasts' distance from the bottom: 16, and on a phone (below md) 16
+   above the bottom bar (bottom-nav.tsx). The Toaster's `offset`. */
+:root {
+  --toast-bottom: calc(var(--spacing) * 4);
+}
+
+/* 48rem: Tailwind's md, where the bottom bar goes. */
+@media (width < 48rem) {
+  :root {
+    --toast-bottom: calc(var(--spacing-bottom-nav) + var(--spacing) * 4);
+  }
 }
 
 /* The code colours (sugar-high reads --sh-<token>). Each is a colour of the
