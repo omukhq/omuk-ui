@@ -645,6 +645,13 @@
     background: var(--color-page);
     -webkit-font-smoothing: antialiased;
   }
+  /* An open modal (dialog, alert dialog, drawer): the page behind it does
+     not scroll; a wheel over the scrim scrolled it. The scrollbar's space
+     stays, so nothing moves. CSS only, no script locks the body. */
+  :root:has(dialog:modal) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
   body {
     font-family: var(--font-sans);
     font-size: var(--text-sm);

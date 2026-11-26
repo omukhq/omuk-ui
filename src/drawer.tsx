@@ -271,6 +271,9 @@ function DrawerContent({
             'pointer-events-auto flex flex-col bg-page text-sm text-foreground shadow-lg outline-none forced-edge will-change-transform',
             'transition-transform duration-400 ease-out',
             POPUP_BY_DIRECTION[direction],
+            // Reduced motion: it fades in and out where it stands, no slide.
+            // A finger still drags it (data-swiping).
+            'motion-reduce:transition-opacity motion-reduce:starting:translate-none motion-reduce:starting:opacity-0 motion-reduce:data-closed:translate-none motion-reduce:data-closed:opacity-0',
             className,
           )}
           {...(horizontal ? swipe : {})}

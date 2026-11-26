@@ -23,6 +23,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 - `data-theme="dark"` or `"light"` on an area inside the page gives that area its own colours, also its text. Before,
   a dark area kept the light text, and a light area inside a dark page did not work.
+- A dialog taller than the window scrolls inside, and the page behind an open dialog or drawer no longer scrolls.
+- A dialog or popover with no title or description no longer points at a missing id. A popover with no title takes
+  its trigger's name.
+- The drawer fades, not slides, with reduced motion.
+- A popup follows its trigger when the trigger grows or the page above it changes.
 
 ## [1.0.0-alpha.27] - 2026-11-24
 

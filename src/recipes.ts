@@ -136,8 +136,12 @@ export const CHIP =
 export const MODAL_BOX =
   'grid gap-4 rounded-xl bg-page p-6 text-sm text-foreground shadow-lg forced-edge';
 
-/** A modal: its look, centred, 16 from the window's sides on a phone. */
-export const MODAL = `${MODAL_BOX} fixed inset-x-4 top-1/2 z-50 mx-auto w-auto -translate-y-1/2 outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95`;
+/**
+ * A modal: its look, centred, 16 from the window's sides on a phone. At
+ * most the window's height less 16 above and below; taller content
+ * scrolls inside it, and the scroll stops at its ends (no page behind).
+ */
+export const MODAL = `${MODAL_BOX} fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-(--spacing(8)))] w-auto -translate-y-1/2 overflow-y-auto overscroll-contain outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95`;
 
 /**
  * The veil behind a modal: `bg-scrim`, the one value for dialogs, drawers
