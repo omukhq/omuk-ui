@@ -100,10 +100,12 @@ function RadioGroup({
       >
         {children}
         {/* Not type="hidden": the browser checks `required` only on a real
-            field. Its message focuses the picked radio, else the first. */}
+            field. Its message focuses the picked radio, else the first.
+            Named only once a radio is picked: with none, the form sends
+            nothing for the group, as with native radios. */}
         {name && (
           <FormValue
-            name={name}
+            name={value === null ? undefined : name}
             value={value ?? ''}
             required={required}
             disabled={disabled}

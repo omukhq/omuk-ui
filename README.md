@@ -50,14 +50,14 @@ It runs our apps in production. We made it public, under the MIT license, so tha
 Install from npm with an exact version:
 
 ```bash
-bun add @omukhq/ui@1.0.0-alpha.27
+bun add @omukhq/ui@1.0.0-alpha.28
 ```
 
 - Pin the exact version: until `1.0.0`, any alpha can break the API. See [Versions](#versions).
 - The name is `@omukhq/ui`. The `@omuk` scope on npm is not ours: do not install `@omuk/ui`.
 - Peer dependencies: `react` 19, `react-dom` 19 and `tailwindcss` 4.
 - The package is TypeScript source. Vite and Astro compile it as is. In Next.js, add it to `transpilePackages`.
-- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.27`.
+- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.28`.
 
 Then load the tokens and fonts in your stylesheet ([Tokens and fonts](#tokens-and-fonts)).
 
