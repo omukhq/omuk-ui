@@ -2,7 +2,9 @@ import { GripVerticalIcon } from 'lucide-react';
 import {
   type ComponentPropsWithRef,
   createContext,
+  type FocusEvent,
   type KeyboardEvent,
+  type MouseEvent,
   type PointerEvent,
   use,
   useId,
@@ -20,8 +22,13 @@ import { cn } from './utils';
 //
 // - Mouse and touch: one path, Pointer Events with the pointer captured by
 //   the handle. The list still scrolls by touch outside the handle.
-// - Keyboard: the handle is a button; with it in focus, Up and Down move the
-//   item, and the focus stays on the handle. Escape ends a drag.
+// - Keyboard: the handle is a toggle button. Space or Enter picks the item
+//   up; then Up and Down move it, and the focus stays on the handle. Space,
+//   Enter or leaving the handle puts it down; Escape puts it back where it
+//   was. Plain arrow keys do nothing until then: a screen reader's arrows
+//   (reading the page) must not move items, and its browse mode passes
+//   Space and Enter on as a click (Modern Web Guidance audit). Escape also
+//   ends a pointer drag.
 // - Screen readers: the handle says what it moves and how; a live region
 //   says where the item went ("Email moved to position 3 of 8").
 // - Motion: while one item is dragged, the items it passes slide aside with
@@ -49,6 +56,11 @@ type SortableState = {
   drop: (event: PointerEvent<HTMLElement>) => void;
   cancel: () => void;
   step: (value: string, by: -1 | 1) => void;
+  /** The item picked up with the keyboard, and where it was. */
+  grabbed: { value: string; from: number } | null;
+  grab: (value: string) => void;
+  /** Puts the picked-up item down; `back` returns it to where it was. */
+  release: (back: boolean) => void;
 };
 
 const SortableContext = createContext<SortableState | null>(null);
@@ -87,6 +99,7 @@ function Sortable({
   const [own, setOwn] = useState<readonly string[]>(defaultValue);
   const order = controlled ?? own;
   const [drag, setDrag] = useState<Drag | null>(null);
+  const [grabbed, setGrabbed] = useState<SortableState['grabbed']>(null);
   const [announcement, setAnnouncement] = useState('');
   const list = useRef<HTMLUListElement>(null);
   const labels = useRef(new Map<string, string>());
@@ -100,14 +113,17 @@ function Sortable({
     setDrag(null);
   }
 
-  function commit(from: number, to: number) {
+  function nameOf(value: string) {
+    return describe?.(value) ?? labels.current.get(value) ?? value;
+  }
+
+  function commit(from: number, to: number, verb = 'moved to') {
     if (from === to) return;
     const next = move(order, from, to);
-    const moved = order[from] ?? '';
-    const name = describe?.(moved) ?? labels.current.get(moved) ?? moved;
+    const name = nameOf(order[from] ?? '');
     setOwn(next);
     onValueChange?.(next);
-    setAnnouncement(`${name} moved to position ${to + 1} of ${next.length}`);
+    setAnnouncement(`${name} ${verb} position ${to + 1} of ${next.length}`);
   }
 
   const state: SortableState = {
@@ -176,6 +192,27 @@ function Sortable({
       if (from < 0 || to < 0 || to >= order.length) return;
       commit(from, to);
     },
+    grabbed,
+    grab(value) {
+      const from = order.indexOf(value);
+      if (from < 0) return;
+      setGrabbed({ value, from });
+      setAnnouncement(
+        `${nameOf(value)} picked up, position ${from + 1} of ${order.length}. Press Up or Down to move, Space to drop, Escape to cancel.`,
+      );
+    },
+    release(back) {
+      if (!grabbed) return;
+      setGrabbed(null);
+      const at = order.indexOf(grabbed.value);
+      if (back && at !== grabbed.from) {
+        commit(at, grabbed.from, 'returned to');
+        return;
+      }
+      setAnnouncement(
+        `${nameOf(grabbed.value)} dropped, position ${at + 1} of ${order.length}`,
+      );
+    },
   };
 
   return (
@@ -192,7 +229,7 @@ function Sortable({
         </ul>
       </LabelsContext>
       <span id={instructionsId} hidden>
-        Drag to move, or press Up or Down.
+        Drag to move, or press Space, then Up or Down.
       </span>
       <span role="status" aria-live="polite" className="sr-only">
         {announcement}
@@ -257,7 +294,7 @@ type SortableHandleProps = Omit<ComponentPropsWithRef<'button'>, 'children'> & {
 
 function SortableHandle({
   className,
-  hint = 'Drag, or press Up or Down',
+  hint = 'Drag, or press Space, then Up or Down',
   ...props
 }: SortableHandleProps) {
   const sortable = useSortable();
@@ -266,6 +303,7 @@ function SortableHandle({
     throw new Error('A sortable handle must be inside <SortableItem>.');
   const value = item.value;
   const dragged = sortable.drag?.value === value;
+  const grabbed = sortable.grabbed?.value === value;
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key === 'Escape' && sortable.drag) {
@@ -273,6 +311,14 @@ function SortableHandle({
       sortable.cancel();
       return;
     }
+    if (event.key === 'Escape' && grabbed) {
+      // Only the pick-up ends: a dialog around the list stays open.
+      event.preventDefault();
+      event.stopPropagation();
+      sortable.release(true);
+      return;
+    }
+    if (!grabbed) return;
     const by = event.key === 'ArrowUp' ? -1 : event.key === 'ArrowDown' ? 1 : 0;
     if (!by) return;
     event.preventDefault();
@@ -289,11 +335,30 @@ function SortableHandle({
         data-slot="sortable-handle"
         aria-label={`Move ${item.label}`}
         aria-describedby={sortable.instructionsId}
+        aria-pressed={grabbed}
+        data-grabbed={grabbed ? '' : undefined}
         className={cn(
-          'grid size-7 shrink-0 touch-none place-items-center rounded-md text-muted outline-none hover:bg-hover hover:text-foreground focus-visible:focus-ring [&>svg]:size-4',
+          'grid size-7 shrink-0 touch-none place-items-center rounded-md text-muted outline-none hover:bg-hover hover:text-foreground focus-visible:focus-ring data-grabbed:bg-hover data-grabbed:text-foreground [&>svg]:size-4',
           dragged ? 'cursor-grabbing' : 'cursor-grab',
           className,
         )}
+        // Space and Enter (a click with no pointer: `detail` 0) pick the
+        // item up or put it down. A pointer's click is the end of a drag.
+        onClick={(event: MouseEvent<HTMLElement>) => {
+          if (event.detail !== 0) return;
+          if (grabbed) sortable.release(false);
+          else sortable.grab(value);
+        }}
+        onBlur={(event: FocusEvent<HTMLElement>) => {
+          // React moves the node on a step and the focus comes straight
+          // back (requestAnimationFrame): only a real move away drops it.
+          const handle = event.currentTarget;
+          requestAnimationFrame(() => {
+            if (grabbed && document.activeElement !== handle) {
+              sortable.release(false);
+            }
+          });
+        }}
         onPointerDown={(event: PointerEvent<HTMLElement>) =>
           sortable.start(value, event)
         }

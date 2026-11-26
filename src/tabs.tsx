@@ -103,20 +103,28 @@ function Tabs({
 }
 
 // DESIGN.md, section 3. `line` is the design system's tabs: muted labels on
-// a `border-b`, the selected one in the text colour over a 2-wide accent
+// a line, the selected one in the text colour over a 2-wide accent
 // underline (`border-b-2 border-accent`). Every tab has a transparent 2-wide
 // edge above and below, so the label sits where it did and only the colour
-// changes; `-mb-px` lays the underline over the list's line. `default` is a
+// changes; the underline covers the list's line. `default` is a
 // segmented track (the chosen tab raised), for the places that used the
 // root's grey pill.
+//
+// Too many tabs for the width: the row scrolls sideways (touch, a trackpad,
+// and the arrow keys, as the focus scrolls the tab into view). A `line` row
+// shows a thin scrollbar below it; the pill shows none, as one inside its
+// fixed height would squeeze the tabs. A scroller cuts off what is outside
+// it, so nothing is: the pill's padding holds the focus ring, a `line` tab
+// draws its ring inside itself, and the line under the tabs is `tab-line`
+// (an inset shadow), not a border that the underline would hang over.
 const tabsListVariants = cva(
-  'group/tabs-list inline-flex w-fit items-center text-muted group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col',
+  'group/tabs-list inline-flex w-fit max-w-full items-center text-muted group-data-horizontal/tabs:overflow-x-auto group-data-horizontal/tabs:overscroll-x-contain group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col',
   {
     variants: {
       variant: {
         default:
-          'gap-0.5 rounded-lg bg-hover p-1 group-data-horizontal/tabs:h-8',
-        line: 'gap-1 group-data-horizontal/tabs:w-full group-data-horizontal/tabs:justify-start group-data-horizontal/tabs:border-b',
+          'gap-0.5 rounded-lg bg-hover p-1 no-scrollbar group-data-horizontal/tabs:h-8',
+        line: 'gap-1 group-data-horizontal/tabs:w-full group-data-horizontal/tabs:justify-start group-data-horizontal/tabs:scrollbar-thin group-data-horizontal/tabs:tab-line',
       },
     },
     defaultVariants: {
@@ -133,8 +141,9 @@ type ListVariant = NonNullable<
 const ListVariantContext = createContext<ListVariant>('default');
 
 const TRIGGER: Record<ListVariant, string> = {
-  default: 'h-full flex-1 rounded-md px-3 text-foreground',
-  line: 'h-8 -mb-px border-y-2 border-transparent px-3',
+  default:
+    'h-full flex-1 rounded-md px-3 text-foreground focus-visible:focus-ring',
+  line: 'h-8 shrink-0 border-y-2 border-transparent px-3 focus-visible:focus-ring-inset',
 };
 
 /**
@@ -262,7 +271,7 @@ function TabsTrigger({
         'data-active': active ? '' : undefined,
         'data-disabled': disabled ? '' : undefined,
         className: cn(
-          "relative inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:focus-ring group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          "relative inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none transition-colors group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           TRIGGER[variant],
           active ? ACTIVE[variant] : IDLE[variant],
           disabled && 'pointer-events-none text-muted',

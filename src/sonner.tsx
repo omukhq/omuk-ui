@@ -12,6 +12,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
+import { animationsDone } from './popup';
 import { Spinner } from './spinner';
 import { TOAST } from './toast-recipe';
 import { cn } from './utils';
@@ -127,9 +128,6 @@ const PLACE: Record<ToastPosition, string> = {
 /** sonner's defaults. */
 const DEFAULT_DURATION = 4000;
 const DEFAULT_VISIBLE = 3;
-/** How long the closing animation runs before the toast goes. */
-const EXIT_MS = 200;
-
 /** In a closed stack: how far each older toast peeks out, and shrinks. */
 const PEEK = 12;
 const SHRINK = 0.05;
@@ -285,16 +283,30 @@ function dismiss(id?: Toast['id']) {
     closing.has(toast.id) ? { ...toast, closing: true } : toast,
   );
   emit();
-  setTimeout(() => {
-    // Shown again under the same id meanwhile: that one stays.
-    for (const toast of toasts)
-      if (toast.closing && closing.has(toast.id)) measurers.delete(toast.id);
-    toasts = toasts.filter(
-      (toast) => !(toast.closing && closing.has(toast.id)),
-    );
-    emit();
-  }, EXIT_MS);
   return id;
+}
+
+/** The toasts whose closing animation is running, so it is waited for once. */
+const leaving = new Set<Toast['id']>();
+
+/**
+ * A closing toast's ref: it goes when its animations end (as a dialog's
+ * do, popup.tsx), not after a set time that the animation's own length
+ * could miss. With reduced motion it has none, and goes at once.
+ */
+function leave(id: Toast['id']) {
+  return (node: HTMLElement | null) => {
+    if (!node || leaving.has(id)) return;
+    leaving.add(id);
+    void animationsDone(node).then(() => {
+      leaving.delete(id);
+      // Shown again under the same id meanwhile: that one stays.
+      if (!toasts.some((toast) => toast.id === id && toast.closing)) return;
+      measurers.delete(id);
+      toasts = toasts.filter((toast) => !(toast.closing && toast.id === id));
+      emit();
+    });
+  };
 }
 
 type PromiseMessages<T> = {
@@ -579,6 +591,7 @@ export function Toaster({
             return (
               <li
                 key={each.id}
+                ref={each.closing ? leave(each.id) : undefined}
                 data-type={each.kind}
                 data-closing={each.closing ? '' : undefined}
                 // Hidden from the keyboard and screen readers while tucked:
@@ -606,7 +619,8 @@ export function Toaster({
                     TOAST.toast,
                     TOAST.kind[each.kind],
                     // In: a whole toast's height from its edge, as sonner's
-                    // toasts come. Out: a quick fade, done before EXIT_MS.
+                    // toasts come. Out: a quick fade; the toast goes when
+                    // it ends (leave).
                     each.closing
                       ? cn(
                           'animate-out fade-out-0 duration-200',

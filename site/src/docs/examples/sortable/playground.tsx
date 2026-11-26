@@ -5,7 +5,7 @@ import { Playground } from '../../playground';
 const STEPS = ['Lint', 'Test', 'Build', 'Migrate', 'Deploy', 'Notify'];
 
 /** The default hint of the handle's tooltip. */
-const DEFAULT_HINT = 'Drag, or press Up or Down';
+const DEFAULT_HINT = 'Drag, or press Space, then Up or Down';
 
 /** An item's frame, as the preview and the code draw it. */
 const ITEM = 'rounded-md p-2 inset-ring inset-ring-border';

@@ -16,7 +16,7 @@ export default function SortablePage() {
       </DocSection>
       <DocSection
         title="With handles"
-        description="Drag an item by its handle, or focus the handle and press Up or Down. The items it passes slide aside; on the drop, onValueChange gets the new order."
+        description="Drag an item by its handle, or focus the handle, press Space, then press Up or Down. The items it passes slide aside; on the drop, onValueChange gets the new order."
       >
         <Example source={columnsSource}>
           <Columns />
@@ -63,7 +63,7 @@ export default function SortablePage() {
             {
               name: 'hint',
               type: 'string',
-              default: "'Drag, or press Up or Down'",
+              default: "'Drag, or press Space, then Up or Down'",
               description: 'SortableHandle: the tooltip on the handle.',
             },
           ]}
@@ -73,11 +73,18 @@ export default function SortablePage() {
         <KeysTable
           rows={[
             [
-              'Arrow Up',
-              'Moves the item up one place. The focus stays on its handle.',
+              'Space or Enter',
+              'Picks the item up. Pressed again, puts it down. Moving the focus away also puts it down.',
             ],
-            ['Arrow Down', 'Moves the item down one place.'],
-            ['Escape', 'Ends a drag; the item goes back to where it was.'],
+            [
+              'Arrow Up',
+              'With the item picked up: moves it up one place. The focus stays on its handle.',
+            ],
+            ['Arrow Down', 'With the item picked up: moves it down one place.'],
+            [
+              'Escape',
+              'Puts a picked-up item back where it was, or ends a drag.',
+            ],
           ]}
         />
       </DocSection>
@@ -86,6 +93,7 @@ export default function SortablePage() {
           items={[
             'Render the items in the order of value: the list does not reorder its children by itself.',
             'A screen reader hears where the item went, such as “Email moved to position 3 of 5”. With reduced motion, nothing slides.',
+            'The arrow keys move nothing until Space picks the item up, so a screen reader’s arrow keys only read the page.',
             'It is for a short list in one direction: no drag between lists, no tree, and no scroll while dragging. A touch outside a handle still scrolls the page.',
           ]}
         />

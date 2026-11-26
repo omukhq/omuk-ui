@@ -1,7 +1,6 @@
 import {
   type ComponentProps,
   createContext,
-  type PointerEvent,
   use,
   useRef,
   useState,
@@ -119,115 +118,66 @@ function DrawerOverlay({
 
 // The viewport lets presses through to the overlay, which closes the drawer;
 // the drawer takes them back.
+//
+// A side drawer's viewport is also its swipe: a sideways scroller with two
+// snap points, the drawer and an empty space as wide as the window beside
+// it. It opens at the scroll's start, with the drawer in view (`right` is
+// a reversed row, so its start is the right edge). A swipe toward the edge
+// scrolls the drawer out, with the browser's own momentum and snap (Modern
+// Web Guidance audit); a short one snaps back. A slide or a translate past
+// the scroll's start is cut off, not scrolled to, so the open and close
+// slides stay as they were. It scrolls only on a touch screen (a coarse
+// pointer), as the swipe it replaces did: with a mouse, Left or Right on a
+// button in the drawer would scroll it out and close it.
+const SWIPE_SCROLLER =
+  'items-stretch overflow-hidden overscroll-x-contain no-scrollbar snap-x snap-mandatory pointer-coarse:overflow-x-auto';
+
 const VIEWPORT_BY_DIRECTION: Record<Direction, string> = {
-  right: 'items-stretch justify-end',
-  left: 'items-stretch justify-start',
+  right: `flex-row-reverse ${SWIPE_SCROLLER}`,
+  left: SWIPE_SCROLLER,
   top: 'items-start justify-stretch',
   bottom: 'items-end justify-stretch',
 };
 
-// Each drawer rounds its two inward-facing corners (`rounded-xl`, as a
-// dialog). `data-swiping` is on while a finger drags it, which moves it by
-// --drawer-swipe-movement-*.
-const POPUP_BY_DIRECTION: Record<Direction, string> = {
-  right:
-    'h-full w-3/4 max-w-sm rounded-l-xl translate-x-0 starting:translate-x-full data-closed:translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
-  left: 'h-full w-3/4 max-w-sm rounded-r-xl translate-x-0 starting:-translate-x-full data-closed:-translate-x-full data-swiping:translate-x-(--drawer-swipe-movement-x)',
-  top: 'h-full max-h-4/5 w-full rounded-b-xl translate-y-0 starting:-translate-y-full data-closed:-translate-y-full data-swiping:translate-y-(--drawer-swipe-movement-y)',
-  bottom:
-    'h-full max-h-4/5 w-full rounded-t-xl translate-y-0 starting:translate-y-full data-closed:translate-y-full data-swiping:translate-y-(--drawer-swipe-movement-y)',
+/** Where the drawer and the space beside it snap, in the scroll's order. */
+const SNAP_BY_DIRECTION: Partial<
+  Record<Direction, { popup: string; space: string }>
+> = {
+  right: { popup: 'snap-end', space: 'snap-start' },
+  left: { popup: 'snap-start', space: 'snap-end' },
 };
 
-/** How far a finger moves before it counts as a swipe, in CSS pixels. */
-const SLOP = 10;
-/** The share of the drawer's size a swipe must cover to close it. */
-const CLOSE_SHARE = 0.4;
-/** Or the speed, in CSS pixels per millisecond, of a flick. */
-const FLICK = 0.5;
+// Each drawer rounds its two inward-facing corners (`rounded-xl`, as a
+// dialog).
+const POPUP_BY_DIRECTION: Record<Direction, string> = {
+  right:
+    'h-full w-3/4 max-w-sm shrink-0 rounded-l-xl translate-x-0 starting:translate-x-full data-closed:translate-x-full',
+  left: 'h-full w-3/4 max-w-sm shrink-0 rounded-r-xl translate-x-0 starting:-translate-x-full data-closed:-translate-x-full',
+  top: 'h-full max-h-4/5 w-full rounded-b-xl translate-y-0 starting:-translate-y-full data-closed:-translate-y-full',
+  bottom:
+    'h-full max-h-4/5 w-full rounded-t-xl translate-y-0 starting:translate-y-full data-closed:translate-y-full',
+};
 
-/** The swipe toward the drawer's edge: its distance along that way. */
-function along(direction: Direction, dx: number, dy: number) {
-  if (direction === 'right') return dx;
-  if (direction === 'left') return -dx;
-  return direction === 'bottom' ? dy : -dy;
-}
-
-function useSwipe(direction: Direction, close: (event: Event) => void) {
-  const swipe = useRef<{
-    x: number;
-    y: number;
-    at: number;
-    moved: number;
-    on: boolean;
-  } | null>(null);
-  const horizontal = direction === 'left' || direction === 'right';
-  const axis = horizontal ? 'x' : 'y';
-
-  function reset(popup: HTMLElement) {
-    swipe.current = null;
-    delete popup.dataset.swiping;
-    popup.style.removeProperty('transition');
-    popup.style.removeProperty(`--drawer-swipe-movement-${axis}`);
-  }
-
-  return {
-    onPointerDown(event: PointerEvent<HTMLElement>) {
-      if (event.pointerType === 'mouse') return;
-      swipe.current = {
-        x: event.clientX,
-        y: event.clientY,
-        at: event.timeStamp,
-        moved: 0,
-        on: false,
-      };
-    },
-    onPointerMove(event: PointerEvent<HTMLElement>) {
-      const start = swipe.current;
-      if (!start) return;
-      const popup = event.currentTarget;
-      const dx = event.clientX - start.x;
-      const dy = event.clientY - start.y;
-      const toward = along(direction, dx, dy);
-      if (!start.on) {
-        const across = Math.abs(horizontal ? dy : dx);
-        if (Math.max(Math.abs(toward), across) < SLOP) return;
-        // Across the way out, or the other way: a scroll, not a swipe.
-        if (toward <= across) {
-          swipe.current = null;
-          return;
-        }
-        start.on = true;
-        popup.setPointerCapture(event.pointerId);
-        popup.dataset.swiping = '';
-        // The drawer follows the finger, with no transition behind it.
-        popup.style.transition = 'none';
-      }
-      start.moved = Math.max(0, toward);
-      const sign = direction === 'left' || direction === 'top' ? -1 : 1;
-      popup.style.setProperty(
-        `--drawer-swipe-movement-${axis}`,
-        `${sign * start.moved}px`,
-      );
-    },
-    onPointerUp(event: PointerEvent<HTMLElement>) {
-      const start = swipe.current;
-      const popup = event.currentTarget;
-      if (!start?.on) {
-        swipe.current = null;
-        return;
-      }
-      const size = horizontal ? popup.offsetWidth : popup.offsetHeight;
-      const speed = start.moved / Math.max(1, event.timeStamp - start.at);
-      // Let go: the transition moves the drawer out, or back.
-      reset(popup);
-      if (start.moved > size * CLOSE_SHARE || speed > FLICK) {
-        close(event.nativeEvent);
-      }
-    },
-    onPointerCancel(event: PointerEvent<HTMLElement>) {
-      reset(event.currentTarget);
-    },
-  };
+/**
+ * A scroll of a side drawer's viewport: once the empty space fills it (the
+ * drawer is all out of view), the drawer closes. By the space's box, not
+ * scrollLeft, which counts the other way in a reversed row and in
+ * right-to-left text; and not the drawer's, which its slide in moves.
+ */
+function onSwipeScroll(
+  viewport: HTMLElement,
+  close: (event: Event) => void,
+  event: Event,
+) {
+  if (viewport.dataset.swiped !== undefined) return;
+  const space = viewport.querySelector('[data-slot=drawer-swipe-space]');
+  if (!space) return;
+  const box = viewport.getBoundingClientRect();
+  const empty = space.getBoundingClientRect();
+  if (Math.abs(empty.left - box.left) > 1) return;
+  // Once: the scroll goes on firing while it settles.
+  viewport.dataset.swiped = '';
+  close(event);
 }
 
 function DrawerContent({
@@ -238,8 +188,7 @@ function DrawerContent({
   ...props
 }: ComponentProps<typeof ModalPopup>) {
   const { direction, close } = use(DrawerContext);
-  const swipe = useSwipe(direction, close);
-  const horizontal = direction === 'left' || direction === 'right';
+  const snap = SNAP_BY_DIRECTION[direction];
   // Base UI's drawer takes the focus on the panel itself, not on its first
   // field: no focus ring on open, and no keyboard popping up on a phone.
   // Once per opening (a new panel each time), after the <dialog> has moved
@@ -259,28 +208,38 @@ function DrawerContent({
           'pointer-events-none fixed inset-0 z-50 flex',
           VIEWPORT_BY_DIRECTION[direction],
         )}
+        onScroll={
+          snap
+            ? (event) =>
+                onSwipeScroll(event.currentTarget, close, event.nativeEvent)
+            : undefined
+        }
       >
         <ModalPopup
           ref={merged}
           tabIndex={-1}
           data-slot="drawer-content"
-          // A side drawer keeps vertical scrolling and takes the sideways
-          // drag; a top or bottom one leaves the drag to its content.
-          style={horizontal ? { touchAction: 'pan-y' } : undefined}
           className={cn(
             'pointer-events-auto flex flex-col bg-page text-sm text-foreground shadow-lg outline-none forced-edge will-change-transform',
             'transition-transform duration-400 ease-out',
             POPUP_BY_DIRECTION[direction],
+            snap?.popup,
             // Reduced motion: it fades in and out where it stands, no slide.
-            // A finger still drags it (data-swiping).
+            // A finger still swipes it out (the scroll).
             'motion-reduce:transition-opacity motion-reduce:starting:translate-none motion-reduce:starting:opacity-0 motion-reduce:data-closed:translate-none motion-reduce:data-closed:opacity-0',
             className,
           )}
-          {...(horizontal ? swipe : {})}
           {...props}
         >
           {children}
         </ModalPopup>
+        {snap && (
+          <div
+            aria-hidden
+            data-slot="drawer-swipe-space"
+            className={cn('w-full shrink-0', snap.space)}
+          />
+        )}
       </div>
     </DrawerPortal>
   );
