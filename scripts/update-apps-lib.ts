@@ -10,24 +10,43 @@ const DEPENDENCY = new RegExp(
   'g',
 );
 
+/** The npm package. An app keeps importing `@omuk/ui` through an alias. */
+export const NPM_PACKAGE = '@omukhq/ui';
+
+const VERSION = String.raw`\d+\.\d+\.\d+[\w.-]*`;
+
 /**
  * The version an install spec points at, or null for one it does not pin:
- * `github:omukhq/omuk-ui#v1.0.0-alpha.27`, `git+ssh://…/omuk-ui.git#v1.0.0-alpha.18`
- * or `1.0.0-alpha.27` from npm.
+ * `github:omukhq/omuk-ui#v1.0.0-alpha.27`, `git+ssh://…/omuk-ui.git#v1.0.0-alpha.18`,
+ * `1.0.0-alpha.27` from npm, or the alias `npm:@omukhq/ui@1.0.0-alpha.30`.
  */
 export function versionOf(spec: string): string | null {
-  const tag = spec.match(/#v(\d[\w.-]*)$/);
+  const tag = spec.match(new RegExp(`#v(${VERSION})$`));
   if (tag?.[1]) return tag[1];
-  const exact = spec.match(/^(\d+\.\d+\.\d+[\w.-]*)$/);
+  const alias = spec.match(new RegExp(`^npm:${NPM_PACKAGE}@(${VERSION})$`));
+  if (alias?.[1]) return alias[1];
+  const exact = spec.match(new RegExp(`^(${VERSION})$`));
   return exact?.[1] ?? null;
 }
 
-/** The same spec at `version`, in its own form; null when it pins none. */
-export function bumpSpec(spec: string, version: string): string | null {
-  if (/#v\d[\w.-]*$/.test(spec))
-    return spec.replace(/#v[\w.-]+$/, `#v${version}`);
-  if (/^\d+\.\d+\.\d+[\w.-]*$/.test(spec)) return version;
-  return null;
+/**
+ * The same spec at `version`, in its own form; null when it pins none.
+ * With `toNpm`, a GitHub spec becomes the npm alias, so the app's imports
+ * (`@omuk/ui/button`) stay as they are.
+ */
+export function bumpSpec(
+  spec: string,
+  version: string,
+  toNpm = false,
+): string | null {
+  if (versionOf(spec) === null) return null;
+  if (/^npm:/.test(spec)) return `npm:${NPM_PACKAGE}@${version}`;
+  if (/#v[\w.-]+$/.test(spec)) {
+    return toNpm
+      ? `npm:${NPM_PACKAGE}@${version}`
+      : spec.replace(/#v[\w.-]+$/, `#v${version}`);
+  }
+  return version;
 }
 
 /** The Omuk UI specs in a package.json's text. */
@@ -39,11 +58,15 @@ export function specsIn(text: string): string[] {
  * The package.json text with every Omuk UI spec at `version`, its own
  * formatting kept. Unchanged when nothing needs a change.
  */
-export function bumpPackageJson(text: string, version: string): string {
+export function bumpPackageJson(
+  text: string,
+  version: string,
+  toNpm = false,
+): string {
   return text.replace(
     DEPENDENCY,
     (whole, before: string, spec: string, after: string) => {
-      const next = bumpSpec(spec, version);
+      const next = bumpSpec(spec, version, toNpm);
       return next === null ? whole : `${before}${next}${after}`;
     },
   );

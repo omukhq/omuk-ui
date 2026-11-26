@@ -38,7 +38,8 @@
   "files": [
     "src",
     "!src/**/*.test.ts",
-    "!src/**/*.test.tsx"
+    "!src/**/*.test.tsx",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public",
