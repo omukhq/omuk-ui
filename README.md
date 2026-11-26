@@ -34,7 +34,7 @@ It follows five promises. Every component keeps them, and a test checks most of 
    open while its action runs, and shows the error there if it fails.
 2. **No number by hand.** Every colour, size, radius and space is a named token. A test fails the moment a component
    writes `13px` or `#eee`. Dark mode, or a new brand colour, is one file.
-3. **A page pays only for what it shows.** There is no index file. `@omukhq/ui/button` is the button and nothing else,
+3. **A page pays only for what it shows.** There is no index file. `@omuk/ui/button` is the button and nothing else,
    so a sign-in page never downloads a date picker.
 4. **Ours all the way down.** No headless library underneath and no second layer of class names. We started on
    wrappers around one, and every fix waited on code we did not own. Now, when something is wrong, it is our bug, and
@@ -47,17 +47,18 @@ It runs our apps in production. We made it public, under the MIT license, so tha
 
 ## Install
 
-Install from npm with an exact version:
+Install from npm with an exact version, under the name the imports use (`@omuk/ui/button`):
 
 ```bash
-bun add @omukhq/ui@1.0.0-alpha.30
+bun add @omuk/ui@npm:omuk-ui@1.0.0-alpha.31
 ```
 
 - Pin the exact version: until `1.0.0`, any alpha can break the API. See [Versions](#versions).
-- The name is `@omukhq/ui`. The `@omuk` scope on npm is not ours: do not install `@omuk/ui`.
+- The npm package is `omuk-ui`; the line above installs it as `@omuk/ui`. The `@omuk` scope on npm is not ours, so
+  never install `@omuk/ui` plainly. Versions up to alpha.30 were briefly on npm as `@omukhq/ui`; that name is gone.
 - Peer dependencies: `react` 19, `react-dom` 19 and `tailwindcss` 4.
 - The package is TypeScript source. Vite and Astro compile it as is. In Next.js, add it to `transpilePackages`.
-- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.30`.
+- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.31`.
 
 Then load the tokens and fonts in your stylesheet ([Tokens and fonts](#tokens-and-fonts)).
 
@@ -67,9 +68,9 @@ The `omuk` command copies a component into your app as source files that you own
 the component imports, and installs its npm packages. You can then change the files as you like.
 
 ```bash
-npx @omukhq/cli init          # omuk.json, and the tokens and fonts
-npx @omukhq/cli add button    # button.tsx and the files it needs
-npx @omukhq/cli list          # every component; yours are marked
+npx omuk init          # omuk.json, and the tokens and fonts
+npx omuk add button    # button.tsx and the files it needs
+npx omuk list          # every component; yours are marked
 ```
 
 - `init` puts the files in `src/components/ui` (or `components/ui`). Use `--dir <folder>` for another folder. It
@@ -89,8 +90,8 @@ want to own and change the code.
 Import each component from its own path:
 
 ```tsx
-import { Button } from '@omukhq/ui/button';
-import { toast } from '@omukhq/ui/sonner';
+import { Button } from '@omuk/ui/button';
+import { toast } from '@omuk/ui/sonner';
 
 <Button isLoading={saving} loadingLabel="Saving" onClick={save}>
   Save
@@ -113,11 +114,11 @@ There is no index file. Each component is a separate export (see `package.json`)
 
 ### Prompts: alerts, modals and drawers from code
 
-`@omukhq/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in
+`@omuk/ui/prompt` opens a prompt from any handler and gives its answer as a promise. Put one `<PromptProvider />` in
 the app, inside the providers that the prompts' content needs.
 
 ```tsx
-import { PromptProvider, usePrompt } from '@omukhq/ui/prompt';
+import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
 
 const prompt = usePrompt();
 
@@ -155,7 +156,7 @@ const name = await prompt.open<string>({
 One component for a day, a day and a time, a range or a time. The value is ISO text, and its type follows `mode`:
 
 ```tsx
-import { DatePicker } from '@omukhq/ui/date-picker';
+import { DatePicker } from '@omuk/ui/date-picker';
 
 <DatePicker value={day} onChange={setDay} />                                 // "2026-11-18"
 <DatePicker granularity="minute" value={at} onChange={setAt} />              // "2026-11-18T14:30"
@@ -168,7 +169,7 @@ import { DatePicker } from '@omukhq/ui/date-picker';
 - Options: `minValue`, `maxValue`, `isDateUnavailable`, `visibleMonths`, `firstDayOfWeek`, `timeZone` (for "today"),
   `locale`, `hourCycle`, `validate`, `name` (`startName`, `endName` for a range), `size`.
 - For a filter: `placeholder` (shown until the field is used), `prefix` ("Updated:") and `showClear`.
-- `@omukhq/ui/calendar` is the calendar alone, for one day or a range.
+- `@omuk/ui/calendar` is the calendar alone, for one day or a range.
 - Gregorian only; no time zone in the value; no seconds.
 
 ## Tokens and fonts
@@ -178,9 +179,9 @@ relative to the stylesheet:
 
 ```css
 @import "tailwindcss";
-@import "../node_modules/@omukhq/ui/src/design/theme.css";
-@import "../node_modules/@omukhq/ui/src/design/fonts.css";
-@source "../node_modules/@omukhq/ui/src";
+@import "../node_modules/@omuk/ui/src/design/theme.css";
+@import "../node_modules/@omuk/ui/src/design/fonts.css";
+@source "../node_modules/@omuk/ui/src";
 ```
 
 - `theme.css` holds every token: colours for light and dark mode, sizes, radii, shadows.
