@@ -4,6 +4,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.30] - 2026-11-26
+
+### Fixed
+
+- `DatePicker` with `presets`: the preset that is the current range shows as chosen (`aria-pressed`, the selected
+  fill), so "Last 7 days" stays marked when the range is the last 7 days. Before, no preset showed as chosen.
+
 ## [1.0.0-alpha.29] - 2026-11-26
 
 ### Added
