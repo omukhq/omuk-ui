@@ -6,6 +6,7 @@ import {
   XIcon,
 } from 'lucide-react';
 import {
+  type CSSProperties,
   type MouseEvent,
   type ReactNode,
   useRef,
@@ -95,14 +96,19 @@ type ToasterProps = {
    */
   position?: ToastPosition;
   /**
-   * From the window's edge on the toasts' side (top or bottom); the band's
-   * own padding keeps 16 at the side.
+   * From the window's edge on the toasts' side (top or bottom), and from
+   * the right edge for a right position (640 up); the band's own padding
+   * keeps 16 otherwise. A number is pixels.
    */
   offset?: {
     top?: number | string;
     bottom?: number | string;
     right?: number | string;
   };
+  /**
+   * On a phone (below 640): the distance from the window's bottom, for a
+   * bottom position, as above a bottom tab bar. `offset.bottom` from 640 up.
+   */
   mobileOffset?: { bottom?: number | string };
   duration?: number;
   visibleToasts?: number;
@@ -371,6 +377,47 @@ export const toast = Object.assign(
 
 // ── The toaster ─────────────────────────────────────────────────────────
 
+/** A CSS length: a number is pixels, as in a style. */
+function cssLength(value: number | string | undefined) {
+  return typeof value === 'number' ? `${value}px` : value;
+}
+
+/**
+ * The band's distances from the window's edges, from `offset` and
+ * `mobileOffset`: CSS variables, so the phone's bottom and the wider
+ * screen's can differ (a breakpoint, which an inline style cannot have).
+ * Unset: PLACE's 16.
+ */
+function placeEdges(
+  position: ToastPosition,
+  offset: ToasterProps['offset'],
+  mobileOffset: ToasterProps['mobileOffset'],
+) {
+  const fromTop = position.startsWith('top');
+  const edge = cssLength(fromTop ? offset?.top : offset?.bottom);
+  const phone = fromTop ? undefined : cssLength(mobileOffset?.bottom);
+  const right = position.endsWith('right')
+    ? cssLength(offset?.right)
+    : undefined;
+  const style: Record<string, string> = {};
+  const className: string[] = [];
+  if (edge !== undefined) style['--toast-edge'] = edge;
+  if (phone !== undefined) style['--toast-phone-bottom'] = phone;
+  if (right !== undefined) style['--toast-right'] = right;
+  if (fromTop) {
+    if (edge !== undefined) className.push('top-(--toast-edge)');
+  } else if (phone !== undefined) {
+    className.push(
+      'bottom-(--toast-phone-bottom)',
+      edge !== undefined ? 'sm:bottom-(--toast-edge)' : 'sm:bottom-4',
+    );
+  } else if (edge !== undefined) {
+    className.push('bottom-(--toast-edge)');
+  }
+  if (right !== undefined) className.push('sm:pr-(--toast-right)');
+  return { style: style as CSSProperties, className };
+}
+
 /**
  * The toasts at an edge of the window: `position` from 640 up (the bottom
  * right when not given), centred on phones, 16 from the edges (`offset`),
@@ -386,6 +433,7 @@ export function Toaster({
   closeButton = true,
   position = 'bottom-right',
   offset,
+  mobileOffset,
   duration = DEFAULT_DURATION,
   visibleToasts = DEFAULT_VISIBLE,
   toastOptions,
@@ -519,6 +567,8 @@ export function Toaster({
       GAP * Math.max(0, front.length - 1)
     : frontHeight + PEEK * Math.max(0, front.length - 1);
 
+  const edges = placeEdges(position, offset, mobileOffset);
+
   return (
     <section
       ref={attach}
@@ -531,8 +581,9 @@ export function Toaster({
       className={cn(
         'pointer-events-none fixed inset-x-0 m-0 flex h-auto w-auto max-w-none justify-center overflow-visible border-none bg-transparent px-4 py-0 text-inherit',
         PLACE[position],
+        edges.className,
       )}
-      style={fromTop ? { top: offset?.top } : { bottom: offset?.bottom }}
+      style={edges.style}
     >
       {/* What a screen reader reads: the newest toast's words only, not its
           buttons. A new element each time a toast shows, also the same
