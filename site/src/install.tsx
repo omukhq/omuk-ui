@@ -44,7 +44,7 @@ const CLI_STEPS: Step[] = [
   {
     title: 'Set up the folder',
     text: 'Writes omuk.json and copies the tokens and fonts into src/components/ui (or the folder you name with --dir). It prints the two lines for your stylesheet.',
-    code: `npx omuk init
+    code: `npx omuk-ui init
 
 # your main stylesheet, after @import "tailwindcss"
 @import "./components/ui/design/theme.css";
@@ -54,7 +54,7 @@ const CLI_STEPS: Step[] = [
   {
     title: 'Add a component',
     text: 'Copies the component and every file it imports, and installs its npm packages with your package manager. The files import each other by relative path: no alias to set up.',
-    code: `npx omuk add button dialog
+    code: `npx omuk-ui add button dialog
 
 import { Button } from './components/ui/button';`,
     label: 'Copy the add command',
@@ -62,8 +62,8 @@ import { Button } from './components/ui/button';`,
   {
     title: 'Change it, update it',
     text: 'The code is yours to change. Run add again for a newer version: omuk updates the files you did not change and keeps the ones you did. --overwrite replaces those too.',
-    code: `npx omuk list                  # what you have, and its version
-npx omuk add button --dry-run  # see the changes first`,
+    code: `npx omuk-ui list                  # what you have, and its version
+npx omuk-ui add button --dry-run  # see the changes first`,
     label: 'Copy the update commands',
   },
 ];

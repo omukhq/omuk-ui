@@ -50,7 +50,7 @@ It runs our apps in production. We made it public, under the MIT license, so tha
 Install from npm with an exact version:
 
 ```bash
-bun add omuk-ui@1.0.0-alpha.31
+bun add omuk-ui@1.0.0-alpha.32
 ```
 
 - Pin the exact version: until `1.0.0`, any alpha can break the API. See [Versions](#versions).
@@ -61,20 +61,23 @@ bun add omuk-ui@1.0.0-alpha.31
   `"@omuk/ui": "npm:omuk-ui@<version>"`.
 - Peer dependencies: `react` 19, `react-dom` 19 and `tailwindcss` 4.
 - The package is TypeScript source. Vite and Astro compile it as is. In Next.js, add it to `transpilePackages`.
-- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.31`.
+- A GitHub tag works too: `bun add github:omukhq/omuk-ui#v1.0.0-alpha.32`.
 
 Then load the tokens and fonts in your stylesheet ([Tokens and fonts](#tokens-and-fonts)).
 
 ### Or copy one component at a time
 
 The `omuk` command copies a component into your app as source files that you own. It also copies the files that
-the component imports, and installs its npm packages. You can then change the files as you like.
+the component imports, and installs its npm packages. You can then change the files as you like. It comes with the
+`omuk-ui` package:
 
 ```bash
-npx omuk init          # omuk.json, and the tokens and fonts
-npx omuk add button    # button.tsx and the files it needs
-npx omuk list          # every component; yours are marked
+npx omuk-ui init          # omuk.json, and the tokens and fonts
+npx omuk-ui add button    # button.tsx and the files it needs
+npx omuk-ui list          # every component; yours are marked
 ```
+
+- In a project that has `omuk-ui` installed, `npx omuk add button` works too.
 
 - `init` puts the files in `src/components/ui` (or `components/ui`). Use `--dir <folder>` for another folder. It
   prints two `@import` lines for your stylesheet.
@@ -223,8 +226,9 @@ To release:
 2. Set the new version in `package.json` and add its section to `CHANGELOG.md`.
 3. Commit, then tag the commit `v<version>`.
 4. Push the commit and the tag.
-5. Run `bun publish`. It publishes with the `alpha` dist-tag (`publishConfig` in `package.json`), so `latest` stays
-   free for `1.0.0`.
+5. Run `bun publish --auth-type=web`, and approve the staged version on npmjs.com. It publishes with the `alpha`
+   dist-tag (`publishConfig` in `package.json`). It builds the `omuk` command first (`prepublishOnly`), which ships
+   inside the package; `cli/` is not published on its own (`"private": true`).
 6. Run `bun scripts/update-apps.ts` to move the apps that use Omuk UI to the new version. Run it with `--dry-run`
    first to see what it will do. For each app's repo, it:
    - makes a branch;

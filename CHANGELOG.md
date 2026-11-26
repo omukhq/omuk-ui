@@ -4,6 +4,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.32] - 2026-11-26
+
+### Changed (breaking)
+
+- The `omuk` command comes with the `omuk-ui` package; there is no separate CLI package. npm refused the name
+  `omuk` as too similar to another package. To update: run `npx omuk-ui add button` (or `init`, `list`). In a project
+  with `omuk-ui` installed, `npx omuk add button` works too.
+
 ## [1.0.0-alpha.31] - 2026-11-26
 
 ### Changed (breaking)
