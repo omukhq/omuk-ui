@@ -4,6 +4,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+### Changed (breaking)
+
+- Without `data-theme`, the page follows the system's light or dark setting. Before, it was always light. To keep
+  it light, set `data-theme="light"` on `<html>`.
+- Text sizes are in rem (`text-sm` is `0.875rem`), so they follow the reader's browser font size. At the default
+  16px they are the same as before.
+
+### Changed
+
+- Each colour role is written once, as `light-dark(<light>, <dark>)`. An app that overrides a role for one mode
+  writes `light-dark()` too.
+- `body` sets `font-size-adjust` to IBM Plex Sans's x-height (`--font-sans-x-height`), so the text keeps its size
+  when the web font arrives. An app with another face sets its own value, or `none`.
+- With reduced motion, popups still fade; only the slide and the zoom stop. The scrim fades too.
+
+### Fixed
+
+- `data-theme="dark"` or `"light"` on an area inside the page gives that area its own colours, also its text. Before,
+  a dark area kept the light text, and a light area inside a dark page did not work.
+
 ## [1.0.0-alpha.27] - 2026-11-24
 
 ### Changed

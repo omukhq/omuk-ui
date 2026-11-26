@@ -61,23 +61,33 @@ function contrast(a: string, b: string) {
   return (hi + 0.05) / ((lo ?? 0) + 0.05);
 }
 
-// The avatar roles, from Omuk UI's theme: each wash and its text, as set
-// for light mode (the first block) and for dark mode (the second).
+// The avatar roles, from Omuk UI's theme: each wash and its text, written
+// once as light-dark(var(--color-<light>), var(--color-<dark>)).
 const kitTheme = await Bun.file(
   new URL('./design/theme.css', import.meta.url),
 ).text();
 
+const SIDES =
+  /: light-dark\(var\(--color-([a-z]+-\d+)\), var\(--color-([a-z]+-\d+)\)\)/;
+
+/** Each role's [light, dark] palette shades, by number. */
+function roles(css: string, prefix: string) {
+  const pattern = new RegExp(`--color-${prefix}-(\\d)${SIDES.source}`, 'g');
+  return [...css.matchAll(pattern)].map((match) => [
+    match[2] ?? '',
+    match[3] ?? '',
+  ]);
+}
+
 function pairs(css: string) {
-  const fills = [
-    ...css.matchAll(/--color-avatar-(\d): var\(--color-([a-z]+-\d+)\)/g),
-  ];
-  const texts = [
-    ...css.matchAll(/--color-on-avatar-(\d): var\(--color-([a-z]+-\d+)\)/g),
-  ];
-  return fills.map((fill, at) => ({
-    fill: fill[2] ?? '',
-    text: texts[at]?.[2] ?? '',
-  }));
+  const fills = roles(css, 'avatar');
+  const texts = roles(css, 'on-avatar');
+  return [0, 1].flatMap((side) =>
+    fills.map((fill, at) => ({
+      fill: fill[side] ?? '',
+      text: texts[at]?.[side] ?? '',
+    })),
+  );
 }
 
 const AVATAR_PAIRS = pairs(kitTheme);

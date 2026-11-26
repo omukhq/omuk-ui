@@ -38,17 +38,24 @@ function onStorage(event: StorageEvent) {
   if (event.key === THEME_STORAGE_KEY) notify();
 }
 
+let watching = false;
+
+/**
+ * Follow the system's setting and a pick in another tab from the start,
+ * not only while a component reads the theme (main.tsx calls it once).
+ */
+export function watchTheme() {
+  if (watching) return;
+  watching = true;
+  matchMedia(DARK_QUERY).addEventListener('change', notify);
+  window.addEventListener('storage', onStorage);
+}
+
 function subscribe(listener: () => void) {
-  if (listeners.size === 0) {
-    matchMedia(DARK_QUERY).addEventListener('change', notify);
-    window.addEventListener('storage', onStorage);
-  }
+  watchTheme();
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
-    if (listeners.size > 0) return;
-    matchMedia(DARK_QUERY).removeEventListener('change', notify);
-    window.removeEventListener('storage', onStorage);
   };
 }
 
