@@ -92,7 +92,8 @@ export default function ToastPage() {
           ]}
         />
       </DocSection>
-      <Toaster position={position} />
+      {/* Above the phone's bottom bar (tokens.css, --toast-bottom). */}
+      <Toaster position={position} offset={{ bottom: 'var(--toast-bottom)' }} />
     </>
   );
 }

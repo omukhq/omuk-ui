@@ -11,6 +11,7 @@ import {
   useCallback,
   useState,
 } from 'react';
+import { setDocsNavOpener } from '../docs-nav-store';
 import { DESIGN_URL, sourceUrl } from '../links';
 import { Link } from '../router';
 import { ImportLine } from './blocks';
@@ -83,7 +84,11 @@ export default function DocsLayout({ slug }: { slug: string }) {
   );
 }
 
-/** On a phone: a button that opens the component list in a drawer. */
+/**
+ * On a phone: a button that opens the component list in a drawer. The
+ * header's Components button opens it too (setDocsNavOpener), so the list
+ * is one tap away after the page scrolls.
+ */
 function PhoneNav({ current }: { current: string }) {
   const prompt = usePrompt();
   function open() {
@@ -91,13 +96,23 @@ function PhoneNav({ current }: { current: string }) {
       type: 'drawer',
       direction: 'left',
       title: 'Components',
+      // In line with the drawer's title (DrawerHeader, p-4).
       content: (close) => (
-        <DocsNav current={current} onNavigate={() => close()} />
+        <div className="px-4 pb-4">
+          <DocsNav current={current} onNavigate={() => close()} />
+        </div>
       ),
     });
   }
   return (
-    <Button variant="outline" onClick={open} className="mb-8 lg:hidden">
+    <Button
+      ref={(node: HTMLButtonElement | null) =>
+        node ? setDocsNavOpener(open) : undefined
+      }
+      variant="outline"
+      onClick={open}
+      className="mb-8 lg:hidden"
+    >
       <PanelLeftIcon data-icon="inline-start" strokeWidth={1.5} aria-hidden />
       Components
     </Button>

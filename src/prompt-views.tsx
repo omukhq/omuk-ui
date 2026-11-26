@@ -176,7 +176,16 @@ function DrawerPrompt({ entry }: { entry: ContentEntry }) {
             )}
           </DrawerHeader>
         )}
-        {entry.body}
+        {/* The body scrolls under the title, when it is taller than the
+            drawer; a scroll at its end does not move the page. Only up
+            and down: a sideways swipe goes on to the drawer, which it
+            closes (drawer.tsx). */}
+        <div
+          data-slot="drawer-body"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
+        >
+          {entry.body}
+        </div>
       </DrawerContent>
     </Drawer>
   );

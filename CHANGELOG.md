@@ -16,6 +16,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   page.
 - `Textarea` and `InputGroupTextarea` grow up to 320 and then scroll; `Textarea` has no resize handle where the
   browser sizes it to its text.
+- `SortableHandle`: Up and Down move an item only after Space or Enter picks it up. Space, Enter or Tab puts it
+  down; Escape puts it back. A screen reader's arrow keys no longer move items. The default `hint` is "Drag, or
+  press Space, then Up or Down".
+- `DrawerContent` (left and right): the swipe is a scroll with snap points, not pointer events, so it has the
+  browser's momentum. The `data-swiping` attribute and the `--drawer-swipe-movement-*` variables are gone.
 
 ### Changed
 
@@ -27,6 +32,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ### Fixed
 
+- `TabsList`: too many tabs for the width scroll sideways, and the focus ring is not cut off. A `line` tab draws its
+  focus ring inside itself, and the line under the tabs is the new `tab-line` utility.
+- A closed toast goes when its closing animation ends, not after a fixed 200 ms; with reduced motion, at once.
+- `usePrompt` drawers: a body taller than the drawer scrolls under the title (`data-slot="drawer-body"`). Before,
+  the rest was cut off.
+- Date field on an Android phone: Delete on the phone's keyboard erases a digit, empties the part and then moves back
+  a part. Before, it did nothing, or Chrome deleted the empty part's placeholder letters.
 - `data-theme="dark"` or `"light"` on an area inside the page gives that area its own colours, also its text. Before,
   a dark area kept the light text, and a light area inside a dark page did not work.
 - A dialog taller than the window scrolls inside, and the page behind an open dialog or drawer no longer scrolls.

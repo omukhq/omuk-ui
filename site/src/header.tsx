@@ -1,30 +1,23 @@
 import { Button } from '@omuk/ui/button';
 import { cn } from '@omuk/ui/utils';
 import { SearchIcon, Settings2Icon } from 'lucide-react';
-import { lazy, Suspense, useState } from 'react';
 import { FIRST_DOC } from './docs/registry';
+import { openDocsNav } from './docs-nav-store';
 import { GithubMark } from './github-mark';
 import { REPO_URL, SECTIONS } from './links';
 import { Link, usePath } from './router';
 import { openSearch, preloadSearch, searchKeys } from './search-store';
-
-const SettingsDrawer = lazy(() => import('./settings-drawer'));
-
-/** Starts the drawer's code before it opens: on hover of its button. */
-function preloadSettings() {
-  import('./settings-drawer').catch(() => {});
-}
+import { openSettings, preloadSettings, useSettings } from './settings-store';
 
 /**
  * The bar at the top: the name (home), the components, the home page's parts,
  * the settings (theme, accent, font, edges, sizes) and the source. The parts
  * are plain links to /#part: on the home page they scroll, from the docs
- * they open it there.
+ * they open it there. On a phone (below md) the search, the components and
+ * the settings are in the bottom bar (bottom-nav.tsx) instead.
  */
 export function Header() {
-  // The drawer's code loads on the first open (or a hover before it), and
-  // stays mounted after, so it can slide out when it closes.
-  const [settings, setSettings] = useState({ open: false, loaded: false });
+  const settings = useSettings();
   const inDocs = usePath().startsWith('/docs');
   return (
     <header className="sticky top-0 z-40 border-b bg-page">
@@ -47,15 +40,27 @@ export function Header() {
           onFocus={preloadSearch}
           aria-label="Find a component"
           aria-keyshortcuts="Meta+K Control+K"
-          className="mr-2 text-muted hover:text-foreground"
+          className="mr-2 hidden text-muted hover:text-foreground md:inline-flex"
         >
           <SearchIcon data-icon="inline-start" strokeWidth={1.5} aria-hidden />
-          <span className="hidden sm:inline">Find a component</span>
-          <kbd className="ml-4 hidden rounded-sm bg-hover px-1.5 font-mono text-xs text-muted sm:inline">
+          <span>Find a component</span>
+          <kbd className="ml-4 rounded-sm bg-hover px-1.5 font-mono text-xs text-muted">
             {searchKeys()}
           </kbd>
         </Button>
-        <nav aria-label="Site" className="flex items-center">
+        <nav aria-label="Site" className="hidden items-center md:flex">
+          {/* In the docs below lg, the page has no sidebar: this opens the
+              component list in a drawer, from anywhere on the page. */}
+          {inDocs && (
+            <Button
+              variant="ghost"
+              aria-haspopup="dialog"
+              onClick={openDocsNav}
+              className="text-foreground lg:hidden"
+            >
+              Components
+            </Button>
+          )}
           <Button
             variant="ghost"
             render={
@@ -66,7 +71,9 @@ export function Header() {
             }
             nativeButton={false}
             className={cn(
-              inDocs ? 'text-foreground' : 'text-muted hover:text-foreground',
+              inDocs
+                ? 'hidden text-foreground lg:inline-flex'
+                : 'text-muted hover:text-foreground',
             )}
           >
             Components
@@ -77,7 +84,7 @@ export function Header() {
               variant="ghost"
               render={<a href={`/#${section.id}`} />}
               nativeButton={false}
-              className="hidden text-muted hover:text-foreground md:inline-flex"
+              className="text-muted hover:text-foreground"
             >
               {section.label}
             </Button>
@@ -91,18 +98,11 @@ export function Header() {
           aria-expanded={settings.open}
           onPointerEnter={preloadSettings}
           onFocus={preloadSettings}
-          onClick={() => setSettings({ open: true, loaded: true })}
+          onClick={openSettings}
+          className="hidden md:inline-flex"
         >
           <Settings2Icon className="size-4" strokeWidth={1.5} />
         </Button>
-        {settings.loaded && (
-          <Suspense fallback={null}>
-            <SettingsDrawer
-              open={settings.open}
-              onOpenChange={(open) => setSettings({ open, loaded: true })}
-            />
-          </Suspense>
-        )}
         <Button
           variant="ghost"
           size="icon"
