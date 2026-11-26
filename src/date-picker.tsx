@@ -612,10 +612,14 @@ function RangePicker(props: RangeModeProps) {
             <ul className="flex flex-col gap-0.5 border-r p-2">
               {props.presets.map((preset) => (
                 <li key={preset.label}>
+                  {/* The preset that is the current range is pressed: it
+                      shows the selected fill, and a screen reader hears
+                      which one is on. */}
                   <Button
                     variant="ghost"
                     size="sm"
                     className="w-full justify-start font-normal"
+                    aria-pressed={sameRange(value, preset.range)}
                     onClick={() => pick(preset.range)}
                   >
                     {preset.label}
