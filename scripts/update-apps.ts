@@ -4,6 +4,12 @@
 //   bun scripts/update-apps.ts             the version in package.json
 //   bun scripts/update-apps.ts --dry-run   only says what it would do
 //   bun scripts/update-apps.ts --version 1.0.0-alpha.30 --only secrets,markpad
+//   bun scripts/update-apps.ts --to-npm    installs from npm, not a GitHub tag
+//
+// With --to-npm, an app's GitHub spec becomes the npm alias
+// `"@omuk/ui": "npm:@omukhq/ui@<version>"`, so its imports (`@omuk/ui/button`)
+// and its CSS paths (`node_modules/@omuk/ui/…`) stay as they are. The version
+// must be on npm. An app on the alias stays on it in later runs.
 //
 // It finds the apps on this machine: every package.json under `root` that
 // depends on @omuk/ui or @omukhq/ui. The list of apps is the owner's, not
@@ -33,6 +39,7 @@ import {
   bumpPackageJson,
   changelogBetween,
   isOlder,
+  NPM_PACKAGE,
   specsIn,
   versionOf,
 } from './update-apps-lib';
@@ -51,6 +58,7 @@ type Result = { repo: string; outcome: string; link?: string };
 const kit = join(import.meta.dir, '..');
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
+const toNpm = args.includes('--to-npm');
 
 /** The value after a flag, as in `--version 1.0.0`. */
 function flag(name: string) {
@@ -137,12 +145,14 @@ function updateRepo(
 ): Result {
   const name = basename(repo);
   const branch = `chore/omuk-ui-${version}`;
-  const oldest = files
-    .flatMap((file) => specsIn(readFileSync(file, 'utf8')))
+  const specs = files.flatMap((file) => specsIn(readFileSync(file, 'utf8')));
+  const oldest = specs
     .map(versionOf)
     .filter((each): each is string => each !== null)
     .sort((a, b) => (isOlder(a, b) ? -1 : 1))[0];
-  if (!oldest || !isOlder(oldest, version)) {
+  // With --to-npm, a GitHub spec still moves, also on the same version.
+  const fromGitHub = specs.some((spec) => /#v[\w.-]+$/.test(spec));
+  if (!oldest || (!isOlder(oldest, version) && !(toNpm && fromGitHub))) {
     return { repo: name, outcome: `already on ${oldest ?? version}` };
   }
   if (git(repo, 'status', '--porcelain').output.trim()) {
@@ -157,16 +167,20 @@ function updateRepo(
     return { repo: name, outcome: `skipped: ${branch} already exists` };
   }
   const where = files.map((file) => relative(repo, file)).join(', ');
+  const source = toNpm ? ` from npm (${NPM_PACKAGE})` : '';
   if (dryRun) {
     return {
       repo: name,
-      outcome: `would move ${oldest} → ${version} in ${where}`,
+      outcome: `would move ${oldest} → ${version}${source} in ${where}`,
     };
   }
 
   git(repo, 'switch', '-c', branch);
   for (const file of files) {
-    writeFileSync(file, bumpPackageJson(readFileSync(file, 'utf8'), version));
+    writeFileSync(
+      file,
+      bumpPackageJson(readFileSync(file, 'utf8'), version, toNpm),
+    );
   }
   for (const folder of lockFolders(repo, files)) {
     const install = run(['bun', 'install'], folder);
@@ -265,6 +279,18 @@ function main() {
       `${tag} is not on GitHub yet: push the tag first (README, "Versions").`,
     );
     process.exit(1);
+  }
+  if (toNpm) {
+    const published = run(
+      ['bun', 'info', `${NPM_PACKAGE}@${version}`, 'version'],
+      kit,
+    );
+    if (!published.ok || !published.output.includes(version)) {
+      console.error(
+        `${NPM_PACKAGE}@${version} is not on npm yet: run \`bun publish\` first.`,
+      );
+      process.exit(1);
+    }
   }
   const configPath = home(
     process.env.OMUK_APPS ?? '~/.config/omuk-ui/apps.json',

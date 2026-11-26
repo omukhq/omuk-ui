@@ -16,6 +16,7 @@ describe('an install spec', () => {
       '1.0.0-alpha.18',
     ],
     ['1.0.0-alpha.27', '1.0.0-alpha.27'],
+    ['npm:@omukhq/ui@1.0.0-alpha.30', '1.0.0-alpha.30'],
     ['github:omukhq/omuk-ui', null],
     ['workspace:*', null],
   ])('%s pins %s', (spec, version) => {
@@ -34,6 +35,23 @@ describe('an install spec', () => {
     ).toBe('git+ssh://git@github.com/omukhq/omuk-ui.git#v1.0.0-alpha.30');
     expect(bumpSpec('1.0.0-alpha.27', '1.0.0-alpha.30')).toBe('1.0.0-alpha.30');
     expect(bumpSpec('workspace:*', '1.0.0-alpha.30')).toBeNull();
+    expect(bumpSpec('npm:@omukhq/ui@1.0.0-alpha.30', '1.0.0-alpha.31')).toBe(
+      'npm:@omukhq/ui@1.0.0-alpha.31',
+    );
+  });
+
+  test('a GitHub spec becomes the npm alias with --to-npm', () => {
+    expect(
+      bumpSpec(
+        'git+ssh://git@github.com/omukhq/omuk-ui.git#v1.0.0-alpha.30',
+        '1.0.0-alpha.30',
+        true,
+      ),
+    ).toBe('npm:@omukhq/ui@1.0.0-alpha.30');
+    // An npm version or the alias stays as it is.
+    expect(bumpSpec('1.0.0-alpha.30', '1.0.0-alpha.31', true)).toBe(
+      '1.0.0-alpha.31',
+    );
   });
 });
 
