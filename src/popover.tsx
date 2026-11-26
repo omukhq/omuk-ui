@@ -10,7 +10,7 @@ import {
 import { Button } from './button';
 import {
   type FinalFocus,
-  nameDialog,
+  namePopup,
   PopupFrame,
   type PopupRoot,
   type PopupRootProps,
@@ -131,7 +131,7 @@ function PopoverContent({
   // or goes.
   function name(node: HTMLDivElement | null) {
     if (node && !props['aria-labelledby']) {
-      nameDialog(node, popover.id, popover.trigger);
+      namePopup(node, popover.id, popover.trigger);
     }
   }
   const merged = useMergedRef(ref, name);

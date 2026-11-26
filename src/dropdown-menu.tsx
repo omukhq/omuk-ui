@@ -259,7 +259,9 @@ function DropdownMenuShortcut({
   ...props
 }: React.ComponentProps<'span'>) {
   return (
+    // Shown, not read: the shortcut is not part of the item's name.
     <span
+      aria-hidden
       data-slot="dropdown-menu-shortcut"
       className={cn(SHORTCUT, className)}
       {...props}

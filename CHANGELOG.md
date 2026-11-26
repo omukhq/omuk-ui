@@ -28,6 +28,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   its trigger's name.
 - The drawer fades, not slides, with reduced motion.
 - A popup follows its trigger when the trigger grows or the page above it changes.
+- A menu takes its trigger's name.
+- Menu typeahead: Space chooses the item, not a search; the search skips disabled items. Enter ticks a checkbox or
+  radio item and closes the menu (Space keeps it open). A pointer that rests in the way to a submenu gives the
+  highlight to the item under it after 300 ms.
+- A menu or command shortcut ("⌘D") is no longer part of the item's name. Screen readers pause between an option's
+  title and its description.
+- Command: the "nothing matches" text is outside the listbox, and a status region reads the result count. New prop
+  `resultsText` for its wording.
+- Combobox: `ComboboxStatus` and `ComboboxEmpty` are read out through one status region that is on the page from the
+  start. Each chip's remove button says which chip it removes ("Remove Design").
 
 ## [1.0.0-alpha.27] - 2026-11-24
 

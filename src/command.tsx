@@ -42,8 +42,10 @@ type CommandProps = Omit<ComponentPropsWithRef<'div'>, 'onSelect'> & {
   items: readonly CommandItem[];
   /** The field's placeholder, and its name for a screen reader. */
   placeholder?: string;
-  /** What shows when nothing matches. */
+  /** What shows when nothing matches. A screen reader reads it too. */
   empty?: (query: string) => ReactNode;
+  /** What a screen reader hears as the search narrows: "3 results". */
+  resultsText?: (count: number) => string;
   /** Runs after a command is chosen, before its onSelect: a dialog closes here. */
   onDone?: () => void;
   /** Focus the field as the menu mounts. A CommandDialog does; inline, it is off. */
@@ -54,11 +56,16 @@ function defaultEmpty(query: string) {
   return `Nothing matches “${query}”.`;
 }
 
+function defaultResults(count: number) {
+  return count === 1 ? '1 result' : `${count} results`;
+}
+
 /** The menu itself: the field and the list, on any surface. */
 function Command({
   items,
   placeholder = 'Search',
   empty = defaultEmpty,
+  resultsText = defaultResults,
   onDone,
   autoFocus = false,
   className,
@@ -69,6 +76,10 @@ function Command({
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sections = filterCommands(items, query);
+  const count = sections.reduce(
+    (sum, section) => sum + section.items.length,
+    0,
+  );
   const enabled = sections
     .flatMap((section) => section.items)
     .filter((item) => !item.disabled);
@@ -159,16 +170,8 @@ function Command({
         role="listbox"
         aria-label={placeholder}
         data-slot="command-list"
-        className="max-h-80 overflow-y-auto p-1"
+        className="max-h-80 overflow-y-auto p-1 empty:hidden"
       >
-        {sections.length === 0 && (
-          <p
-            data-slot="command-empty"
-            className="px-3 py-6 text-center text-muted"
-          >
-            {empty(query)}
-          </p>
-        )}
         {sections.map((section, index) => (
           <div
             key={section.group ?? ''}
@@ -206,12 +209,15 @@ function Command({
                   <span className="truncate">{item.label}</span>
                   {item.description && (
                     <span className="truncate text-xs text-muted">
+                      {/* A pause between the two lines for a screen reader. */}
+                      <span className="sr-only">, </span>
                       {item.description}
                     </span>
                   )}
                 </span>
+                {/* Shown, not read: the shortcut is not the command's name. */}
                 {item.shortcut && (
-                  <kbd className={cn(SHORTCUT, 'font-sans')}>
+                  <kbd aria-hidden className={cn(SHORTCUT, 'font-sans')}>
                     {item.shortcut}
                   </kbd>
                 )}
@@ -219,6 +225,22 @@ function Command({
             ))}
           </div>
         ))}
+      </div>
+      {/* Outside the listbox, which holds options only. A screen reader
+          reads it from the status below. */}
+      {count === 0 && (
+        <p
+          aria-hidden
+          data-slot="command-empty"
+          className="px-3 py-6 text-center text-muted"
+        >
+          {empty(query)}
+        </p>
+      )}
+      {/* On the page from the start, so a change is read out: the count as
+          the search narrows, or the empty message. Quiet until a search. */}
+      <div role="status" className="sr-only">
+        {query === '' ? null : count === 0 ? empty(query) : resultsText(count)}
       </div>
     </div>
   );

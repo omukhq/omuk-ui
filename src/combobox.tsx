@@ -12,6 +12,8 @@ import {
   type ReactNode,
   type RefObject,
   use,
+  useCallback,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -131,7 +133,12 @@ type ComboboxState = PopupRoot & {
   list: RefObject<HTMLDivElement | null>;
   /** A ComboboxButton is the field: the search sits in the list. */
   searchInPopup: RefObject<boolean>;
+  /** Puts a part's text in the combobox's status region, to be read out. */
+  announce: (source: Announcer, text: string) => void;
 };
+
+/** The parts that speak through the status region. */
+type Announcer = 'status' | 'empty';
 
 const ComboboxContext = createContext<ComboboxState | null>(null);
 
@@ -248,6 +255,19 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const list = useRef<HTMLDivElement | null>(null);
   const searchInPopup = useRef(false);
 
+  // What ComboboxStatus and ComboboxEmpty say. They mount with the list, and
+  // a live region that appears already filled is often not read out; this
+  // one is on the page from the start, so a change in it is.
+  const [messages, setMessages] = useState<Record<Announcer, string>>({
+    status: '',
+    empty: '',
+  });
+  const announce = useCallback((source: Announcer, text: string) => {
+    setMessages((now) =>
+      now[source] === text ? now : { ...now, [source]: text },
+    );
+  }, []);
+
   function type(
     text: string,
     event: Event | undefined,
@@ -347,9 +367,13 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
         input,
         list,
         searchInPopup,
+        announce,
       }}
     >
       {children}
+      <div role="status" className="sr-only">
+        {[messages.status, messages.empty].filter(Boolean).join(' ')}
+      </div>
       {name &&
         (selected.length ? selected : [null]).map((item, at) => (
           <FormValue
@@ -871,17 +895,32 @@ function ComboboxButton({
  * "12 results". Put it in ComboboxContent; it takes no room while empty.
  * Base UI's Status. Use `className="sr-only"` to only announce it.
  */
+/**
+ * Copies a part's text into the combobox's status region on each render,
+ * and takes it out when the part goes (the list closes).
+ */
+function useAnnounced(source: Announcer) {
+  const { announce } = useCombobox();
+  const element = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    announce(source, element.current?.textContent?.trim() ?? '');
+  });
+  useEffect(() => () => announce(source, ''), [announce, source]);
+  return element;
+}
+
 function ComboboxStatus({
   className,
   render,
+  ref,
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
+  const merged = useMergedRef(ref, useAnnounced('status'));
   return useRender(
     'div',
     {
-      role: 'status',
-      'aria-live': 'polite',
-      'aria-atomic': true,
+      // Shown here, read out from the combobox's status region.
+      ref: merged,
       'data-slot': 'combobox-status',
       className: cn(
         'flex items-center gap-2 px-3 py-2 text-sm text-muted empty:hidden [&_svg]:size-4',
@@ -1061,14 +1100,17 @@ function ComboboxEmpty({
   className,
   children,
   render,
+  ref,
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
   const combobox = useCombobox();
+  const merged = useMergedRef(ref, useAnnounced('empty'));
   return useRender(
     'div',
     {
-      // Read out when the list empties, as a status.
-      role: 'status',
+      // Shown when the list empties; read out from the combobox's status
+      // region.
+      ref: merged,
       'data-slot': 'combobox-empty',
       className: cn(
         'hidden w-full justify-center py-2 text-center text-sm text-muted group-data-empty/combobox-content:flex',
@@ -1144,6 +1186,9 @@ function ComboboxChip({
   render?: RenderProp;
 }) {
   const combobox = useCombobox();
+  // The remove button is named "Remove" and the chip's text: "Remove
+  // Design", so each one says which chip it takes away.
+  const id = useId();
   return useRender(
     'div',
     {
@@ -1156,13 +1201,17 @@ function ComboboxChip({
       ...props,
       children: (
         <>
-          {children}
+          <span id={`${id}-label`} className="contents">
+            {children}
+          </span>
           {showRemove && (
             <Button
               variant="ghost"
               size="icon-xs"
               tabIndex={-1}
+              id={`${id}-remove`}
               aria-label="Remove"
+              aria-labelledby={`${id}-remove ${id}-label`}
               disabled={combobox.disabled}
               className="size-5 rounded-sm text-muted hover:text-foreground"
               data-slot="combobox-chip-remove"

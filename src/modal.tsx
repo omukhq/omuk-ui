@@ -16,7 +16,7 @@ import { createPortal } from 'react-dom';
 import {
   addLayer,
   animationsDone,
-  nameDialog,
+  namePopup,
   type PopupRoot,
   type PopupRootProps,
   popupState,
@@ -153,7 +153,7 @@ export function ModalPortal({
   function frame(node: HTMLDialogElement | null) {
     if (!node) return;
     const dialog = node;
-    nameDialog(dialog, modal.id);
+    namePopup(dialog, modal.id);
     let alive = true;
     if (status === 'closing') {
       delete dialog.dataset.entered;

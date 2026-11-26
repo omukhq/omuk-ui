@@ -253,13 +253,13 @@ export function focusTarget(
 }
 
 /**
- * Names a dialog by its title (`<id>-title`) and describes it by its
- * description (`<id>-description`), only when they are inside it: an id
- * that points at nothing leaves the dialog with no name. With no title, it
- * takes the name of `fallback` (a popover's trigger). An `aria-label` the
- * caller gave wins. Runs from a ref, again on each render.
+ * Names a dialog or menu by its title (`<id>-title`) and describes it by
+ * its description (`<id>-description`), only when they are inside it: an
+ * id that points at nothing leaves it with no name. With no title, it
+ * takes the name of `fallback` (its trigger). An `aria-label` the caller
+ * gave wins. Runs from a ref, again on each render.
  */
-export function nameDialog(
+export function namePopup(
   element: HTMLElement,
   id: string,
   fallback?: HTMLElement | null,
