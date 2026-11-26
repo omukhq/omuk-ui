@@ -17,8 +17,8 @@ import {
   startOfWeek,
   todayIn,
 } from './date/civil';
+import { useDateLocale, useHydrated } from './date/hydration';
 import {
-  browserLocale,
   firstDayOfWeek as firstDayOf,
   formatNumber,
   fullDate,
@@ -34,6 +34,9 @@ import { cn } from './utils';
 // a light grey fill; the focus ring shows for the keyboard only.
 
 export type DateRange = { start: string; end: string };
+
+/** Today, safe in pre-rendered HTML (null until the page hydrates). */
+export { useToday } from './date/hydration';
 
 type CalendarBase = {
   /** The language: names, order, first day of the week. Default: the browser's. */
@@ -78,7 +81,7 @@ function ordered(a: CivilDate, b: CivilDate): [CivilDate, CivilDate] {
 
 export function Calendar(props: CalendarProps) {
   const {
-    locale = browserLocale(),
+    locale: givenLocale,
     timeZone,
     minValue,
     maxValue,
@@ -90,6 +93,10 @@ export function Calendar(props: CalendarProps) {
     autoFocus = false,
     className,
   } = props;
+  // The browser's language and today, once a pre-rendered page has
+  // hydrated (date/hydration.ts): the server's HTML cannot know them.
+  const locale = useDateLocale(givenLocale);
+  const hydrated = useHydrated();
   const firstDay = props.firstDayOfWeek ?? firstDayOf(locale);
   const min = parseDay(minValue);
   const max = parseDay(maxValue);
@@ -300,7 +307,9 @@ export function Calendar(props: CalendarProps) {
                     const isStart = isSameDay(day, bandStart);
                     const isEnd = isSameDay(day, bandEnd);
                     const isPoint = isSameDay(day, single) || isStart || isEnd;
-                    const isToday = isSameDay(day, today);
+                    // Not marked in a server's HTML: its today is the
+                    // build's, not the visitor's.
+                    const isToday = hydrated && isSameDay(day, today);
                     const isFocused = isSameDay(day, focused);
                     return (
                       // biome-ignore lint/a11y/useFocusableInteractive: a date grid's cell; the day's button inside takes the focus (APG).

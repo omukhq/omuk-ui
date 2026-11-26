@@ -1,2 +1,4 @@
 node_modules/
 dist/
+# The build's renderer (entry-server.tsx), used by scripts/pages.ts.
+dist-ssr/

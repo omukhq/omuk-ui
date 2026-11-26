@@ -33,9 +33,24 @@ function currentPath() {
   return location.pathname;
 }
 
+/** The path the build renders (entry-server.tsx); the browser has its own. */
+let renderedPath = '/';
+
+export function setRenderedPath(path: string) {
+  renderedPath = path;
+}
+
+/**
+ * The path at render on the server, and while the browser hydrates that
+ * HTML: the address bar's, which is the page the HTML was built for.
+ */
+function serverPath() {
+  return typeof location === 'undefined' ? renderedPath : location.pathname;
+}
+
 /** The path now. Re-renders when it changes. */
 export function usePath() {
-  return useSyncExternalStore(subscribe, currentPath, () => '/');
+  return useSyncExternalStore(subscribe, currentPath, serverPath);
 }
 
 /** Goes to a path on this site, without a reload, at the top of the page. */
