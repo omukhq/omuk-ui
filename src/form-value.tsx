@@ -18,6 +18,24 @@ type FormValueProps = Omit<
 };
 
 /**
+ * A ref that runs `reset` when the element's form is reset (`form.reset()`,
+ * a reset button): a control that keeps its own state goes back to its
+ * default, as a native field does. A button's or an input's own form (its
+ * `form` attribute counts), else the form around it.
+ */
+export function resetWithForm(reset: () => void) {
+  return (node: HTMLElement | null) => {
+    const form =
+      node instanceof HTMLButtonElement || node instanceof HTMLInputElement
+        ? node.form
+        : node?.closest('form');
+    if (!form) return;
+    form.addEventListener('reset', reset);
+    return () => form.removeEventListener('reset', reset);
+  };
+}
+
+/**
  * The value a form sends for a control that is not a native field (select,
  * combobox, date picker). A visually hidden text input, not
  * `type="hidden"`: a browser checks only real fields, so with `required` the

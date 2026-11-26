@@ -38,6 +38,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   `resultsText` for its wording.
 - Combobox: `ComboboxStatus` and `ComboboxEmpty` are read out through one status region that is on the page from the
   start. Each chip's remove button says which chip it removes ("Remove Design").
+- DatePicker: a visible `<label for={id}>` names it, and a press on the label goes to the first part. New prop
+  `aria-labelledby`. Inside a Field it reads the Field's hints and errors.
+- Checkbox, Switch, RadioGroup and CheckboxGroup go back to their default when their form is reset.
+- RadioGroup: new prop `required`; with a `name`, the form does not send while no radio is picked.
+- Input OTP: the slots turn red when the input is invalid (`aria-invalid`, a Field error or a failed native check).
+  The caret blinks again (`animate-caret-blink` was not defined).
+- Segmented: the chosen segment's fill slides to the new one (anchor positioning; without it, no slide).
 
 ## [1.0.0-alpha.27] - 2026-11-24
 

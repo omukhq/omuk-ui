@@ -513,6 +513,60 @@
   }
 }
 
+/* The OTP field's caret (input-otp.tsx): on and off, as a text caret.
+   Reduced motion: it stays on. */
+@keyframes caret-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  50% {
+    opacity: 0;
+  }
+}
+@utility animate-caret-blink {
+  animation: caret-blink 1.25s ease-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* Segmented (segmented.tsx): the chosen segment's raised fill slides from
+   one segment to the next. The fill is the track's ::before, placed on the
+   chosen segment with anchor positioning; each track names its own anchor
+   (--segmented-anchor, set inline), so two tracks on a page do not mix.
+   Without anchor positioning, and in forced colours, the chosen segment
+   draws its own fill (its classes), with no slide. */
+@supports (anchor-name: --a) {
+  @media (forced-colors: none) {
+    [data-slot="segmented"] {
+      position: relative;
+      isolation: isolate;
+      &::before {
+        content: "";
+        position: absolute;
+        position-anchor: var(--segmented-anchor);
+        inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
+        z-index: -1;
+        border-radius: var(--radius-md);
+        background: var(--color-raised);
+        box-shadow: var(--elevation-sm);
+        transition: inset 200ms var(--ease-sheet);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+    [data-slot="segmented-item"][aria-checked="true"] {
+      anchor-name: var(--segmented-anchor);
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
 @utility fade-in-* {
   --tw-enter-opacity: calc(--value(integer) * 1%);
 }

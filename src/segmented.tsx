@@ -1,8 +1,10 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
   type ComponentPropsWithRef,
+  type CSSProperties,
   createContext,
   use,
+  useId,
   useState,
 } from 'react';
 import { moveAndPick } from './radio-group';
@@ -51,8 +53,11 @@ function Segmented({
   value: controlled,
   defaultValue = null,
   onValueChange,
+  style,
   ...props
 }: SegmentedProps) {
+  // The anchor the sliding fill follows (theme.css), one per track.
+  const anchor = `--segmented-${useId().replace(/\W/g, '')}`;
   const [own, setOwn] = useState(defaultValue);
   const value = controlled === undefined ? own : controlled;
   function pick(next: string) {
@@ -67,6 +72,7 @@ function Segmented({
         data-slot="segmented"
         data-size={size ?? 'md'}
         className={cn(segmentedVariants({ size }), className)}
+        style={{ '--segmented-anchor': anchor, ...style } as CSSProperties}
         onKeyDown={moveAndPick}
         {...props}
       />

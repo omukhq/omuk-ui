@@ -16,6 +16,7 @@ import {
   type HourCycle,
   hourCycleOf,
 } from './date/locale';
+import { useFieldControl } from './field-context';
 import { FormValue } from './form-value';
 import { InputGroupButton } from './input-group';
 import { PopupFrame, popupState, usePopupRoot } from './popup';
@@ -68,6 +69,8 @@ type PickerBase = {
    */
   align?: 'start' | 'end';
   'aria-label'?: string;
+  /** The id of the visible text that names it. A `<label for={id}>` works too. */
+  'aria-labelledby'?: string;
   id?: string;
   /**
    * On the picker's outer box. It fills the width it gets, like Input; pass
@@ -191,18 +194,45 @@ function PickerShell({
     box.current?.querySelector<HTMLElement>('[data-segment]')?.focus();
   }
 
+  // A visible `<label for={id}>` (FieldLabel): a label names only an input
+  // or a button, not this group, so the group points at it, and a press on
+  // it goes to the first part, as a label's does. Found from the box's ref.
+  const [labelId, setLabelId] = useState<string | undefined>();
+  const labelledBy = base['aria-labelledby'] ?? labelId;
+
+  /** Links the label for `id`, if there is one; returns the unlink. */
+  function linkLabel(node: HTMLElement) {
+    const id = base.id;
+    if (!id) return;
+    const text = node.ownerDocument.querySelector<HTMLLabelElement>(
+      `label[for="${CSS.escape(id)}"]`,
+    );
+    if (!text) return;
+    if (!text.id) text.id = `${id}-label`;
+    if (labelId !== text.id) setLabelId(text.id);
+    text.addEventListener('click', focusFirstPart);
+    return () => text.removeEventListener('click', focusFirstPart);
+  }
+  const control = useFieldControl({
+    'aria-describedby': error ? errorId : undefined,
+    'aria-invalid': invalid || undefined,
+  });
+
   return (
     <div className={cn('flex w-full min-w-0 flex-col gap-1', base.className)}>
       <div
         ref={(node) => {
           box.current = node;
-          if (node && root && root.trigger !== node) root.setTrigger(node);
+          if (!node) return;
+          if (root && root.trigger !== node) root.setTrigger(node);
+          return linkLabel(node);
         }}
         id={base.id}
         role="group"
-        aria-label={label}
-        aria-invalid={invalid || undefined}
-        aria-describedby={error ? errorId : undefined}
+        aria-label={labelledBy ? undefined : label}
+        aria-labelledby={labelledBy}
+        aria-invalid={control['aria-invalid']}
+        aria-describedby={control['aria-describedby']}
         aria-disabled={disabled || undefined}
         data-slot="date-picker"
         data-size={base.size ?? 'md'}

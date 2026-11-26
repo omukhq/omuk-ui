@@ -5,6 +5,8 @@ import {
   use,
   useState,
 } from 'react';
+import { FormValue, resetWithForm } from './form-value';
+import { useMergedRef } from './render';
 import { cn } from './utils';
 
 // WAI-ARIA radio group: one tab stop (the picked radio; while none is
@@ -55,6 +57,8 @@ type RadioGroupProps = Omit<
   disabled?: boolean;
   /** The form field's name. Without it, no native input is drawn. */
   name?: string;
+  /** The form does not send while no radio is picked. Needs `name`. */
+  required?: boolean;
 };
 
 function RadioGroup({
@@ -64,10 +68,17 @@ function RadioGroup({
   onValueChange,
   disabled = false,
   name,
+  required = false,
   children,
+  ref,
   ...props
 }: RadioGroupProps) {
   const [own, setOwn] = useState(defaultValue);
+  // A form reset puts it back to defaultValue, as native radios.
+  const merged = useMergedRef(
+    ref,
+    resetWithForm(() => setOwn(defaultValue)),
+  );
   const value = controlled === undefined ? own : controlled;
   function pick(next: string) {
     if (next === value) return;
@@ -77,7 +88,9 @@ function RadioGroup({
   return (
     <RadioGroupContext value={{ value, pick, disabled }}>
       <div
+        ref={merged}
         role="radiogroup"
+        aria-required={required || undefined}
         aria-disabled={disabled || undefined}
         data-slot="radio-group"
         data-disabled={disabled ? '' : undefined}
@@ -86,7 +99,21 @@ function RadioGroup({
         {...props}
       >
         {children}
-        {name && <input type="hidden" name={name} value={value ?? ''} />}
+        {/* Not type="hidden": the browser checks `required` only on a real
+            field. Its message focuses the picked radio, else the first. */}
+        {name && (
+          <FormValue
+            name={name}
+            value={value ?? ''}
+            required={required}
+            disabled={disabled}
+            focusTarget={(input) =>
+              input.parentElement?.querySelector<HTMLElement>(
+                '[role=radio][aria-checked=true], [role=radio]:not(:disabled)',
+              )
+            }
+          />
+        )}
       </div>
     </RadioGroupContext>
   );

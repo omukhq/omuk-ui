@@ -1,7 +1,8 @@
 import { CheckIcon } from 'lucide-react';
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
 import { useFieldControl } from './field-context';
-import { mergeProps, type RenderProp, useRender } from './render';
+import { resetWithForm } from './form-value';
+import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
 import { cn } from './utils';
 
 // WAI-ARIA switch: a <button role="switch">. Space toggles it, and Enter too
@@ -56,9 +57,15 @@ function Switch({
   value,
   form,
   render,
+  ref,
   ...props
 }: SwitchProps) {
   const [own, setOwn] = useState(defaultChecked);
+  // A form reset puts it back to defaultChecked, as a native checkbox.
+  const merged = useMergedRef(
+    ref,
+    resetWithForm(() => setOwn(defaultChecked)),
+  );
   const checked = controlled ?? own;
   const state = checked ? 'data-checked' : 'data-unchecked';
   const button = useRender(
@@ -66,6 +73,7 @@ function Switch({
     mergeProps(
       {
         type: 'button',
+        ref: merged,
         role: 'switch',
         'aria-checked': checked,
         'aria-readonly': readOnly || undefined,

@@ -1,4 +1,6 @@
 import { type ComponentPropsWithRef, createContext, useState } from 'react';
+import { resetWithForm } from './form-value';
+import { useMergedRef } from './render';
 import { cn } from './utils';
 
 // A group of checkboxes with one value: the list of the checked ones (Base
@@ -66,9 +68,15 @@ function CheckboxGroup({
   allValues = [],
   disabled = false,
   name,
+  ref,
   ...props
 }: CheckboxGroupProps) {
   const [own, setOwn] = useState<readonly string[]>(defaultValue);
+  // A form reset puts it back to defaultValue, as native checkboxes.
+  const merged = useMergedRef(
+    ref,
+    resetWithForm(() => setOwn(defaultValue)),
+  );
   const value = controlled ?? own;
 
   function change(next: string[]) {
@@ -93,6 +101,7 @@ function CheckboxGroup({
       value={{ value, toggle, allValues, setAll, disabled, name }}
     >
       <div
+        ref={merged}
         role="group"
         data-slot="checkbox-group"
         data-disabled={disabled ? '' : undefined}
