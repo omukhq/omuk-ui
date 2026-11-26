@@ -71,7 +71,9 @@ export function App() {
       </a>
       <Header />
       {inDocs ? (
-        <div className="flex-1">
+        // A screen tall while the docs' code loads: the footer starts
+        // below the first screen, and does not jump when the page comes.
+        <div className="min-h-dvh flex-1">
           <Suspense fallback={null}>
             <DocsLayout slug={docsSlug(path)} />
           </Suspense>

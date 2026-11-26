@@ -1,12 +1,5 @@
-import { Calendar } from '@omuk/ui/calendar';
+import { Calendar, useToday } from '@omuk/ui/calendar';
 import { useState } from 'react';
-
-/** A day as ISO text ("2026-11-23"), in the browser's time zone. */
-function isoDay(date: Date) {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${date.getFullYear()}-${month}-${day}`;
-}
 
 /** Saturdays and Sundays: the office is closed. */
 function isWeekend(day: string) {
@@ -16,13 +9,15 @@ function isWeekend(day: string) {
 
 export default function CalendarDay() {
   const [day, setDay] = useState<string | null>(null);
+  // From today on. useToday is null in pre-rendered HTML, until it hydrates.
+  const today = useToday();
   return (
     <div className="flex flex-col items-center gap-2">
       <Calendar
         aria-label="Delivery day"
         value={day}
         onChange={setDay}
-        minValue={isoDay(new Date())}
+        minValue={today ?? undefined}
         isDateUnavailable={isWeekend}
       />
       <p className="text-sm text-muted">

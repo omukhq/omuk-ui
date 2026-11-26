@@ -50,10 +50,15 @@ function subscribeViews(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
+function viewsNow() {
+  return views;
+}
+
 /** Draws the open prompts. One in the app. */
 export function PromptProvider() {
   const entries = useSyncExternalStore(subscribe, snapshot, snapshot);
-  const loaded = useSyncExternalStore(subscribeViews, () => views);
+  // The same on a server render (no prompt is open there).
+  const loaded = useSyncExternalStore(subscribeViews, viewsNow, viewsNow);
   if (!loaded && entries.length > 0) void loadViews();
   return loaded ? <loaded.PromptViews /> : null;
 }

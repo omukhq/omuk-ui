@@ -2,6 +2,7 @@ import {
   DatePicker,
   type DatePreset,
   type DateRange,
+  useToday,
 } from '@omuk/ui/date-picker';
 import { useState } from 'react';
 
@@ -12,11 +13,11 @@ function isoDay(date: Date) {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** The range from `count` days before today up to today. */
-function lastDays(count: number): DateRange {
-  const start = new Date();
+/** The range from `count` days before `today` up to it. */
+function lastDays(count: number, today = isoDay(new Date())): DateRange {
+  const start = new Date(`${today}T12:00`);
   start.setDate(start.getDate() - (count - 1));
-  return { start: isoDay(start), end: isoDay(new Date()) };
+  return { start: isoDay(start), end: today };
 }
 
 const PRESETS: DatePreset[] = [
@@ -27,7 +28,12 @@ const PRESETS: DatePreset[] = [
 ];
 
 export default function DatePickerRange() {
-  const [range, setRange] = useState<DateRange | null>(lastDays(7));
+  // useToday is null in pre-rendered HTML, until it hydrates.
+  const today = useToday();
+  const [picked, setPicked] = useState<DateRange | null>();
+  // Until a pick: the last 7 days.
+  const range =
+    picked !== undefined ? picked : today ? lastDays(7, today) : null;
   return (
     <div className="flex w-full max-w-sm flex-col gap-1">
       <span aria-hidden className="text-sm font-medium text-foreground">
@@ -37,10 +43,10 @@ export default function DatePickerRange() {
         mode="range"
         aria-label="Activity between"
         value={range}
-        onChange={setRange}
+        onChange={setPicked}
         presets={PRESETS}
         visibleMonths={2}
-        maxValue={isoDay(new Date())}
+        maxValue={today ?? undefined}
       />
       <p className="font-mono text-xs text-muted">
         {range ? `${range.start} to ${range.end}` : 'No range'}

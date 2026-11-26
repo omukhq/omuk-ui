@@ -187,7 +187,10 @@ function DocPage({ entry }: { entry: DocEntry }) {
         </div>
         {Page ? (
           <Suspense fallback={<PageSkeleton />}>
-            <div ref={watchHeadings}>
+            {/* At least a screen tall, as the skeleton: the links and the
+                footer under the page start below the first screen, so
+                they do not jump when the page's code arrives. */}
+            <div ref={watchHeadings} className="min-h-dvh">
               <Page />
             </div>
           </Suspense>
@@ -241,10 +244,14 @@ function Outline({
   );
 }
 
-/** A page's place while its code loads: a frame the size of an example. */
+/**
+ * A page's place while its code loads: a frame the size of an example, in
+ * a screen's height (min-h-dvh, as the page), so what is under it stays
+ * below the first screen.
+ */
 function PageSkeleton() {
   return (
-    <div className="flex flex-col gap-4 pt-14" aria-hidden>
+    <div className="flex min-h-dvh flex-col gap-4 pt-14" aria-hidden>
       <Skeleton className="h-6 w-32" />
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-48 w-full rounded-xl" />

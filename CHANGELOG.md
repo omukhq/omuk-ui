@@ -30,8 +30,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   when the web font arrives. An app with another face sets its own value, or `none`.
 - With reduced motion, popups still fade; only the slide and the zoom stop. The scrim fades too.
 
+### Added
+
+- `useToday(timeZone?)` from `@omuk/ui/calendar` and `@omuk/ui/date-picker`: today as ISO text, for a `minValue`,
+  a `maxValue` or a range up to today. It is `null` in pre-rendered HTML and while it hydrates.
+
 ### Fixed
 
+- Pre-rendered pages (server rendering) hydrate without a mismatch:
+  - `Calendar` and `DatePicker` use `en-US` and mark no day as today until the page hydrates, then the browser's
+    language and today. A page drawn in the browser only has them from the first render.
+  - `PromptProvider` renders on a server.
 - `TabsList`: too many tabs for the width scroll sideways, and the focus ring is not cut off. A `line` tab draws its
   focus ring inside itself, and the line under the tabs is the new `tab-line` utility.
 - A closed toast goes when its closing animation ends, not after a fixed 200 ms; with reduced motion, at once.

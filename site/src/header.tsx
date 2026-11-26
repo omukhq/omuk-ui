@@ -6,7 +6,7 @@ import { openDocsNav } from './docs-nav-store';
 import { GithubMark } from './github-mark';
 import { REPO_URL, SECTIONS } from './links';
 import { Link, usePath } from './router';
-import { openSearch, preloadSearch, searchKeys } from './search-store';
+import { openSearch, preloadSearch, useSearchKeys } from './search-store';
 import { openSettings, preloadSettings, useSettings } from './settings-store';
 
 /**
@@ -18,6 +18,7 @@ import { openSettings, preloadSettings, useSettings } from './settings-store';
  */
 export function Header() {
   const settings = useSettings();
+  const keys = useSearchKeys();
   const inDocs = usePath().startsWith('/docs');
   return (
     <header className="sticky top-0 z-40 border-b bg-page">
@@ -45,7 +46,7 @@ export function Header() {
           <SearchIcon data-icon="inline-start" strokeWidth={1.5} aria-hidden />
           <span>Find a component</span>
           <kbd className="ml-4 rounded-sm bg-hover px-1.5 font-mono text-xs text-muted">
-            {searchKeys()}
+            {keys}
           </kbd>
         </Button>
         <nav aria-label="Site" className="hidden items-center md:flex">

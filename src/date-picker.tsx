@@ -10,12 +10,8 @@ import {
   todayIn,
 } from './date/civil';
 import { DateSegments } from './date/field';
-import {
-  browserLocale,
-  type FieldKind,
-  type HourCycle,
-  hourCycleOf,
-} from './date/locale';
+import { useDateLocale } from './date/hydration';
+import { type FieldKind, type HourCycle, hourCycleOf } from './date/locale';
 import { useFieldControl } from './field-context';
 import { FormValue } from './form-value';
 import { InputGroupButton } from './input-group';
@@ -29,6 +25,8 @@ import { cn } from './utils';
 // mode. The field is React Aria's: the parts are typed, the arrows step
 // them; the calendar button inside the field opens a Calendar.
 
+/** Today, safe in pre-rendered HTML (null until the page hydrates). */
+export { useToday } from './date/hydration';
 export type { DateRange };
 
 /**
@@ -385,7 +383,8 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
     : props.granularity === 'minute'
       ? 'dateTime'
       : 'date';
-  const locale = props.locale ?? browserLocale();
+  // The browser's language once a pre-rendered page has hydrated.
+  const locale = useDateLocale(props.locale);
   const hourCycle = props.hourCycle ?? hourCycleOf(locale);
   const [own, setOwn] = useState(props.defaultValue ?? null);
   const value = props.value === undefined ? own : props.value;
@@ -504,7 +503,8 @@ function sameRange(
 }
 
 function RangePicker(props: RangeModeProps) {
-  const locale = props.locale ?? browserLocale();
+  // The browser's language once a pre-rendered page has hydrated.
+  const locale = useDateLocale(props.locale);
   const hourCycle = props.hourCycle ?? hourCycleOf(locale);
   const [own, setOwn] = useState(props.defaultValue ?? null);
   const value = props.value === undefined ? own : props.value;

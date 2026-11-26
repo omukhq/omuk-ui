@@ -59,6 +59,23 @@ export function useSearch(): State {
 }
 
 /** "⌘K" on a Mac, "Ctrl K" elsewhere. */
-export function searchKeys() {
+function searchKeys() {
   return /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl K';
+}
+
+function never() {
+  return () => {};
+}
+
+function buildKeys() {
+  return 'Ctrl K';
+}
+
+/**
+ * The keys, for the header. The built HTML cannot know the visitor's
+ * system: it has "Ctrl K", and a Mac's page shows "⌘K" right after it
+ * takes over, without a hydration mismatch.
+ */
+export function useSearchKeys() {
+  return useSyncExternalStore(never, searchKeys, buildKeys);
 }
