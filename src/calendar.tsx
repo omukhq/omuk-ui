@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { type KeyboardEvent, useRef, useState } from 'react';
 import { Button } from './button';

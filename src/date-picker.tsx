@@ -1,3 +1,5 @@
+'use client';
+
 import { CalendarIcon, XIcon } from 'lucide-react';
 import { type ReactNode, useId, useRef, useState } from 'react';
 import { Button } from './button';

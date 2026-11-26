@@ -1,3 +1,5 @@
+'use client';
+
 // What every popup here shares (tooltip, popover, menu, dialog): the open
 // state, the stack of open popups that Escape and an outside press act on,
 // and the frame that shows a popup in the top layer, places it, plays its

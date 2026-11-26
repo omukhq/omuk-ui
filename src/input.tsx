@@ -1,3 +1,5 @@
+'use client';
+
 import { useFieldControl } from './field-context';
 import { FIELD, FIELD_OFF, FIELD_SIZE, type FieldSize } from './recipes';
 import { cn } from './utils';

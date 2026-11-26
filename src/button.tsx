@@ -1,3 +1,5 @@
+'use client';
+
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { FOCUS } from './recipes';

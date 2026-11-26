@@ -1,3 +1,5 @@
+'use client';
+
 // The `render` prop, as Base UI has it: a part can be drawn as another
 // element (`render={<a href="…" />}`), which gets the part's props and ref
 // merged into its own. Shared by every component in this folder.
