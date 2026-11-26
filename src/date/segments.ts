@@ -202,3 +202,42 @@ export function fromValue(
   }
   return out;
 }
+
+/**
+ * Pasted text as parts, or null when it does not fit the field. ISO text
+ * ("2026-12-04", "14:30", "2026-12-04T14:30"), or the numbers in the
+ * field's own order, with any marks between ("4/12/2026", "2:30 PM" with
+ * the day period's name). Every number must be in its part's range.
+ */
+export function fromPaste(
+  text: string,
+  order: readonly SegmentType[],
+  kind: FieldKind,
+  hourCycle: HourCycle,
+  periods: readonly [string, string],
+): Segments | null {
+  const trimmed = text.trim();
+  const iso = fromValue(trimmed, kind, hourCycle);
+  if (Object.keys(iso).length > 0) return iso;
+  const numeric = order.filter((type) => type !== 'dayPeriod');
+  const numbers = trimmed.match(/\d+/g) ?? [];
+  if (numbers.length !== numeric.length) return null;
+  const out: Segments = {};
+  numeric.forEach((type, at) => {
+    out[type] = Number(numbers[at]);
+  });
+  if (order.includes('dayPeriod')) {
+    const lower = trimmed.toLocaleLowerCase();
+    const period = periods.findIndex(
+      (name) => name !== '' && lower.includes(name.toLocaleLowerCase()),
+    );
+    if (period < 0) return null;
+    out.dayPeriod = period;
+  }
+  const fits = numeric.every((type) => {
+    const value = out[type] ?? Number.NaN;
+    const { min, max } = limitsOf(type, out, hourCycle);
+    return value >= min && value <= max;
+  });
+  return fits ? out : null;
+}

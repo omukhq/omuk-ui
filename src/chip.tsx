@@ -31,7 +31,8 @@ function Chip({
         <button
           type="button"
           aria-label={removeLabel}
-          className="inline-flex size-5 items-center justify-center rounded-sm text-muted outline-none hover:text-foreground focus-visible:focus-ring"
+          // 20 drawn, 24 to press (the after: box): WCAG 2.5.8's minimum.
+          className="relative inline-flex size-5 items-center justify-center rounded-sm text-muted outline-none after:absolute after:-inset-0.5 hover:text-foreground focus-visible:focus-ring"
           onClick={onRemove}
         >
           <XIcon strokeWidth={1.5} className="size-4" />

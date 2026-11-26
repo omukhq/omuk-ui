@@ -14,8 +14,9 @@ function InputOTP({
   return (
     <OTPInput
       data-slot="input-otp"
+      // group/otp: the slots read the input's state (aria-invalid) from here.
       containerClassName={cn(
-        'cn-input-otp flex items-center has-disabled:opacity-50',
+        'cn-input-otp group/otp flex items-center has-disabled:opacity-50',
         containerClassName,
       )}
       spellCheck={false}
@@ -51,8 +52,10 @@ function InputOTPSlot({
       data-active={isActive}
       className={cn(
         // Each digit a field of its own (DESIGN.md, Field): the 2-wide control
-        // edge, the field's focus ring on the active one, danger when invalid.
-        'relative flex size-8 items-center justify-center rounded-md bg-page text-base edge-control inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
+        // edge, the field's focus ring on the active one, danger when invalid:
+        // the slot's own aria-invalid, or the one input's (`aria-invalid` on
+        // InputOTP, or a Field's error), or its failed native check.
+        'relative flex size-8 items-center justify-center rounded-md bg-page text-base edge-control inset-ring-control transition-shadow outline-none aria-invalid:inset-ring-danger group-has-aria-invalid/otp:inset-ring-danger group-has-user-invalid/otp:inset-ring-danger data-[active=true]:z-10 data-[active=true]:focus-ring',
         className,
       )}
       {...props}

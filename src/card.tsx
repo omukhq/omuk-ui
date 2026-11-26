@@ -9,7 +9,7 @@ import { cn } from './utils';
 // keeps a gap to it.
 
 const cardVariants = cva(
-  'group/card flex flex-col overflow-hidden rounded-lg bg-raised text-sm text-foreground shadow-sm',
+  'group/card flex flex-col overflow-hidden rounded-lg bg-raised text-sm text-foreground shadow-sm forced-edge',
   {
     variants: {
       size: {
@@ -21,13 +21,16 @@ const cardVariants = cva(
   },
 );
 
+// A card is an <article> and its title an <h3>: a screen reader lists the
+// cards and jumps between their titles. `<CardTitle level={2}>` fits the
+// title into the page's heading order.
 function Card({
   className,
   size = 'md',
   ...props
-}: React.ComponentProps<'div'> & { size?: 'sm' | 'md' }) {
+}: React.ComponentProps<'article'> & { size?: 'sm' | 'md' }) {
   return (
-    <div
+    <article
       data-slot="card"
       data-size={size}
       className={cn(cardVariants({ size }), className)}
@@ -50,9 +53,17 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
+function CardTitle({
+  className,
+  level = 3,
+  ...props
+}: React.ComponentProps<'h3'> & {
+  /** The heading level, for the page's outline: 2 to 6. Default 3. */
+  level?: 2 | 3 | 4 | 5 | 6;
+}) {
+  const Heading = `h${level}` as const;
   return (
-    <div
+    <Heading
       data-slot="card-title"
       className={cn('text-sm font-semibold', className)}
       {...props}

@@ -39,7 +39,8 @@ The test `src/tokens.test.ts` fails when a literal value is in a file of the pac
 ## Tokens
 
 The tokens are in `src/design/theme.css`; the rules for each one are in [DESIGN.md](DESIGN.md). Dark mode:
-`data-theme="dark"` on `<html>` changes the token values. A component uses the same classes in both modes.
+`data-theme="dark"` on `<html>` (or on an area inside the page) changes the token values. Without it, the page
+follows the system's setting. A component uses the same classes in both modes.
 
 ## What the browser does for us
 

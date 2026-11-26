@@ -9,6 +9,7 @@
 import { type ReactNode, type RefObject, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type Box, boxOf, type Placement, place } from './position';
+import { isComposing } from './utils';
 
 export type InteractionType = 'mouse' | 'touch' | 'pen' | 'keyboard' | '';
 
@@ -155,7 +156,7 @@ function top() {
 
 /** Escape closes the newest popup, and only that one. */
 function onEscape(event: KeyboardEvent) {
-  if (event.key !== 'Escape' || event.isComposing) return;
+  if (event.key !== 'Escape' || isComposing(event)) return;
   const layer = top();
   if (!layer) return;
   if (!layer.passive) {
@@ -217,13 +218,26 @@ export function swallowClick() {
   );
 }
 
-/** Resolves when the element's animations (and its children's) have ended. */
+/** The longest a close waits for its exit animation. */
+const EXIT_LIMIT_MS = 2000;
+
+/**
+ * Resolves when the element's animations (and its children's) have ended.
+ * An endless one (a spinning icon on a busy button, a pulse) never ends,
+ * so it is left out, and the wait has a limit: without one the popup never
+ * closed and the page stayed inert (Modern Web Guidance,
+ * animate-to-from-top-layer).
+ */
 export function animationsDone(element: HTMLElement) {
-  return Promise.all(
-    element
-      .getAnimations({ subtree: true })
-      .map((animation) => animation.finished.catch(() => undefined)),
-  );
+  const finite = element
+    .getAnimations({ subtree: true })
+    .filter(
+      (animation) => animation.effect?.getTiming().iterations !== Infinity,
+    );
+  return Promise.race([
+    Promise.allSettled(finite.map((animation) => animation.finished)),
+    new Promise((done) => setTimeout(done, EXIT_LIMIT_MS)),
+  ]);
 }
 
 export function focusTarget(
@@ -236,6 +250,31 @@ export function focusTarget(
   if (value === false) return null;
   if (value === true || value == null) return trigger;
   return 'current' in value ? value.current : value;
+}
+
+/**
+ * Names a dialog or menu by its title (`<id>-title`) and describes it by
+ * its description (`<id>-description`), only when they are inside it: an
+ * id that points at nothing leaves it with no name. With no title, it
+ * takes the name of `fallback` (its trigger). An `aria-label` the caller
+ * gave wins. Runs from a ref, again on each render.
+ */
+export function namePopup(
+  element: HTMLElement,
+  id: string,
+  fallback?: HTMLElement | null,
+) {
+  const title = element.querySelector(`[id="${id}-title"]`);
+  const description = element.querySelector(`[id="${id}-description"]`);
+  if (fallback && !title && !fallback.id) fallback.id = `${id}-trigger`;
+  const label = title?.id ?? fallback?.id;
+  if (element.hasAttribute('aria-label') || !label) {
+    element.removeAttribute('aria-labelledby');
+  } else {
+    element.setAttribute('aria-labelledby', label);
+  }
+  if (description) element.setAttribute('aria-describedby', description.id);
+  else element.removeAttribute('aria-describedby');
 }
 
 /** The elements Tab reaches inside `element`, in order. */
@@ -345,8 +384,13 @@ export function PopupFrame({
       if (box) place(element, box, placement);
     }
     update();
+    // The popup, the trigger and the page: a trigger that grows, or moves
+    // because the page above it changed, takes the popup with it (no scroll
+    // or window resize needed).
     const resize = new ResizeObserver(update);
     resize.observe(element);
+    if (trigger) resize.observe(trigger);
+    resize.observe(document.body);
     window.addEventListener('resize', update);
     document.addEventListener('scroll', update, {
       capture: true,

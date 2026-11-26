@@ -16,6 +16,8 @@ import {
   type HourCycle,
   hourCycleOf,
 } from './date/locale';
+import { useFieldControl } from './field-context';
+import { FormValue } from './form-value';
 import { InputGroupButton } from './input-group';
 import { PopupFrame, popupState, usePopupRoot } from './popup';
 import { FIELD_SIZE, type FieldSize, POP, SURFACE } from './recipes';
@@ -28,6 +30,14 @@ import { cn } from './utils';
 // them; the calendar button inside the field opens a Calendar.
 
 export type { DateRange };
+
+/**
+ * The picker's first typed part, next to its form value: where the focus
+ * goes when the form reports that a required date is empty.
+ */
+function firstPart(input: HTMLInputElement) {
+  return input.parentElement?.querySelector<HTMLElement>('[data-segment]');
+}
 
 /** A shortcut beside the range calendar: "Last 7 days". */
 export type DatePreset = { label: string; range: DateRange };
@@ -59,6 +69,8 @@ type PickerBase = {
    */
   align?: 'start' | 'end';
   'aria-label'?: string;
+  /** The id of the visible text that names it. A `<label for={id}>` works too. */
+  'aria-labelledby'?: string;
   id?: string;
   /**
    * On the picker's outer box. It fills the width it gets, like Input; pass
@@ -182,18 +194,45 @@ function PickerShell({
     box.current?.querySelector<HTMLElement>('[data-segment]')?.focus();
   }
 
+  // A visible `<label for={id}>` (FieldLabel): a label names only an input
+  // or a button, not this group, so the group points at it, and a press on
+  // it goes to the first part, as a label's does. Found from the box's ref.
+  const [labelId, setLabelId] = useState<string | undefined>();
+  const labelledBy = base['aria-labelledby'] ?? labelId;
+
+  /** Links the label for `id`, if there is one; returns the unlink. */
+  function linkLabel(node: HTMLElement) {
+    const id = base.id;
+    if (!id) return;
+    const text = node.ownerDocument.querySelector<HTMLLabelElement>(
+      `label[for="${CSS.escape(id)}"]`,
+    );
+    if (!text) return;
+    if (!text.id) text.id = `${id}-label`;
+    if (labelId !== text.id) setLabelId(text.id);
+    text.addEventListener('click', focusFirstPart);
+    return () => text.removeEventListener('click', focusFirstPart);
+  }
+  const control = useFieldControl({
+    'aria-describedby': error ? errorId : undefined,
+    'aria-invalid': invalid || undefined,
+  });
+
   return (
     <div className={cn('flex w-full min-w-0 flex-col gap-1', base.className)}>
       <div
         ref={(node) => {
           box.current = node;
-          if (node && root && root.trigger !== node) root.setTrigger(node);
+          if (!node) return;
+          if (root && root.trigger !== node) root.setTrigger(node);
+          return linkLabel(node);
         }}
         id={base.id}
         role="group"
-        aria-label={label}
-        aria-invalid={invalid || undefined}
-        aria-describedby={error ? errorId : undefined}
+        aria-label={labelledBy ? undefined : label}
+        aria-labelledby={labelledBy}
+        aria-invalid={control['aria-invalid']}
+        aria-describedby={control['aria-describedby']}
         aria-disabled={disabled || undefined}
         data-slot="date-picker"
         data-size={base.size ?? 'md'}
@@ -351,6 +390,7 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
   const [own, setOwn] = useState(props.defaultValue ?? null);
   const value = props.value === undefined ? own : props.value;
   const [touched, setTouched] = useState(false);
+  const [interacted, setInteracted] = useState(false);
   const dateProps = isTime ? null : props;
   const root = usePopupRoot({
     open: dateProps?.isOpen,
@@ -364,6 +404,7 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
 
   function set(next: string | null) {
     setOwn(next);
+    setInteracted(true);
     props.onChange?.(next);
   }
 
@@ -384,7 +425,11 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
     if (close) root.setOpen(false, 'item-press');
   }
 
-  const error = props.validate?.(value) ?? null;
+  // The form knows the problem at once; the person sees it only once they
+  // have changed the field or sent the form (as :user-invalid): a
+  // `validate` that rejects null would otherwise show at page load.
+  const problem = props.validate?.(value) ?? null;
+  const error = value === null && !interacted ? null : problem;
 
   return (
     <PickerShell
@@ -434,11 +479,13 @@ function SinglePicker(props: DateModeProps | TimeModeProps) {
       }
       hidden={
         props.name && (
-          <input
-            type="hidden"
+          <FormValue
             name={props.name}
             value={value ?? ''}
             required={props.isRequired}
+            error={problem}
+            focusTarget={firstPart}
+            onInvalid={() => setInteracted(true)}
           />
         )
       }
@@ -469,6 +516,7 @@ function RangePicker(props: RangeModeProps) {
   // The value changed from outside ("Clear all", a link): show it. Our own
   // change (a null for a half-typed or backwards range) keeps the typing.
   const emitted = useRef<DateRange | null | undefined>(undefined);
+  const [interacted, setInteracted] = useState(false);
   const [seen, setSeen] = useState(value);
   if (value !== seen) {
     setSeen(value);
@@ -491,6 +539,7 @@ function RangePicker(props: RangeModeProps) {
   }
 
   function typed(end: 'start' | 'end', day: string | null) {
+    setInteracted(true);
     const next = { ...draft, [end]: day };
     const start = parseDay(next.start);
     const last = parseDay(next.end);
@@ -504,6 +553,7 @@ function RangePicker(props: RangeModeProps) {
   }
 
   function pick(range: DateRange) {
+    setInteracted(true);
     setDraft(range);
     set(range);
     if (props.shouldCloseOnSelect ?? true) root.setOpen(false, 'item-press');
@@ -514,7 +564,9 @@ function RangePicker(props: RangeModeProps) {
   const backwards = Boolean(
     typedStart && typedEnd && compareDays(typedStart, typedEnd) > 0,
   );
-  const error = props.validate?.(value) ?? null;
+  // As one date: no error for an empty range until it is changed or sent.
+  const problem = props.validate?.(value) ?? null;
+  const error = value === null && !interacted ? null : problem;
   const field = (end: 'start' | 'end') => (
     <DateSegments
       kind="date"
@@ -588,17 +640,22 @@ function RangePicker(props: RangeModeProps) {
       hidden={
         <>
           {props.startName && (
-            <input
-              type="hidden"
+            <FormValue
               name={props.startName}
               value={value?.start ?? ''}
+              required={props.isRequired}
+              error={problem}
+              focusTarget={firstPart}
+              onInvalid={() => setInteracted(true)}
             />
           )}
           {props.endName && (
-            <input
-              type="hidden"
+            <FormValue
               name={props.endName}
               value={value?.end ?? ''}
+              required={props.isRequired}
+              focusTarget={firstPart}
+              onInvalid={() => setInteracted(true)}
             />
           )}
         </>

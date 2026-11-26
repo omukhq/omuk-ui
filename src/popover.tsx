@@ -10,6 +10,7 @@ import {
 import { Button } from './button';
 import {
   type FinalFocus,
+  namePopup,
   PopupFrame,
   type PopupRoot,
   type PopupRootProps,
@@ -115,6 +116,7 @@ function PopoverContent({
   initialFocus,
   finalFocus,
   onKeyDown,
+  ref,
   ...props
 }: ComponentPropsWithRef<'div'> & {
   side?: Side;
@@ -125,6 +127,14 @@ function PopoverContent({
   finalFocus?: FinalFocus;
 }) {
   const popover = usePopover();
+  // A new function each render, so the name follows a title that comes
+  // or goes.
+  function name(node: HTMLDivElement | null) {
+    if (node && !props['aria-labelledby']) {
+      namePopup(node, popover.id, popover.trigger);
+    }
+  }
+  const merged = useMergedRef(ref, name);
   function focusIn(panel: HTMLElement) {
     if (initialFocus === false) return;
     const target =
@@ -147,9 +157,8 @@ function PopoverContent({
       <div
         role="dialog"
         id={popover.id}
+        ref={merged}
         tabIndex={-1}
-        aria-labelledby={`${popover.id}-title`}
-        aria-describedby={`${popover.id}-description`}
         data-slot="popover-content"
         data-side={side}
         data-align={align}

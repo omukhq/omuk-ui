@@ -13,6 +13,7 @@ import {
 } from './locale';
 import {
   constrain,
+  fromPaste,
   fromValue,
   limitsOf,
   PAGE_STEP,
@@ -203,39 +204,49 @@ export function DateSegments({
         update({ ...segments, [type]: limits.max });
         return;
       case 'Backspace':
-      case 'Delete': {
+      case 'Delete':
         event.preventDefault();
-        buffer.current = '';
-        if (current === undefined) {
-          if (event.key === 'Backspace') moveFrom(target, -1);
-          return;
-        }
-        // One digit off the end; the last one empties the part.
-        const shorter =
-          type === 'dayPeriod' || current < 10
-            ? undefined
-            : Math.floor(current / 10);
-        const next = { ...segments };
-        if (shorter === undefined) delete next[type];
-        else next[type] = shorter;
-        update(next);
+        erase(type, target, event.key === 'Backspace');
         return;
-      }
     }
-    // Typing. React Aria reads `beforeinput`; a key's text is the same here,
-    // and a phone's keyboard sends one key event for each digit as well.
+    // Typing on a keyboard: the key's text. A phone's keyboard sends the
+    // key as "Unidentified" and the text in `beforeinput` (onBeforeInput).
     if (event.key.length !== 1 || event.metaKey || event.ctrlKey) return;
     event.preventDefault();
+    typeChar(type, target, event.key);
+  }
+
+  /** One digit off the end; the last one empties the part. An empty part: Backspace moves back. */
+  function erase(type: SegmentType, target: HTMLElement, back: boolean) {
+    buffer.current = '';
+    const current = segments[type];
+    if (current === undefined) {
+      if (back) moveFrom(target, -1);
+      return;
+    }
+    const shorter =
+      type === 'dayPeriod' || current < 10
+        ? undefined
+        : Math.floor(current / 10);
+    const next = { ...segments };
+    if (shorter === undefined) delete next[type];
+    else next[type] = shorter;
+    update(next);
+  }
+
+  /** One typed character: a digit, or the first letter of a day period. */
+  function typeChar(type: SegmentType, target: HTMLElement, char: string) {
     if (type === 'dayPeriod') {
-      const period = typePeriod(event.key, periods);
+      const period = typePeriod(char, periods);
       if (period !== null) {
         update({ ...segments, dayPeriod: period });
         moveFrom(target, 1);
       }
       return;
     }
-    const digit = digitOf(event.key, locale);
+    const digit = digitOf(char, locale);
     if (digit === null) return;
+    const limits = limitsOf(type, segments, hourCycle);
     const typed = typeDigit(buffer.current, digit, limits);
     buffer.current = typed.buffer;
     typingYear.current = type === 'year' && !typed.advance;
@@ -244,6 +255,38 @@ export function DateSegments({
     else next[type] = typed.value;
     update(next);
     if (typed.advance) moveFrom(target, 1);
+  }
+
+  /** Pasted text (or a phone's autofill): every part at once, when it fits. */
+  function paste(text: string) {
+    const order = parts.flatMap((part) =>
+      part.type === 'literal' ? [] : [part.type],
+    );
+    const next = fromPaste(text, order, kind, hourCycle, periods);
+    if (!next) return false;
+    buffer.current = '';
+    typingYear.current = false;
+    update(next);
+    return true;
+  }
+
+  /**
+   * What a phone's keyboard types: the text comes in `beforeinput`, not in
+   * the key event. The browser does not change the part (React draws it);
+   * the text goes through the same typing as a key. Native, from the
+   * part's ref: React's onBeforeInput is a different event.
+   */
+  function onBeforeInput(type: SegmentType, event: InputEvent) {
+    event.preventDefault();
+    if (readOnly || disabled) return;
+    const target = event.currentTarget as HTMLElement;
+    if (event.inputType.startsWith('delete')) {
+      erase(type, target, event.inputType !== 'deleteContentForward');
+      return;
+    }
+    const text = event.data ?? event.dataTransfer?.getData('text/plain') ?? '';
+    if (text.length > 1) paste(text);
+    else if (text) typeChar(type, target, text);
   }
 
   return (
@@ -275,10 +318,27 @@ export function DateSegments({
         const limits = limitsOf(type, segments, hourCycle);
         const current = segments[type];
         return (
+          // Editable, so a phone opens its keyboard on a tap (React Aria's
+          // parts are too); every change goes through our handlers, which
+          // stop the browser's own. A new ref each render: the listener
+          // sees this render's parts.
           <span
             key={type}
+            ref={(node) => {
+              if (!node) return;
+              function listener(event: Event) {
+                onBeforeInput(type, event as InputEvent);
+              }
+              node.addEventListener('beforeinput', listener);
+              return () => node.removeEventListener('beforeinput', listener);
+            }}
             role="spinbutton"
             tabIndex={disabled ? undefined : 0}
+            contentEditable={!disabled && !readOnly}
+            suppressContentEditableWarning
+            spellCheck={false}
+            autoCorrect="off"
+            autoCapitalize="off"
             inputMode={type === 'dayPeriod' ? 'text' : 'numeric'}
             enterKeyHint="next"
             data-segment={type}
@@ -301,7 +361,13 @@ export function DateSegments({
               buffer.current = '';
             }}
             onKeyDown={(event) => onKeyDown(type, event)}
-            onPaste={(event) => event.preventDefault()}
+            // A whole date or time, ISO or in the field's order, fills
+            // every part; text that does not fit changes nothing.
+            onPaste={(event) => {
+              event.preventDefault();
+              if (readOnly || disabled) return;
+              paste(event.clipboardData.getData('text/plain'));
+            }}
           >
             {text(type)}
           </span>

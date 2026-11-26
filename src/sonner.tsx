@@ -59,6 +59,8 @@ type Toast = {
   action?: Action;
   duration?: number;
   closing: boolean;
+  /** Counts up on each show, also when the same toast shows again: what is read out next. */
+  said: number;
 };
 
 type ClassNames = Partial<
@@ -162,6 +164,7 @@ let toasts: Toast[] = [];
 const listeners = new Set<() => void>();
 const settings = { duration: DEFAULT_DURATION, visible: DEFAULT_VISIBLE };
 let nextId = 1;
+let saidCount = 0;
 
 /**
  * Each toast's ref callback that measures it, kept from render to render (a
@@ -242,6 +245,7 @@ function show(kind: Kind, title: ReactNode, options: ExternalToast = {}) {
     action: options.action,
     duration: options.duration,
     closing: false,
+    said: ++saidCount,
   };
   // The same id updates that toast in place, its timer from the start.
   const at = toasts.findIndex((open) => open.id === id);
@@ -385,6 +389,32 @@ export function Toaster({
     () => new Map(),
   );
   const list = useRef<HTMLOListElement>(null);
+  // Where the focus was before it came into the toasts.
+  const cameFrom = useRef<HTMLElement | null>(null);
+
+  /**
+   * Closes a toast from a press inside it. When it had the focus, the
+   * focus goes on to another toast's first button, else back to where it
+   * came from, not to the page's start (Modern Web Guidance,
+   * persistent-toast-notifications).
+   */
+  function closeFrom(target: HTMLElement, id: Toast['id']) {
+    const item = target.closest('li');
+    const hadFocus = Boolean(item?.contains(document.activeElement));
+    dismiss(id);
+    if (!hadFocus) return;
+    const others = [
+      ...(list.current?.querySelectorAll<HTMLElement>(
+        'li:not([data-closing])',
+      ) ?? []),
+    ].filter((each) => each !== item);
+    const next = others
+      .map((each) => each.querySelector<HTMLElement>('button'))
+      .find(Boolean);
+    next?.focus();
+    // No other toast, or it cannot take the focus yet (still tucked).
+    if (!next || document.activeElement !== next) cameFrom.current?.focus();
+  }
 
   // Nothing left: the next toast starts in a closed stack.
   if (open && shown.length === 0) setOpen(false);
@@ -466,6 +496,10 @@ export function Toaster({
 
   // Newest first: the front of the stack.
   const front = shown.toReversed();
+  const latest = shown.reduce<Toast | undefined>(
+    (newest, each) => (newest && newest.said > each.said ? newest : each),
+    undefined,
+  );
   const heightOf = (each: Toast) => heights.get(each.id) ?? FIRST_HEIGHT;
   const frontHeight = front[0] ? heightOf(front[0]) : FIRST_HEIGHT;
   const listHeight = open
@@ -477,9 +511,6 @@ export function Toaster({
     <section
       ref={attach}
       aria-label="Notifications"
-      aria-live="polite"
-      aria-relevant="additions text"
-      aria-atomic="false"
       popover="manual"
       // A popover's own box (the browser's: centred, bordered, Canvas
       // coloured) undone: a band along the top or the bottom of the
@@ -491,11 +522,24 @@ export function Toaster({
       )}
       style={fromTop ? { top: offset?.top } : { bottom: offset?.bottom }}
     >
+      {/* What a screen reader reads: the newest toast's words only, not its
+          buttons. A new element each time a toast shows, also the same
+          toast again, so it is read again. On the page from the start. */}
+      <div role="status" className="sr-only">
+        {latest && !latest.closing && (
+          <p key={latest.said}>
+            {latest.title}
+            {latest.description && <>. {latest.description}</>}
+          </p>
+        )}
+      </div>
       {shown.length > 0 && (
         <ol
           ref={list}
           data-expanded={open ? '' : undefined}
-          className="pointer-events-auto relative w-full max-w-96 transition-all duration-300 ease-out motion-reduce:transition-none"
+          // Only the height moves: transition-all also ran on every colour
+          // and edge a theme change set.
+          className="pointer-events-auto relative w-full max-w-96 transition-[height] duration-300 ease-out motion-reduce:transition-none"
           style={{ height: listHeight }}
           onPointerEnter={(event) => {
             if (event.pointerType !== 'touch') expand(true);
@@ -507,7 +551,9 @@ export function Toaster({
             // A phone has no hover: a tap opens the stack.
             if (event.pointerType === 'touch' && !open) expand(true);
           }}
-          onFocus={() => {
+          onFocus={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              cameFrom.current = event.relatedTarget as HTMLElement | null;
             setOpen(true);
             hold('focus', true);
           }}
@@ -542,7 +588,7 @@ export function Toaster({
                 className={cn(
                   // The words fade as a toast tucks behind the new one,
                   // and back as the stack opens, as sonner's do.
-                  'absolute inset-x-0 rounded-lg transition-all duration-300 ease-out *:*:transition-opacity *:*:duration-300 motion-reduce:transition-none',
+                  'absolute inset-x-0 rounded-lg transition-[translate,scale,height] duration-300 ease-out *:*:transition-opacity *:*:duration-300 motion-reduce:transition-none',
                   fromTop ? 'top-0 origin-top' : 'bottom-0 origin-bottom',
                   tucked && 'overflow-hidden *:*:opacity-0',
                 )}
@@ -621,7 +667,8 @@ export function Toaster({
                       )}
                       onClick={(event) => {
                         each.action?.onClick(event);
-                        if (!event.defaultPrevented) dismiss(each.id);
+                        if (!event.defaultPrevented)
+                          closeFrom(event.currentTarget, each.id);
                       }}
                     >
                       {each.action.label}
@@ -632,7 +679,9 @@ export function Toaster({
                       type="button"
                       aria-label="Close toast"
                       className={cn(TOAST.closeButton, classNames.closeButton)}
-                      onClick={() => dismiss(each.id)}
+                      onClick={(event) =>
+                        closeFrom(event.currentTarget, each.id)
+                      }
                     >
                       <XIcon strokeWidth={1.5} />
                     </button>

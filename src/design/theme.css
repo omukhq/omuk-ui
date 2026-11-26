@@ -10,7 +10,18 @@
   Read docs/DESIGN.md for what each token is for, and CHANGELOG.md for what changed.
 */
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+/* dark: as the roles below: `data-theme="dark"`, or the system's dark
+   setting when the page sets no theme. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+      @slot;
+    }
+  }
+}
 
 /* The parts mark their direction with `data-orientation` (separator, tabs,
    button group, field). `data-horizontal:` and `data-vertical:` read it:
@@ -47,73 +58,154 @@
      shades, gray red orange amber yellow green teal sky blue violet pink, plus white and
      black. bg-red-100, text-blue-600, border-gray-200 … The other families are off (above). */
 
-  /* 1b · Roles — what components use. Each points at a palette shade; dark mode sets the same
-     names again ([data-theme="dark"] below). No middle layer: bg-page reads --color-page. */
+  /* 1b · Roles: below, after this block. */
+}
 
-  --color-page: var(--color-white);          /* the doc, sidebars, side panels, menus, popovers, dialogs */
-  --color-panel: var(--color-gray-50);        /* ground behind cards: dashboard grids, auth pages, code */
-  --color-raised: var(--color-white);      /* above the ground: cards, popovers, chosen segment */
-  --color-hover: color-mix(in oklab, var(--color-gray-950) 4%, transparent);        /* pointer over a row or ghost button; a tint, works on any ground */
-  --color-selected: color-mix(in oklab, var(--color-gray-950) 8%, transparent);  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
-  --color-border: var(--color-gray-100);      /* lines, dividers, card and button edges */
-  --color-outline: var(--color-gray-500);    /* hover edge of buttons, checkboxes, radios (3:1; Tailwind's gray-400 is 2.6:1) */
-  --color-control: var(--color-gray-200);    /* resting edge: fields 1px, checkboxes and radios 2px */
-  --color-foreground: var(--color-gray-950);
-  --color-muted: var(--color-gray-600);
-  --color-primary: var(--color-gray-950);    /* primary buttons, tooltips, toasts */
-  --color-primary-hover: var(--color-gray-800);  /* a solid step, not 90%: nothing shows through */
-  --color-on-primary: var(--color-white);
-  --color-accent: var(--color-blue-600);      /* links, caret, picked values, chart series 1 */
-  --color-on-accent: var(--color-white);      /* text on an accent fill: a focused date part */
-  --color-mark: var(--color-blue-100);          /* comment highlights, added text, focus ring, plan badges */
-  --color-found: var(--color-yellow-200);        /* the words a search found, in its results */
-  --color-danger: var(--color-red-600);
+/* 1b · Roles — what components use. No middle layer: bg-page reads
+   --color-page. Each is written once, as light-dark(<light>, <dark>): the
+   element's color-scheme picks the side. `data-theme` sets the scheme
+   (further down); without it, the system's setting.
+
+   The values are set on every `[data-theme]` area, not only on :root. A
+   build tool for older browsers (Vite 8's default CSS target) turns
+   light-dark() into variables that resolve where the role is set; set
+   again on the area, the role takes the area's side. So a dark area inside
+   a light page, or the other way round, has its own colours (Modern Web
+   Guidance: color).
+
+   In the theme layer, as Tailwind's own variables: an app's :root rule
+   wins over them. The names are listed for Tailwind below (`@theme
+   reference`), so bg-page and the others exist. */
+@layer theme {
+  :root,
+  :host,
+  [data-theme] {
+  --color-page: light-dark(var(--color-white), var(--color-gray-800));          /* the doc, sidebars, side panels, menus, popovers, dialogs; dark: a soft slate, not black (owner, 18 Nov 2026) */
+  --color-panel: light-dark(var(--color-gray-50), var(--color-gray-900));        /* ground behind cards: dashboard grids, auth pages, code; dark: one step darker than the page */
+  --color-raised: light-dark(var(--color-white), var(--color-gray-700));      /* above the ground: cards, popovers, chosen segment; dark: one step lighter */
+  /* Tints, so they work on any ground. Dark: stronger, as at 4.5% a badge's
+     fill (the hover tint) and a hovered row hardly showed on the slate. */
+  --color-hover: light-dark(color-mix(in oklab, var(--color-gray-950) 4%, transparent), rgb(255 255 255 / 0.07));        /* pointer over a row or ghost button */
+  --color-selected: light-dark(color-mix(in oklab, var(--color-gray-950) 8%, transparent), rgb(255 255 255 / 0.12));  /* toggles that are on, applied filters, selected rows, the current row in lists: an 8% tint (hover is 4%) */
+  /* Lines and edges: in dark mode tints, not shades, so they show on the
+     page and on a card alike (a gray-700 line would vanish on a gray-700 card). */
+  --color-border: light-dark(var(--color-gray-100), color-mix(in oklab, var(--color-white) 10%, transparent));      /* lines, dividers, card and button edges */
+  --color-outline: light-dark(var(--color-gray-500), var(--color-gray-400));    /* hover edge of buttons, checkboxes, radios (3:1; Tailwind's gray-400 is 2.6:1 on white, 5.6:1 on the dark page) */
+  --color-control: light-dark(var(--color-gray-200), color-mix(in oklab, var(--color-white) 16%, transparent));    /* resting edge: fields 1px, checkboxes and radios 2px */
+  --color-foreground: light-dark(var(--color-gray-950), var(--color-gray-100));
+  --color-muted: light-dark(var(--color-gray-600), var(--color-gray-300));
+  --color-primary: light-dark(var(--color-gray-950), var(--color-gray-100));    /* primary buttons, tooltips, toasts */
+  --color-primary-hover: light-dark(var(--color-gray-800), var(--color-gray-300));  /* a solid step, not 90%: nothing shows through */
+  --color-on-primary: light-dark(var(--color-white), var(--color-gray-950));
+  --color-accent: light-dark(var(--color-blue-600), var(--color-blue-300));      /* links, caret, picked values, chart series 1 */
+  --color-on-accent: light-dark(var(--color-white), var(--color-gray-950));      /* text on an accent fill: a focused date part */
+  --color-mark: light-dark(var(--color-blue-100), var(--color-blue-950));          /* comment highlights, added text, focus ring, plan badges */
+  --color-found: light-dark(var(--color-yellow-200), var(--color-yellow-800));        /* the words a search found, in its results */
+  --color-danger: light-dark(var(--color-red-600), var(--color-red-300));     /* dark: red-400 is 3.6:1 on a card */
   /* The danger fill under the pointer: a step darker. Red at 90% on white
      read as a washed pink, and an edge crossing flashed. */
-  --color-danger-hover: var(--color-red-700);
+  --color-danger-hover: light-dark(var(--color-red-700), var(--color-red-200));
   /* The destructive button: red text on a red tint, the tint a step
      stronger under the pointer (owner, 24 Nov 2026). Solid, not a see-through
      red, so nothing behind it shows. */
-  --color-danger-tint: var(--color-red-100);
-  --color-danger-tint-hover: var(--color-red-200);
+  --color-danger-tint: light-dark(var(--color-red-100), var(--color-red-950));
+  --color-danger-tint-hover: light-dark(var(--color-red-200), var(--color-red-900));
   /* The focus halo of an invalid field: red, as its edge (owner, 24 Nov 2026). */
-  --color-danger-ring: var(--color-red-200);
-  --color-success: var(--color-green-700);  /* 4.9:1 on white; Tailwind's green-600 is 3.2:1 */
-  --color-warning: var(--color-amber-700);
-  --color-info: var(--color-blue-600);
+  --color-danger-ring: light-dark(var(--color-red-200), var(--color-red-900));
+  --color-success: light-dark(var(--color-green-700), var(--color-green-400));  /* 4.9:1 on white; Tailwind's green-600 is 3.2:1 */
+  --color-warning: light-dark(var(--color-amber-700), var(--color-amber-400));
+  --color-info: light-dark(var(--color-blue-600), var(--color-blue-300));
   /* Toasts (owner, 18 Nov 2026): a soft fill and its text, per kind. */
-  --color-success-soft: var(--color-green-50);
-  --color-on-success-soft: var(--color-green-900);
-  --color-info-soft: var(--color-blue-50);
-  --color-on-info-soft: var(--color-blue-900);
-  --color-warning-soft: var(--color-amber-50);
-  --color-on-warning-soft: var(--color-amber-900);
-  --color-danger-soft: var(--color-red-50);
-  --color-on-danger-soft: var(--color-red-900);
-  --color-scrim: rgb(0 0 0 / 0.32);        /* behind dialogs, drawers and sheets */
-  --color-chart-1: var(--color-blue-600);    /* chart series, in this order; max 3 per chart */
+  --color-success-soft: light-dark(var(--color-green-50), var(--color-green-950));
+  --color-on-success-soft: light-dark(var(--color-green-900), var(--color-green-100));
+  --color-info-soft: light-dark(var(--color-blue-50), var(--color-blue-950));
+  --color-on-info-soft: light-dark(var(--color-blue-900), var(--color-blue-100));
+  --color-warning-soft: light-dark(var(--color-amber-50), var(--color-amber-950));
+  --color-on-warning-soft: light-dark(var(--color-amber-900), var(--color-amber-100));
+  --color-danger-soft: light-dark(var(--color-red-50), var(--color-red-950));
+  --color-on-danger-soft: light-dark(var(--color-red-900), var(--color-red-100));
+  --color-scrim: light-dark(rgb(0 0 0 / 0.32), rgb(0 0 0 / 0.6));        /* behind dialogs, drawers and sheets */
+  --color-chart-1: light-dark(var(--color-blue-600), var(--color-blue-500));    /* chart series, in this order; max 3 per chart */
   --color-chart-2: var(--color-orange-500);
   --color-chart-3: var(--color-teal-500);
   /* A person without a photo: a soft wash and its text, by user (avatar.tsx).
      Six hues round the wheel, so neighbours differ; calm, not saturated fills
      (owner, 18 Nov 2026). */
-  --color-avatar-1: var(--color-blue-100);
-  --color-on-avatar-1: var(--color-blue-800);
-  --color-avatar-2: var(--color-teal-100);
-  --color-on-avatar-2: var(--color-teal-800);
-  --color-avatar-3: var(--color-violet-100);
-  --color-on-avatar-3: var(--color-violet-800);
-  --color-avatar-4: var(--color-amber-100);
-  --color-on-avatar-4: var(--color-amber-800);
-  --color-avatar-5: var(--color-pink-100);
-  --color-on-avatar-5: var(--color-pink-800);
-  --color-avatar-6: var(--color-green-100);
-  --color-on-avatar-6: var(--color-green-800);
+  --color-avatar-1: light-dark(var(--color-blue-100), var(--color-blue-900));
+  --color-on-avatar-1: light-dark(var(--color-blue-800), var(--color-blue-200));
+  --color-avatar-2: light-dark(var(--color-teal-100), var(--color-teal-900));
+  --color-on-avatar-2: light-dark(var(--color-teal-800), var(--color-teal-200));
+  --color-avatar-3: light-dark(var(--color-violet-100), var(--color-violet-900));
+  --color-on-avatar-3: light-dark(var(--color-violet-800), var(--color-violet-200));
+  --color-avatar-4: light-dark(var(--color-amber-100), var(--color-amber-900));
+  --color-on-avatar-4: light-dark(var(--color-amber-800), var(--color-amber-200));
+  --color-avatar-5: light-dark(var(--color-pink-100), var(--color-pink-900));
+  --color-on-avatar-5: light-dark(var(--color-pink-800), var(--color-pink-200));
+  --color-avatar-6: light-dark(var(--color-green-100), var(--color-green-900));
+  --color-on-avatar-6: light-dark(var(--color-green-800), var(--color-green-200));
+  }
+}
 
+/* The roles' names, for Tailwind: each makes its utilities (bg-page,
+   text-muted, border-control …), which read the variable above. The value
+   here is only Tailwind's fallback; the real one is above. */
+@theme reference {
+  --color-page: currentcolor;
+  --color-panel: currentcolor;
+  --color-raised: currentcolor;
+  --color-hover: currentcolor;
+  --color-selected: currentcolor;
+  --color-border: currentcolor;
+  --color-outline: currentcolor;
+  --color-control: currentcolor;
+  --color-foreground: currentcolor;
+  --color-muted: currentcolor;
+  --color-primary: currentcolor;
+  --color-primary-hover: currentcolor;
+  --color-on-primary: currentcolor;
+  --color-accent: currentcolor;
+  --color-on-accent: currentcolor;
+  --color-mark: currentcolor;
+  --color-found: currentcolor;
+  --color-danger: currentcolor;
+  --color-danger-hover: currentcolor;
+  --color-danger-tint: currentcolor;
+  --color-danger-tint-hover: currentcolor;
+  --color-danger-ring: currentcolor;
+  --color-success: currentcolor;
+  --color-warning: currentcolor;
+  --color-info: currentcolor;
+  --color-success-soft: currentcolor;
+  --color-on-success-soft: currentcolor;
+  --color-info-soft: currentcolor;
+  --color-on-info-soft: currentcolor;
+  --color-warning-soft: currentcolor;
+  --color-on-warning-soft: currentcolor;
+  --color-danger-soft: currentcolor;
+  --color-on-danger-soft: currentcolor;
+  --color-scrim: currentcolor;
+  --color-chart-1: currentcolor;
+  --color-chart-2: currentcolor;
+  --color-chart-3: currentcolor;
+  --color-avatar-1: currentcolor;
+  --color-on-avatar-1: currentcolor;
+  --color-avatar-2: currentcolor;
+  --color-on-avatar-2: currentcolor;
+  --color-avatar-3: currentcolor;
+  --color-on-avatar-3: currentcolor;
+  --color-avatar-4: currentcolor;
+  --color-on-avatar-4: currentcolor;
+  --color-avatar-5: currentcolor;
+  --color-on-avatar-5: currentcolor;
+  --color-avatar-6: currentcolor;
+  --color-on-avatar-6: currentcolor;
+}
+
+@theme static {
   /* 2 · Space and size — Tailwind's own scale (--spacing 0.25rem = 4px): p-3 = 12px, h-8 = 32px.
      Spacing steps: 0.5 1 2 3 4 6 8 12 16. Control heights: h-10 (40) h-8 (32) h-7 (28, formatting toolbar) h-6 (24, row actions). */
   /* The read views' text column (boards 13 and 14): about 75 characters a line. max-w-reading */
-  --container-reading: 720px;
+  --container-reading: 45rem;
 
   /* 3 · Type — seven interface sizes, each with its line height. text-base is Tailwind's own
      (16px, 1.5); the others differ from Tailwind's and are set here. Tailwind's larger sizes
@@ -125,17 +217,19 @@
   --text-7xl: initial;
   --text-8xl: initial;
   --text-9xl: initial;
-  --text-2xs: 10px;
+  /* In rem, so they follow the reader's browser font size: at the default
+     16px, 2xs 10 · xs 12 · sm 14 · lg 20 · xl 24 · 2xl 32. */
+  --text-2xs: 0.625rem;
   --text-2xs--line-height: 1;
-  --text-xs: 12px;
+  --text-xs: 0.75rem;
   --text-xs--line-height: 1.5;
-  --text-sm: 14px;
+  --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
-  --text-lg: 20px;
+  --text-lg: 1.25rem;
   --text-lg--line-height: 1.25;
-  --text-xl: 24px;
+  --text-xl: 1.5rem;
   --text-xl--line-height: 1.25;
-  --text-2xl: 32px;
+  --text-2xl: 2rem;
   --text-2xl--line-height: 1.25;
 
   --font-*: initial;
@@ -164,76 +258,56 @@
 }
 
 :root {
-  --elevation-sm: 0 0 2px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.14);
-  --elevation-lg: 0 0 2px rgb(0 0 0 / 0.12), 0 8px 16px rgb(0 0 0 / 0.14);
   --line: 1px;
   --line-strong: 2px;
   --ring: 3px;
+  /* IBM Plex Sans's x-height (516 of 1000). The fallback face is scaled to
+     it, so the text keeps its size when Plex arrives (body, below). An app
+     that changes --font-sans sets its own face's value, or `none`. */
+  --font-sans-x-height: 0.516;
 }
 
-/* Dark on screen only: a printed page (Download .pdf) is paper, so print
-   keeps the light colours above, whatever the theme. */
+/* Light or dark. The roles above pick their side from color-scheme:
+   - no `data-theme`: the system's setting;
+   - `data-theme="dark"` or `"light"` on <html>, or on any area inside it:
+     that area's scheme, whatever is around it.
+   Dark on screen only: a printed page (Download .pdf) is paper, so print
+   keeps the light colours, whatever the theme. */
+:root {
+  color-scheme: light dark;
+}
+[data-theme="light"] {
+  color-scheme: only light;
+}
+[data-theme="dark"] {
+  color-scheme: only dark;
+}
+@media print {
+  :root,
+  [data-theme] {
+    color-scheme: light;
+  }
+}
+
+/* The shadows change shape, not only colour, so they are set per scheme. A
+   black shadow hardly shows on a dark page: in dark mode a shadow also draws
+   a faint light outline, so shadow-sm alone works in both modes (no dark:
+   edge beside it). */
+:root,
+[data-theme="light"] {
+  --elevation-sm: 0 0 2px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.14);
+  --elevation-lg: 0 0 2px rgb(0 0 0 / 0.12), 0 8px 16px rgb(0 0 0 / 0.14);
+}
 @media not print {
   [data-theme="dark"] {
-    --color-page: var(--color-gray-800);   /* a soft slate, not black (owner, 18 Nov 2026) */
-    --color-panel: var(--color-gray-900);  /* one step darker than the page, as in light mode */
-    --color-raised: var(--color-gray-700); /* cards: one step lighter */
-    /* Tints for the slate page: at 4.5% a badge's fill (the hover tint) and a
-       hovered row hardly showed. */
-    --color-hover: rgb(255 255 255 / 0.07);
-    --color-selected: rgb(255 255 255 / 0.12);
-    /* Lines and edges are tints, not shades: they show on the page and on a
-       card alike (a gray-700 line would vanish on a gray-700 card). */
-    --color-border: color-mix(in oklab, var(--color-white) 10%, transparent);
-    --color-outline: var(--color-gray-400);   /* 5.6:1 on the page */
-    --color-control: color-mix(in oklab, var(--color-white) 16%, transparent);
-    --color-foreground: var(--color-gray-100);
-    --color-muted: var(--color-gray-300);
-    --color-primary: var(--color-gray-100);
-    --color-primary-hover: var(--color-gray-300);
-    --color-on-primary: var(--color-gray-950);
-    --color-accent: var(--color-blue-300);
-    --color-on-accent: var(--color-gray-950);
-    --color-mark: var(--color-blue-950);
-    --color-avatar-1: var(--color-blue-900);
-    --color-on-avatar-1: var(--color-blue-200);
-    --color-avatar-2: var(--color-teal-900);
-    --color-on-avatar-2: var(--color-teal-200);
-    --color-avatar-3: var(--color-violet-900);
-    --color-on-avatar-3: var(--color-violet-200);
-    --color-avatar-4: var(--color-amber-900);
-    --color-on-avatar-4: var(--color-amber-200);
-    --color-avatar-5: var(--color-pink-900);
-    --color-on-avatar-5: var(--color-pink-200);
-    --color-avatar-6: var(--color-green-900);
-    --color-on-avatar-6: var(--color-green-200);
-    --color-found: var(--color-yellow-800);
-    --color-danger: var(--color-red-300);     /* red-400 is 3.6:1 on a card */
-    --color-danger-hover: var(--color-red-200);
-    --color-danger-tint: var(--color-red-950);
-    --color-danger-tint-hover: var(--color-red-900);
-    --color-danger-ring: var(--color-red-900);
-    --color-success: var(--color-green-400);
-    --color-warning: var(--color-amber-400);
-    --color-info: var(--color-blue-300);
-    --color-success-soft: var(--color-green-950);
-    --color-on-success-soft: var(--color-green-100);
-    --color-info-soft: var(--color-blue-950);
-    --color-on-info-soft: var(--color-blue-100);
-    --color-warning-soft: var(--color-amber-950);
-    --color-on-warning-soft: var(--color-amber-100);
-    --color-danger-soft: var(--color-red-950);
-    --color-on-danger-soft: var(--color-red-100);
-    --color-scrim: rgb(0 0 0 / 0.6);
-    --color-chart-1: var(--color-blue-500);
-    --color-chart-2: var(--color-orange-500);
-    --color-chart-3: var(--color-teal-500);
-    /* A black shadow hardly shows on a dark page: in dark mode a shadow
-       also draws a faint light outline, so shadow-sm alone works in both
-       modes (no dark: edge beside it). */
     --elevation-sm: 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.5);
     --elevation-lg: 0 0 0 1px rgb(255 255 255 / 0.08), 0 8px 16px rgb(0 0 0 / 0.5);
-    color-scheme: dark;
+  }
+}
+@media not print and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --elevation-sm: 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.5);
+    --elevation-lg: 0 0 0 1px rgb(255 255 255 / 0.08), 0 8px 16px rgb(0 0 0 / 0.5);
   }
 }
 
@@ -251,14 +325,43 @@
   --edge-control: 2px;
 }
 
+/* Forced colours (Windows contrast themes). The browser removes every
+   box-shadow and paints every background in the system's Canvas colour.
+   The kit draws edges, focus and the chosen state with those, so in that
+   mode they come back as outlines and system colours (Modern Web Guidance:
+   color, checkbox, tabs). The values are the system's, not the kit's. */
+:root {
+  --forced-line: 1px;
+  --forced-focus: Highlight;
+  --forced-chosen: Highlight;
+  --forced-on-chosen: HighlightText;
+  --forced-ink: CanvasText;
+}
+
 /* `inset-ring-2`, with its width from --edge-control. cn (utils.ts) counts
-   it as a ring width, so a later `inset-ring` or `inset-ring-2` replaces it. */
+   it as a ring width, so a later `inset-ring` or `inset-ring-2` replaces it.
+   Forced colours: an outline inside the box, in the system's text colour.
+   `!important` there only: the same boxes carry `outline-none` for the
+   normal mode, and the order of two utilities is not ours to set. */
 @utility edge-control {
   --tw-inset-ring-shadow: inset 0 0 0 var(--edge-control)
     var(--tw-inset-ring-color, currentcolor);
   box-shadow:
     var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
     var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  @media (forced-colors: active) {
+    outline: var(--edge-control) solid !important;
+    outline-offset: calc(var(--edge-control) * -1) !important;
+  }
+}
+
+/* A floating surface's edge (popover, menu, dialog, tooltip) in forced
+   colours: its shadow is gone, so a 1-wide outline marks where it ends. */
+@utility forced-edge {
+  @media (forced-colors: active) {
+    outline: var(--forced-line) solid !important;
+    outline-offset: calc(var(--forced-line) * -1) !important;
+  }
 }
 
 /* Fixed sizes. An app may change Tailwind's --spacing for a tighter or
@@ -299,7 +402,8 @@
    fade-in-0, zoom-in-95, slide-in-from-bottom …), written here, so no
    package: the kit used these names, but nothing defined them, and every
    popover, menu, dialog and sheet appeared with no motion. `duration-*`
-   and `ease-*` set the timing. Reduced motion: none. */
+   and `ease-*` set the timing. Reduced motion: the fade stays, the slide
+   and the zoom go (a fade is not movement). */
 @keyframes enter {
   from {
     opacity: var(--tw-enter-opacity, 1);
@@ -314,19 +418,29 @@
       scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1));
   }
 }
+@keyframes enter-fade {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+  }
+}
+@keyframes exit-fade {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+  }
+}
 @utility animate-in {
   animation: enter var(--tw-duration, 150ms) var(--tw-ease, cubic-bezier(0.16, 1, 0.3, 1)) both;
   @media (prefers-reduced-motion: reduce) {
-    animation: none;
+    animation-name: enter-fade;
   }
 }
 @utility animate-out {
   animation: exit var(--tw-duration, 150ms) var(--tw-ease, cubic-bezier(0.7, 0, 0.84, 0)) both;
   @media (prefers-reduced-motion: reduce) {
-    animation: none;
+    animation-name: exit-fade;
   }
 }
-/* The scrim behind a sheet fades with it. */
+/* The scrim behind a sheet fades with it, also with reduced motion. */
 @keyframes scrim-in {
   from {
     opacity: 0;
@@ -339,15 +453,9 @@
 }
 @utility animate-scrim-in {
   animation: scrim-in 400ms ease-out both;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
 }
 @utility animate-scrim-out {
   animation: scrim-out 400ms ease-out both;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
 }
 /* A tick drawn as with a pen (owner, 24 Nov 2026): down the short arm, then
    up the long one, slowing a little at the turn. On an SVG path with
@@ -367,6 +475,98 @@
     animation: none;
   }
 }
+/* The spinner (spinner.tsx): the ring turns, and the arc grows, travels
+   and shrinks, as the SVG animation it had. Reduced motion: the ring turns
+   slowly, the arc stays still (Modern Web Guidance, spinner: slower, not
+   stopped, so it still says "busy"). */
+@keyframes spinner-turn {
+  to {
+    rotate: 1turn;
+  }
+}
+@keyframes spinner-arc {
+  0% {
+    stroke-dasharray: 0 150;
+    stroke-dashoffset: 0;
+  }
+  47.5% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -16;
+  }
+  95%,
+  100% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -59;
+  }
+}
+@utility animate-spinner {
+  animation: spinner-turn 2s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 6s;
+  }
+}
+@utility animate-spinner-arc {
+  stroke-dasharray: 42 150;
+  animation: spinner-arc 1.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* The OTP field's caret (input-otp.tsx): on and off, as a text caret.
+   Reduced motion: it stays on. */
+@keyframes caret-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  50% {
+    opacity: 0;
+  }
+}
+@utility animate-caret-blink {
+  animation: caret-blink 1.25s ease-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* Segmented (segmented.tsx): the chosen segment's raised fill slides from
+   one segment to the next. The fill is the track's ::before, placed on the
+   chosen segment with anchor positioning; each track names its own anchor
+   (--segmented-anchor, set inline), so two tracks on a page do not mix.
+   Without anchor positioning, and in forced colours, the chosen segment
+   draws its own fill (its classes), with no slide. */
+@supports (anchor-name: --a) {
+  @media (forced-colors: none) {
+    [data-slot="segmented"] {
+      position: relative;
+      isolation: isolate;
+      &::before {
+        content: "";
+        position: absolute;
+        position-anchor: var(--segmented-anchor);
+        inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
+        z-index: -1;
+        border-radius: var(--radius-md);
+        background: var(--color-raised);
+        box-shadow: var(--elevation-sm);
+        transition: inset 200ms var(--ease-sheet);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+    [data-slot="segmented-item"][aria-checked="true"] {
+      anchor-name: var(--segmented-anchor);
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
 @utility fade-in-* {
   --tw-enter-opacity: calc(--value(integer) * 1%);
 }
@@ -433,6 +633,48 @@
   --tw-inset-ring-shadow: inset 0 0 0 var(--edge-control) var(--focus-edge, var(--color-outline));
   --tw-ring-shadow: 0 0 0 var(--ring) var(--focus-halo, var(--color-control));
   box-shadow: var(--tw-inset-ring-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  /* Forced colours: the halo is gone, so an outline in the system's focus
+     colour, outside the box, where a chosen fill cannot cover it. */
+  @media (forced-colors: active) {
+    outline: var(--ring) solid var(--forced-focus) !important;
+    outline-offset: var(--edge-control) !important;
+  }
+}
+
+/* Forced colours: the chosen tab, segment, radio, checkbox, switch and day,
+   and the row under the pointer or the keys, show only with a fill, which
+   the browser removes. Here they take the system's chosen colours instead.
+   Keyed on the ARIA state, so an app's own controls with these roles match.
+   Outside a layer, so it wins over the utilities that set the normal fill. */
+@media (forced-colors: active) {
+  [role="tab"][aria-selected="true"],
+  [role="radio"][aria-checked="true"],
+  [role="checkbox"]:is([aria-checked="true"], [aria-checked="mixed"]),
+  [role="switch"][aria-checked="true"],
+  [data-slot="calendar"] :is([data-selected], [data-in-range]),
+  [data-highlighted] {
+    forced-color-adjust: none;
+    background-color: var(--forced-chosen);
+    color: var(--forced-on-chosen);
+    & * {
+      color: inherit;
+    }
+  }
+  /* The radio's dot and the switch's knob are fills too. */
+  [role="radio"][aria-checked="true"] [data-slot="radio-group-indicator"],
+  [role="switch"][aria-checked="true"] [data-slot="switch-thumb"] {
+    background-color: var(--forced-on-chosen);
+  }
+  [data-slot="switch-thumb"] {
+    outline: var(--forced-line) solid;
+    outline-offset: calc(var(--forced-line) * -1);
+  }
+  /* Separators are 1-wide fills. */
+  [role="separator"],
+  [data-slot="separator"] {
+    forced-color-adjust: none;
+    background-color: var(--forced-ink);
+  }
 }
 
 /* An invalid field keeps red when focused: a red edge and a red halo, not
@@ -441,7 +683,9 @@
    a form with an invalid field does not turn its other rings red. */
 @layer base {
   [aria-invalid="true"],
-  :has(> [aria-invalid="true"]) {
+  :has(> [aria-invalid="true"]),
+  :user-invalid,
+  :has(> :user-invalid) {
     --focus-edge: var(--color-danger);
     --focus-halo: var(--color-danger-ring);
   }
@@ -453,13 +697,26 @@
      The 14px interface size is set on body. */
   html {
     background: var(--color-page);
-    color-scheme: light;
     -webkit-font-smoothing: antialiased;
+  }
+  /* An open modal (dialog, alert dialog, drawer): the page behind it does
+     not scroll; a wheel over the scrim scrolled it. The scrollbar's space
+     stays, so nothing moves. CSS only, no script locks the body. */
+  :root:has(dialog:modal) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
   }
   body {
     font-family: var(--font-sans);
     font-size: var(--text-sm);
+    font-size-adjust: var(--font-sans-x-height);
     line-height: var(--leading-normal);
+    background: var(--color-page);
+    color: var(--color-foreground);
+  }
+  /* An area with its own theme: the text colour is inherited already
+     resolved, so the area sets it, and its ground, again. */
+  [data-theme] {
     background: var(--color-page);
     color: var(--color-foreground);
   }
@@ -467,8 +724,12 @@
   *, ::before, ::after {
     border-color: var(--color-border);
   }
-  :focus-visible {
-    outline: none;
+  /* Forced colours keep the browser's own focus outline on anything that
+     does not draw the focus ring. */
+  @media (forced-colors: none) {
+    :focus-visible {
+      outline: none;
+    }
   }
   ::selection {
     background: var(--color-mark);
@@ -476,7 +737,8 @@
   /* Fields are 14 (text-sm) at every width, as the 36 controls around them
      (owner, 18 Nov 2026; phones had 16). An iPhone zooms the page in when a
      field under 16 takes the focus; Android does not. */
-  input, textarea, select, [contenteditable="true"]:not(.cm-content) {
+  /* Not a date field's parts: editable too, they take their field's size. */
+  input, textarea, select, [contenteditable="true"]:not(.cm-content, [data-segment]) {
     font-size: var(--text-sm);
   }
 }

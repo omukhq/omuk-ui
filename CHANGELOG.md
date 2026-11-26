@@ -4,6 +4,64 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+### Changed (breaking)
+
+- Without `data-theme`, the page follows the system's light or dark setting. Before, it was always light. To keep
+  it light, set `data-theme="light"` on `<html>`.
+- Text sizes are in rem (`text-sm` is `0.875rem`), so they follow the reader's browser font size. At the default
+  16px they are the same as before.
+- `Card` is an `<article>` and `CardTitle` an `<h3>` (new prop `level`, 2 to 6). A ref on them is an `HTMLElement`
+  and an `HTMLHeadingElement` now.
+- `ListRow current={true}` sets `aria-current="true"`, not `"page"`. Pass `current="page"` for a link to the open
+  page.
+- `Textarea` and `InputGroupTextarea` grow up to 320 and then scroll; `Textarea` has no resize handle where the
+  browser sizes it to its text.
+
+### Changed
+
+- Each colour role is written once, as `light-dark(<light>, <dark>)`. An app that overrides a role for one mode
+  writes `light-dark()` too.
+- `body` sets `font-size-adjust` to IBM Plex Sans's x-height (`--font-sans-x-height`), so the text keeps its size
+  when the web font arrives. An app with another face sets its own value, or `none`.
+- With reduced motion, popups still fade; only the slide and the zoom stop. The scrim fades too.
+
+### Fixed
+
+- `data-theme="dark"` or `"light"` on an area inside the page gives that area its own colours, also its text. Before,
+  a dark area kept the light text, and a light area inside a dark page did not work.
+- A dialog taller than the window scrolls inside, and the page behind an open dialog or drawer no longer scrolls.
+- A dialog or popover with no title or description no longer points at a missing id. A popover with no title takes
+  its trigger's name.
+- The drawer fades, not slides, with reduced motion.
+- A popup follows its trigger when the trigger grows or the page above it changes.
+- A menu takes its trigger's name.
+- Menu typeahead: Space chooses the item, not a search; the search skips disabled items. Enter ticks a checkbox or
+  radio item and closes the menu (Space keeps it open). A pointer that rests in the way to a submenu gives the
+  highlight to the item under it after 300 ms.
+- A menu or command shortcut ("⌘D") is no longer part of the item's name. Screen readers pause between an option's
+  title and its description.
+- Command: the "nothing matches" text is outside the listbox, and a status region reads the result count. New prop
+  `resultsText` for its wording.
+- Combobox: `ComboboxStatus` and `ComboboxEmpty` are read out through one status region that is on the page from the
+  start. Each chip's remove button says which chip it removes ("Remove Design").
+- DatePicker: a visible `<label for={id}>` names it, and a press on the label goes to the first part. New prop
+  `aria-labelledby`. Inside a Field it reads the Field's hints and errors.
+- Checkbox, Switch, RadioGroup and CheckboxGroup go back to their default when their form is reset.
+- RadioGroup: new prop `required`; with a `name`, the form does not send while no radio is picked.
+- Input OTP: the slots turn red when the input is invalid (`aria-invalid`, a Field error or a failed native check).
+  The caret blinks again (`animate-caret-blink` was not defined).
+- Segmented: the chosen segment's fill slides to the new one (anchor positioning; without it, no slide).
+- A loading Button keeps the focus (it is `aria-disabled`, not `disabled`) and still does not send its form.
+- Toasts: a screen reader reads the toast's words, not its buttons, and reads a repeated toast again.
+- Table: the scroll box is in the Tab order, and named by the caption, while the table is wider than it.
+- Sortable: Escape puts the item back during a pointer drag too.
+- The chip's remove button is 24 to press. Menu shortcuts sit at the end in right-to-left pages too.
+- The token check also finds `color()`, `hwb()`, colour keywords and rem values.
+- Tabs have no `aria-controls`.
+- Date and time fields: a phone opens its keyboard on a part and types into it (the text a phone keyboard sends in
+  `beforeinput`). Paste fills every part from ISO text ("2026-12-04", "14:30") or the numbers in the field's order
+  ("4/12/2026", "2:30 PM"); text that does not fit changes nothing.
+
 ## [1.0.0-alpha.27] - 2026-11-24
 
 ### Changed

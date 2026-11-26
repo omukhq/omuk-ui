@@ -6,7 +6,9 @@ import {
   useState,
 } from 'react';
 import { CheckboxGroupContext, parentState } from './checkbox-group';
-import { mergeProps, type RenderProp, useRender } from './render';
+import { useFieldControl } from './field-context';
+import { resetWithForm } from './form-value';
+import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
 import { cn } from './utils';
 
 // WAI-ARIA checkbox: a <button role="checkbox">. Space toggles it (the
@@ -112,9 +114,15 @@ function Checkbox({
   parent = false,
   form,
   render,
+  ref,
   ...props
 }: CheckboxProps) {
   const [own, setOwn] = useState(defaultChecked);
+  // A form reset puts it back to defaultChecked, as a native checkbox.
+  const merged = useMergedRef(
+    ref,
+    resetWithForm(() => setOwn(defaultChecked)),
+  );
   // In a CheckboxGroup, the group decides: a parent box from all the
   // values, any other from its own value.
   const group = use(CheckboxGroupContext);
@@ -149,6 +157,7 @@ function Checkbox({
     mergeProps(
       {
         type: 'button',
+        ref: merged,
         role: 'checkbox',
         'aria-checked': indeterminate ? 'mixed' : checked,
         'aria-readonly': readOnly || undefined,
@@ -197,7 +206,7 @@ function Checkbox({
             </span>
           ) : null,
       },
-      props,
+      { ...props, ...useFieldControl(props) },
     ),
     render,
   );

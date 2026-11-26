@@ -27,7 +27,12 @@ function OptionText({
         {title}
       </span>
       {description && (
-        <span className="truncate text-xs text-muted">{description}</span>
+        <span className="truncate text-xs text-muted">
+          {/* A pause between the two lines for a screen reader: without
+              it, the title and the description ran on as one phrase. */}
+          <span className="sr-only">, </span>
+          {description}
+        </span>
       )}
     </span>
   );

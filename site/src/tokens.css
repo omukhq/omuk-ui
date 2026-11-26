@@ -51,34 +51,26 @@
    page and a 300 on the dark one, as the kit's blue, so text keeps its
    contrast. */
 :root[data-accent="violet"] {
-  --color-accent: var(--color-violet-600);
+  --color-accent: light-dark(var(--color-violet-600), var(--color-violet-300));
 }
 :root[data-accent="green"] {
-  --color-accent: var(--color-green-700);
+  --color-accent: light-dark(var(--color-green-700), var(--color-green-300));
 }
 /* Amber, not orange: orange-700, the first orange dark enough for text,
    reads as red, the danger colour (owner, 24 Nov 2026). */
 :root[data-accent="amber"] {
-  --color-accent: var(--color-amber-700);
+  --color-accent: light-dark(var(--color-amber-700), var(--color-amber-300));
 }
 :root[data-accent="pink"] {
-  --color-accent: var(--color-pink-600);
-}
-:root[data-theme="dark"][data-accent="violet"] {
-  --color-accent: var(--color-violet-300);
-}
-:root[data-theme="dark"][data-accent="green"] {
-  --color-accent: var(--color-green-300);
-}
-:root[data-theme="dark"][data-accent="amber"] {
-  --color-accent: var(--color-amber-300);
-}
-:root[data-theme="dark"][data-accent="pink"] {
-  --color-accent: var(--color-pink-300);
+  --color-accent: light-dark(var(--color-pink-600), var(--color-pink-300));
 }
 
 /* Font: Atkinson Hyperlegible (the kit's "easy read" face) or the system's
-   own. Both cost nothing until picked. */
+   own. Both cost nothing until picked. The kit scales a fallback face to
+   Plex's x-height; another face keeps its own. */
+:root:is([data-font="atkinson"], [data-font="system"], [data-font="google"]) {
+  --font-sans-x-height: none;
+}
 :root[data-font="atkinson"] {
   --font-sans: var(--font-readable);
 }
@@ -106,46 +98,37 @@
 }
 
 /* A thin scrollbar with no track: hidden until the area is in use (the
-   pointer over it, or the focus inside it); then a soft thumb in the text
-   colour, so it reads in light and dark alike. Its space stays reserved,
-   so nothing moves when it shows. Put it on every element that scrolls.
-   Chrome and Safari draw it from the ::-webkit-scrollbar parts: with them,
-   macOS does not swap in its own dark floating scrollbar while a trackpad
-   scrolls. Firefox has no such parts and reads scrollbar-color. */
+   pointer over it, or the focus inside it); then a thumb in the outline
+   colour, 3:1 on the page in light and dark (Modern Web Guidance:
+   scrollbar). Its space stays reserved, so nothing moves when it shows.
+   Put it on every element that scrolls. The standard properties come
+   first (Chrome, Edge, Firefox); a browser without scrollbar-color
+   (Safari) draws it from the ::-webkit-scrollbar parts. */
 @utility scrollbar-subtle {
-  &::-webkit-scrollbar {
-    width: calc(var(--spacing) * 2);
-    height: calc(var(--spacing) * 2);
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  &:hover,
+  &:focus-within {
+    scrollbar-color: var(--color-outline) transparent;
   }
-  &::-webkit-scrollbar-track,
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    border: calc(var(--spacing) * 0.5) solid transparent;
-    border-radius: var(--radius-full, 9999px);
-    background-clip: padding-box;
-    background-color: transparent;
-  }
-  &:hover::-webkit-scrollbar-thumb,
-  &:focus-within::-webkit-scrollbar-thumb {
-    background-color: color-mix(
-      in oklch,
-      var(--color-foreground) 12%,
-      transparent
-    );
-  }
-  @supports not selector(::-webkit-scrollbar) {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    &:hover,
-    &:focus-within {
-      scrollbar-color: color-mix(
-          in oklch,
-          var(--color-foreground) 12%,
-          transparent
-        )
-        transparent;
+  @supports not (scrollbar-color: auto) {
+    &::-webkit-scrollbar {
+      width: calc(var(--spacing) * 2);
+      height: calc(var(--spacing) * 2);
+    }
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border: calc(var(--spacing) * 0.5) solid transparent;
+      border-radius: var(--radius-full, 9999px);
+      background-clip: padding-box;
+      background-color: transparent;
+    }
+    &:hover::-webkit-scrollbar-thumb,
+    &:focus-within::-webkit-scrollbar-thumb {
+      background-color: var(--color-outline);
     }
   }
 }

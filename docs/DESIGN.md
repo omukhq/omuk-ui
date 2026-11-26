@@ -44,7 +44,10 @@ The rules every Omuk UI component follows, and that an app built with it should 
 8. **Radius nests:** the outer corner is one size rounder than the inner one. Row `rounded-md` (6) in a menu with
    `p-1` → menu `rounded-lg` (8). Tailwind's scale: `sm` 4, `md` 6, `lg` 8, `xl` 12.
    Card `rounded-lg` in a dialog → dialog `rounded-xl`.
-9. **Dark mode** is `data-theme="dark"` on `<html>`. App chrome never writes `dark:` colour pairs: roles swap by themselves.
+9. **Dark mode** is `data-theme="dark"` on `<html>`; `data-theme="light"` keeps it light. Without the attribute,
+   the page follows the system's setting. The attribute also works on an area inside the page: a dark panel on a
+   light page takes the dark roles, and the other way round. Print is always light. App chrome never writes
+   `dark:` colour pairs: roles swap by themselves.
    The one exception is palette colours in tag, badge, label, avatar and chart components, which write both modes
    (`bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200`). Otherwise `dark:` only for a change of shape, almost never.
 10. **App chrome uses roles only.** Palette shades don't switch in dark mode, roles do: `text-blue-600` where

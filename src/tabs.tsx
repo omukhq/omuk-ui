@@ -4,7 +4,9 @@ import {
   createContext,
   type KeyboardEvent,
   use,
+  useCallback,
   useId,
+  useLayoutEffect,
   useState,
 } from 'react';
 import { mergeProps, type RenderProp, useRender } from './render';
@@ -24,7 +26,11 @@ type TabsState = {
   select: (value: TabValue, event?: Event) => void;
   orientation: Orientation;
   id: string;
+  /** A tab puts its value here while it is on the page, in page order. */
+  register: (value: TabValue, disabled: boolean) => () => void;
 };
+
+type Registered = { value: TabValue; disabled: boolean };
 
 const TabsContext = createContext<TabsState | null>(null);
 
@@ -57,15 +63,28 @@ function Tabs({
   ...props
 }: TabsProps) {
   const [own, setOwn] = useState(defaultValue);
-  const value = controlled === undefined ? own : controlled;
+  const [registered, setRegistered] = useState<Registered[]>([]);
+  // With no tab of the value (the default 0 with string values), the first
+  // tab that is on is selected: a tab list must have one, or it has no Tab
+  // stop and no panel (Modern Web Guidance, tabs). The app's own value
+  // stays its own.
+  const chosen = registered.some((tab) => Object.is(tab.value, own))
+    ? own
+    : (registered.find((tab) => !tab.disabled)?.value ?? own);
+  const value = controlled === undefined ? chosen : controlled;
   const id = useId();
   function select(next: TabValue, event?: Event) {
     if (Object.is(next, value)) return;
     onValueChange?.(next, { reason: 'none', event });
     setOwn(next);
   }
+  const register = useCallback((tab: TabValue, disabled: boolean) => {
+    const entry = { value: tab, disabled };
+    setRegistered((now) => [...now, entry]);
+    return () => setRegistered((now) => now.filter((each) => each !== entry));
+  }, []);
   return (
-    <TabsContext value={{ value, select, orientation, id }}>
+    <TabsContext value={{ value, select, orientation, id, register }}>
       {useRender(
         'div',
         {
@@ -219,6 +238,11 @@ function TabsTrigger({
   const tabs = useTabs();
   const variant = use(ListVariantContext);
   const active = Object.is(tabs.value, value);
+  const register = tabs.register;
+  useLayoutEffect(
+    () => register(value, Boolean(disabled)),
+    [register, value, disabled],
+  );
   return useRender(
     'button',
     mergeProps(
@@ -227,7 +251,9 @@ function TabsTrigger({
         role: 'tab',
         id: partId(tabs, 'tab', value),
         'aria-selected': active,
-        'aria-controls': active ? partId(tabs, 'panel', value) : undefined,
+        // No aria-controls: the panel follows the tab at once (automatic
+        // activation), names itself by the tab, and screen readers do
+        // little with the link (Modern Web Guidance, tabs).
         tabIndex: active ? 0 : -1,
         // Focusable when disabled, so the arrow keys can pass it.
         'aria-disabled': disabled || undefined,
@@ -275,7 +301,11 @@ function TabsContent({
       hidden: !active,
       'data-slot': 'tabs-content',
       'data-orientation': tabs.orientation,
-      className: cn('flex-1 text-sm outline-none', className),
+      // Takes the focus (Tab after the list): the one focus ring shows it.
+      className: cn(
+        'flex-1 rounded-md text-sm outline-none focus-visible:focus-ring',
+        className,
+      ),
       ...props,
     },
     render,

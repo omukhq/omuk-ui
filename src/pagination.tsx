@@ -3,7 +3,7 @@ import {
   ChevronRightIcon,
   MoreHorizontalIcon,
 } from 'lucide-react';
-import { Button } from './button';
+import { type Button, buttonOffText, buttonVariants } from './button';
 import { cn } from './utils';
 
 // DESIGN.md, section 8, and decisions R22: previous, the pages, next, all
@@ -48,28 +48,34 @@ type PaginationLinkProps = {
 } & Pick<React.ComponentProps<typeof Button>, 'size'> &
   React.ComponentProps<'a'>;
 
+/**
+ * A page link with a button's look. A real link, not `role="button"`: it
+ * goes to a page (Modern Web Guidance, natural-interactions). Disabled, it
+ * has no `href`, so a press goes nowhere, and says so with `aria-disabled`.
+ */
 function PaginationLink({
   className,
   isActive,
   disabled,
   size = 'icon',
+  href,
   ...props
 }: PaginationLinkProps) {
   return (
-    <Button
-      variant={isActive ? 'outline' : 'ghost'}
-      size={size}
-      disabled={disabled}
-      className={cn('tabular-nums', isActive && 'font-semibold', className)}
-      nativeButton={false}
-      render={
-        <a
-          aria-current={isActive ? 'page' : undefined}
-          data-slot="pagination-link"
-          data-active={isActive}
-          {...props}
-        />
-      }
+    <a
+      aria-current={isActive ? 'page' : undefined}
+      data-slot="pagination-link"
+      data-active={isActive}
+      data-disabled={disabled || undefined}
+      {...(disabled ? { role: 'link', 'aria-disabled': true } : { href })}
+      className={cn(
+        buttonVariants({ variant: isActive ? 'outline' : 'ghost', size }),
+        'tabular-nums',
+        isActive && 'font-semibold',
+        disabled && buttonOffText,
+        className,
+      )}
+      {...props}
     />
   );
 }

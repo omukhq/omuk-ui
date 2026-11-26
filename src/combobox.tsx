@@ -16,7 +16,9 @@ import {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './button';
+import { FormValue } from './form-value';
 import {
   InputGroup,
   InputGroupAddon,
@@ -48,7 +50,7 @@ import {
   TICK_SLOT,
 } from './recipes';
 import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
-import { cn } from './utils';
+import { cn, isComposing } from './utils';
 
 // A combobox: a text field that filters a list of options under it
 // (WAI-ARIA combobox with a listbox popup). The focus stays in the field;
@@ -130,6 +132,8 @@ type ComboboxState = PopupRoot & {
   list: RefObject<HTMLDivElement | null>;
   /** A ComboboxButton is the field: the search sits in the list. */
   searchInPopup: RefObject<boolean>;
+  /** The status region, on the page from the start: what is put in it is read out. */
+  region: HTMLDivElement | null;
 };
 
 const ComboboxContext = createContext<ComboboxState | null>(null);
@@ -247,6 +251,12 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
   const list = useRef<HTMLDivElement | null>(null);
   const searchInPopup = useRef(false);
 
+  // Where ComboboxStatus and ComboboxEmpty are read out. They mount with
+  // the list, and a live region that appears already filled is often not
+  // read out; this one is on the page from the start, so text they put in
+  // it (a portal) is.
+  const [region, setRegion] = useState<HTMLDivElement | null>(null);
+
   function type(
     text: string,
     event: Event | undefined,
@@ -346,17 +356,19 @@ function Combobox<Value, Multiple extends boolean | undefined = false>({
         input,
         list,
         searchInPopup,
+        region,
       }}
     >
       {children}
+      <div ref={setRegion} role="status" className="sr-only" />
       {name &&
         (selected.length ? selected : [null]).map((item, at) => (
-          <input
+          <FormValue
             key={at}
-            type="hidden"
             name={name}
             required={required}
             disabled={disabled}
+            focusTarget={() => input.current}
             value={
               item == null
                 ? ''
@@ -457,7 +469,7 @@ function useInputProps(
         if (combobox.openOnInputClick && !combobox.open) open(event, 'chosen');
       },
       onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-        if (event.nativeEvent.isComposing) return;
+        if (isComposing(event.nativeEvent)) return;
         const { open: isOpen, highlighted } = combobox;
         switch (event.key) {
           case 'ArrowDown':
@@ -873,22 +885,30 @@ function ComboboxButton({
 function ComboboxStatus({
   className,
   render,
+  children,
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
-  return useRender(
+  const { region } = useCombobox();
+  const shown = useRender(
     'div',
     {
-      role: 'status',
-      'aria-live': 'polite',
-      'aria-atomic': true,
       'data-slot': 'combobox-status',
       className: cn(
         'flex items-center gap-2 px-3 py-2 text-sm text-muted empty:hidden [&_svg]:size-4',
         className,
       ),
       ...props,
+      // Shown here, read out from the combobox's status region.
+      'aria-hidden': true,
+      children,
     },
     render,
+  );
+  return (
+    <>
+      {shown}
+      {region && children ? createPortal(children, region) : null}
+    </>
   );
 }
 
@@ -1063,20 +1083,28 @@ function ComboboxEmpty({
   ...props
 }: ComponentPropsWithRef<'div'> & { render?: RenderProp }) {
   const combobox = useCombobox();
-  return useRender(
+  const said = combobox.empty ? children : null;
+  const shown = useRender(
     'div',
     {
-      // Read out when the list empties, as a status.
-      role: 'status',
       'data-slot': 'combobox-empty',
       className: cn(
         'hidden w-full justify-center py-2 text-center text-sm text-muted group-data-empty/combobox-content:flex',
         className,
       ),
       ...props,
-      children: combobox.empty ? children : null,
+      // Shown when the list empties; read out from the combobox's status
+      // region.
+      'aria-hidden': true,
+      children: said,
     },
     render,
+  );
+  return (
+    <>
+      {shown}
+      {combobox.region && said ? createPortal(said, combobox.region) : null}
+    </>
   );
 }
 
@@ -1143,6 +1171,9 @@ function ComboboxChip({
   render?: RenderProp;
 }) {
   const combobox = useCombobox();
+  // The remove button is named "Remove" and the chip's text: "Remove
+  // Design", so each one says which chip it takes away.
+  const id = useId();
   return useRender(
     'div',
     {
@@ -1155,13 +1186,17 @@ function ComboboxChip({
       ...props,
       children: (
         <>
-          {children}
+          <span id={`${id}-label`} className="contents">
+            {children}
+          </span>
           {showRemove && (
             <Button
               variant="ghost"
               size="icon-xs"
               tabIndex={-1}
+              id={`${id}-remove`}
               aria-label="Remove"
+              aria-labelledby={`${id}-remove ${id}-label`}
               disabled={combobox.disabled}
               className="size-5 rounded-sm text-muted hover:text-foreground"
               data-slot="combobox-chip-remove"

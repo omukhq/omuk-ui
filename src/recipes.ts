@@ -31,10 +31,13 @@ export const FIELD_TEXT_OFF = 'cursor-not-allowed text-muted';
  * 2-wide `control` edge, as React Spectrum's field (owner, 18 Nov 2026;
  * 1-wide from alpha.2 to alpha.10), the same on hover (owner: no hover
  * edge on fields), the field's focus ring on focus, and the 2-wide danger
- * edge for `aria-invalid`, which keeps the ring when focused.
+ * edge for `aria-invalid`, which keeps the ring when focused. A native
+ * check (`required`, `type="email"`, `pattern`) shows the same edge once
+ * the person has changed the field or sent the form (`:user-invalid`), not
+ * at page load (Modern Web Guidance, validate-input-after-interaction).
  */
 export const FIELD_EDGE =
-  'edge-control inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger';
+  'edge-control inset-ring-control focus:focus-ring aria-invalid:inset-ring-danger user-invalid:inset-ring-danger';
 
 /**
  * The same edge on a box that holds the field (input group, chips). The
@@ -44,7 +47,7 @@ export const FIELD_EDGE =
  * Field with a trailing action).
  */
 export const FIELD_WRAPPER_EDGE = [
-  'edge-control inset-ring-control has-aria-invalid:inset-ring-danger',
+  'edge-control inset-ring-control has-aria-invalid:inset-ring-danger has-user-invalid:inset-ring-danger',
   'has-[input:focus-visible,textarea:focus-visible]:focus-ring', // design-ok: a selector, not a value (owner: field with a trailing action)
 ].join(' ');
 
@@ -52,8 +55,8 @@ export const FIELD_WRAPPER_EDGE = [
  * A one-line field's height: the Button's heights (owner, 24 Nov 2026), so
  * a field and a button of one size line up; the middle one is `md`, the
  * default (owner: not "default"). The text stays the
- * field's 14 at every size (16 on phones, theme.css), so no size makes an
- * iPhone zoom in.
+ * field's 14 at every size and width (owner, 18 Nov 2026; theme.css). An
+ * iPhone zooms in on a field under 16 when it takes the focus.
  */
 export const FIELD_SIZE = {
   xs: 'h-6',
@@ -78,9 +81,12 @@ export const FIELD = `${FIELD_TEXT} rounded-md bg-page transition-shadow ${FIELD
 export const FIELD_OFF =
   'cursor-not-allowed bg-hover text-muted edge-control inset-ring-border';
 
-/** Popovers, menus and lists that float: page ground, small shadow. */
+/**
+ * Popovers, menus and lists that float: page ground, small shadow; an
+ * outline in forced colours, where the shadow is gone (`forced-edge`).
+ */
 export const SURFACE =
-  'rounded-lg bg-page p-1 text-sm text-foreground shadow-sm';
+  'rounded-lg bg-page p-1 text-sm text-foreground shadow-sm forced-edge';
 
 /** How a floating surface comes and goes. */
 export const POP =
@@ -110,7 +116,7 @@ export const SECTION_LABEL = 'px-3 pt-2 pb-1 text-xs font-medium text-muted';
 export const MENU_SEPARATOR = 'mx-2 my-1 h-px bg-border';
 
 /** A shortcut at the end of a row: plain text, small, muted. */
-export const SHORTCUT = 'ml-auto pl-4 text-xs text-muted';
+export const SHORTCUT = 'ms-auto ps-4 text-xs text-muted';
 
 /** The tick's slot: an icon wide, the accent tick inside when picked. */
 export const TICK_SLOT =
@@ -128,10 +134,14 @@ export const CHIP =
  * `p-6 rounded-xl bg-page shadow-lg gap-4`.
  */
 export const MODAL_BOX =
-  'grid gap-4 rounded-xl bg-page p-6 text-sm text-foreground shadow-lg';
+  'grid gap-4 rounded-xl bg-page p-6 text-sm text-foreground shadow-lg forced-edge';
 
-/** A modal: its look, centred, 16 from the window's sides on a phone. */
-export const MODAL = `${MODAL_BOX} fixed inset-x-4 top-1/2 z-50 mx-auto w-auto -translate-y-1/2 outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95`;
+/**
+ * A modal: its look, centred, 16 from the window's sides on a phone. At
+ * most the window's height less 16 above and below; taller content
+ * scrolls inside it, and the scroll stops at its ends (no page behind).
+ */
+export const MODAL = `${MODAL_BOX} fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-(--spacing(8)))] w-auto -translate-y-1/2 overflow-y-auto overscroll-contain outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95`;
 
 /**
  * The veil behind a modal: `bg-scrim`, the one value for dialogs, drawers
@@ -150,4 +160,4 @@ export const MODAL_DESCRIPTION =
  * text-on-primary text-xs`; a shortcut after the text in the outline colour.
  */
 export const TOOLTIP =
-  'inline-flex w-fit max-w-xs items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-on-primary [&_kbd]:text-outline';
+  'inline-flex w-fit max-w-xs items-center gap-2 rounded-md bg-primary px-2 py-1 text-xs text-on-primary forced-edge [&_kbd]:text-outline';

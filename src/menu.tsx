@@ -19,6 +19,7 @@ import {
 } from 'react';
 import {
   type FinalFocus,
+  namePopup,
   type OpenChangeDetails,
   PopupFrame,
   type PopupRoot,
@@ -34,8 +35,14 @@ import { mergeProps, type RenderProp, useMergedRef, useRender } from './render';
 /** What the popup focuses as it opens: an end item, itself, or nothing. */
 type Highlight = 'first' | 'last' | 'popup' | 'none';
 
-/** The triangle the pointer may cross, from a submenu's trigger to it. */
-type SafeZone = { x: number; y: number; menu: HTMLElement };
+/**
+ * The triangle the pointer may cross, from a submenu's trigger to it.
+ * `rest`: the timer that gives it up when the pointer stops inside.
+ */
+type SafeZone = { x: number; y: number; menu: HTMLElement; rest?: number };
+
+/** How long the pointer may rest in the safe triangle, in milliseconds. */
+const SAFE_REST = 300;
 
 type MenuState = PopupRoot & {
   kind: 'dropdown' | 'context' | 'sub';
@@ -311,12 +318,23 @@ export function MenuPopup({
   positionerClassName,
   onKeyDown,
   onPointerEnter,
+  ref,
   ...props
 }: MenuPopupProps) {
   const menu = useMenu();
   const subId = use(SubIdContext);
+  const id = useId();
   const typed = useRef({ text: '', at: 0 });
   const sub = menu.kind === 'sub';
+  // The menu takes its trigger's name: the button, the submenu's item, or
+  // the area a context menu opened on. A caller's aria-label wins. A new
+  // function each render, so it follows a new trigger.
+  function name(node: HTMLDivElement | null) {
+    if (node && !props['aria-labelledby']) {
+      namePopup(node, id, menu.trigger);
+    }
+  }
+  const merged = useMergedRef(ref, name);
 
   function focusIn(positioner: HTMLElement) {
     const popup = positioner.firstElementChild as HTMLElement | null;
@@ -382,13 +400,22 @@ export function MenuPopup({
         const now = event.timeStamp;
         const buffer = typed.current;
         if (now - buffer.at > TYPEAHEAD_RESET) buffer.text = '';
+        // Space chooses the item (its own keys did that); it is part of a
+        // search only after a letter ("new f").
+        if (event.key === ' ' && buffer.text === '') return;
         buffer.text += event.key.toLowerCase();
         buffer.at = now;
         // A repeated first letter steps on; more letters narrow from here.
+        // A disabled item is never found: it cannot be chosen.
         const from = buffer.text.length === 1 ? at + 1 : Math.max(at, 0);
         const order = [...items.slice(from), ...items.slice(0, from)];
-        const found = order.find((item) =>
-          (item.textContent ?? '').trim().toLowerCase().startsWith(buffer.text),
+        const found = order.find(
+          (item) =>
+            !item.hasAttribute('data-disabled') &&
+            (item.textContent ?? '')
+              .trim()
+              .toLowerCase()
+              .startsWith(buffer.text),
         );
         if (!found) return;
         focusItem(found);
@@ -411,6 +438,7 @@ export function MenuPopup({
       onDismiss={sub ? closeSub : undefined}
     >
       <div
+        ref={merged}
         role="menu"
         tabIndex={-1}
         // Its trigger finds it by this, for the pointer's safe zone.
@@ -474,7 +502,20 @@ function useItemProps(menu: MenuState, options: ItemOptions) {
     'data-disabled': disabled ? '' : undefined,
     onPointerMove(event: PointerEvent<HTMLElement>) {
       if (event.pointerType === 'touch' || disabled) return;
-      if (towardSub(menu.safe.current, event.clientX, event.clientY)) return;
+      const zone = menu.safe.current;
+      if (zone && towardSub(zone, event.clientX, event.clientY)) {
+        // Heading for the submenu: wait. A pointer that rests in the
+        // triangle is not going there: then this item takes the highlight.
+        const item = event.currentTarget;
+        clearTimeout(zone.rest);
+        zone.rest = window.setTimeout(() => {
+          if (menu.safe.current !== zone) return;
+          menu.safe.current = null;
+          if (item.matches(':hover')) item.focus({ preventScroll: true });
+        }, SAFE_REST);
+        return;
+      }
+      if (zone) clearTimeout(zone.rest);
       menu.safe.current = null;
       if (document.activeElement !== event.currentTarget) {
         event.currentTarget.focus({ preventScroll: true });
@@ -504,6 +545,11 @@ function useItemProps(menu: MenuState, options: ItemOptions) {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         event.currentTarget.click();
+        // WAI-ARIA menu: Enter ticks a checkbox or radio item and closes
+        // the menu; Space ticks it and keeps the menu open.
+        if (event.key === 'Enter' && role !== 'menuitem' && !disabled) {
+          menu.closeAll('item-press', event.nativeEvent);
+        }
       }
     },
     onClick(event: React.MouseEvent) {

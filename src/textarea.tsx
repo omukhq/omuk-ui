@@ -1,3 +1,4 @@
+import { useFieldControl } from './field-context';
 import { FIELD, FIELD_OFF } from './recipes';
 import { cn } from './utils';
 
@@ -8,16 +9,20 @@ import { cn } from './utils';
 // and such a line wraps anywhere.
 
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+  const field = useFieldControl(props);
   return (
     <textarea
       data-slot="textarea"
       className={cn(
         FIELD,
         props.disabled && FIELD_OFF,
-        'flex field-sizing-content w-full min-w-0 min-h-16 px-3 py-2 wrap-anywhere',
+        // Grows up to 320, then scrolls. A browser without field-sizing
+        // keeps a fixed height: there the person drags it taller.
+        'flex field-sizing-content w-full min-w-0 min-h-16 max-h-80 resize-none px-3 py-2 wrap-anywhere not-supports-[field-sizing:content]:resize-y',
         className,
       )}
       {...props}
+      {...field}
     />
   );
 }

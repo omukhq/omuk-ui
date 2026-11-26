@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import type { KeyboardEvent } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 import { FOCUS } from './recipes';
 import { type RenderProps, useRender } from './render';
 import { Spinner } from './spinner';
@@ -121,8 +121,12 @@ function Button({
   ...props
 }: ButtonProps) {
   const off = isLoading || disabled;
-  // A disabled button that stays focusable can't take the attribute.
-  const native = nativeButton && !(off && focusableWhenDisabled);
+  // The native `disabled` only for a plain disabled <button>. A loading
+  // button keeps the focus (the attribute would drop it to <body> while the
+  // person waits), and so does one that asks to stay focusable: those are
+  // aria-disabled, and their click is blocked.
+  const nativeOff =
+    nativeButton && Boolean(disabled) && !isLoading && !focusableWhenDisabled;
   return useRender(
     'button',
     {
@@ -133,15 +137,19 @@ function Button({
       'data-loading': isLoading || undefined,
       'data-disabled': off || undefined,
       type: nativeButton ? (type ?? 'button') : undefined,
-      disabled: native ? off : undefined,
-      'aria-disabled': off && !native ? true : undefined,
+      disabled: nativeButton ? nativeOff : undefined,
+      'aria-disabled': off && !nativeOff ? true : undefined,
       role: nativeButton ? undefined : 'button',
       tabIndex: nativeButton
         ? undefined
-        : off && !focusableWhenDisabled
+        : off && !focusableWhenDisabled && !isLoading
           ? -1
           : 0,
-      onClick: off ? undefined : onClick,
+      // Blocked, not only left out: a submit button would still send its
+      // form.
+      onClick: off
+        ? (event: MouseEvent<HTMLElement>) => event.preventDefault()
+        : onClick,
       onKeyDown: nativeButton
         ? onKeyDown
         : (event: KeyboardEvent<HTMLElement>) => {
@@ -162,6 +170,7 @@ function Button({
         <>
           <span className="invisible contents">{children}</span>
           <Spinner
+            role="img"
             aria-label={loadingLabel}
             className="absolute inset-0 m-auto text-current"
           />
@@ -180,4 +189,4 @@ function isTrue(value: unknown): boolean {
 }
 
 export type { ButtonProps };
-export { Button, buttonVariants };
+export { Button, buttonVariants, OFF_TEXT as buttonOffText };

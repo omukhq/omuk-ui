@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom';
 import {
   addLayer,
   animationsDone,
+  namePopup,
   type PopupRoot,
   type PopupRootProps,
   popupState,
@@ -152,6 +153,7 @@ export function ModalPortal({
   function frame(node: HTMLDialogElement | null) {
     if (!node) return;
     const dialog = node;
+    namePopup(dialog, modal.id);
     let alive = true;
     if (status === 'closing') {
       delete dialog.dataset.entered;
@@ -189,8 +191,6 @@ export function ModalPortal({
       <dialog
         ref={frame}
         role={modal.role === 'alertdialog' ? 'alertdialog' : undefined}
-        aria-labelledby={`${modal.id}-title`}
-        aria-describedby={`${modal.id}-description`}
         className={BOX}
         // Escape is handled with the other popups (popup.tsx); this is the
         // browser's other ways to ask, like Android's back gesture.
