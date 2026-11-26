@@ -1,5 +1,5 @@
 import { CodeBlock } from './code-block';
-import { INSTALL_LINE, TAG } from './links';
+import { INSTALL_LINE, NPM_PACKAGE, VERSION } from './links';
 import { Section } from './section';
 
 // Two ways in, each in steps from an empty app: the package (updates by
@@ -7,11 +7,11 @@ import { Section } from './section';
 // files the app owns (cli/ in the kit). Both come from the same source.
 
 const STYLES = `@import "tailwindcss";
-@import "../node_modules/@omuk/ui/src/design/theme.css";
-@import "../node_modules/@omuk/ui/src/design/fonts.css";
-@source "../node_modules/@omuk/ui/src";`;
+@import "../node_modules/omuk-ui/src/design/theme.css";
+@import "../node_modules/omuk-ui/src/design/fonts.css";
+@source "../node_modules/omuk-ui/src";`;
 
-const USE = `import { Button } from '@omuk/ui/button';
+const USE = `import { Button } from 'omuk-ui/button';
 
 <Button isLoading={saving} loadingLabel="Saving" onClick={save}>
   Save
@@ -22,8 +22,8 @@ type Step = { title: string; text: string; code: string; label: string };
 const PACKAGE_STEPS: Step[] = [
   {
     title: 'Add the package',
-    text: 'From GitHub, at an exact tag: a tag never moves. It needs React 19, React DOM 19 and Tailwind CSS 4. The @omuk scope on npm is not mine.',
-    code: `${INSTALL_LINE}\n\n# package.json\n"@omuk/ui": "github:omukhq/omuk-ui#${TAG}"`,
+    text: 'From npm, at an exact version. It needs React 19, React DOM 19 and Tailwind CSS 4.',
+    code: `${INSTALL_LINE}\n\n# package.json\n"${NPM_PACKAGE}": "${VERSION}"`,
     label: 'Copy the install command',
   },
   {
@@ -44,7 +44,7 @@ const CLI_STEPS: Step[] = [
   {
     title: 'Set up the folder',
     text: 'Writes omuk.json and copies the tokens and fonts into src/components/ui (or the folder you name with --dir). It prints the two lines for your stylesheet.',
-    code: `npx @omukhq/cli init
+    code: `npx omuk init
 
 # your main stylesheet, after @import "tailwindcss"
 @import "./components/ui/design/theme.css";
@@ -54,7 +54,7 @@ const CLI_STEPS: Step[] = [
   {
     title: 'Add a component',
     text: 'Copies the component and every file it imports, and installs its npm packages with your package manager. The files import each other by relative path: no alias to set up.',
-    code: `npx @omukhq/cli add button dialog
+    code: `npx omuk add button dialog
 
 import { Button } from './components/ui/button';`,
     label: 'Copy the add command',
@@ -62,8 +62,8 @@ import { Button } from './components/ui/button';`,
   {
     title: 'Change it, update it',
     text: 'The code is yours to change. Run add again for a newer version: omuk updates the files you did not change and keeps the ones you did. --overwrite replaces those too.',
-    code: `npx @omukhq/cli list                  # what you have, and its version
-npx @omukhq/cli add button --dry-run  # see the changes first`,
+    code: `npx omuk list                  # what you have, and its version
+npx omuk add button --dry-run  # see the changes first`,
     label: 'Copy the update commands',
   },
 ];

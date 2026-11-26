@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { RadioGroup, RadioGroupItem } from '@omuk/ui/radio-group';
+import { Label } from 'omuk-ui/label';
+import { RadioGroup, RadioGroupItem } from 'omuk-ui/radio-group';
 import { useId } from 'react';
 
 const LENGTHS = ['16', '32', '64'];

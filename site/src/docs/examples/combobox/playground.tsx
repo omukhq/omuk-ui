@@ -5,8 +5,8 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from '@omuk/ui/combobox';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/combobox';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -113,8 +113,8 @@ function code(values: Values) {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from '@omuk/ui/combobox';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/combobox';
+import { Label } from 'omuk-ui/label';
 
 <Label htmlFor={id}>Time zone</Label>
 ${root} items={TIME_ZONES} value={zone} onValueChange={setZone}>

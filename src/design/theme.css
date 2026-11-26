@@ -4,7 +4,7 @@
   Tailwind 4. In each app's main stylesheet (the path is relative to that file):
 
     @import "tailwindcss";
-    @import "<path to node_modules>/@omukhq/ui/src/design/theme.css";
+    @import "<path to node_modules>/omuk-ui/src/design/theme.css";
 
   Tailwind's default colours are replaced by Markpad's palette; its text sizes, radii and shadows by ours. Spacing and sizing are Tailwind's own.
   Read docs/DESIGN.md for what each token is for, and CHANGELOG.md for what changed.

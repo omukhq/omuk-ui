@@ -8,7 +8,7 @@ const RULES = [
   {
     title: 'A page pays only for what it shows.',
     text: 'There is no index file. Each component is its own import, and the heavy parts load when they are first used: the dialogs with the first prompt, the toaster with the first toast.',
-    proof: ["import { Button } from '@omuk/ui/button'"],
+    proof: ["import { Button } from 'omuk-ui/button'"],
   },
   {
     title: 'The browser does the work.',

@@ -1,5 +1,5 @@
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -52,8 +52,8 @@ export default function InputPlayground() {
       render={(values) => <Preview {...values} />}
       code={({ label, ...props }) =>
         [
-          "import { Input } from '@omuk/ui/input';",
-          "import { Label } from '@omuk/ui/label';",
+          "import { Input } from 'omuk-ui/input';",
+          "import { Label } from 'omuk-ui/label';",
           '',
           '<div className="flex flex-col gap-1">',
           `  <Label htmlFor="name">${label}</Label>`,

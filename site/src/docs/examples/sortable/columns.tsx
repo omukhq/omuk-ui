@@ -1,4 +1,4 @@
-import { Sortable, SortableHandle, SortableItem } from '@omuk/ui/sortable';
+import { Sortable, SortableHandle, SortableItem } from 'omuk-ui/sortable';
 import { useState } from 'react';
 
 const COLUMNS: Record<string, string> = {

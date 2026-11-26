@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import { jsx, Playground } from '../../playground';
 
 const VARIANTS = [
@@ -44,7 +44,7 @@ export default function ButtonPlayground() {
         </Button>
       )}
       code={({ children, ...props }) =>
-        `import { Button } from '@omuk/ui/button';\n\n${jsx('Button', props, INITIAL, children)}`
+        `import { Button } from 'omuk-ui/button';\n\n${jsx('Button', props, INITIAL, children)}`
       }
     />
   );

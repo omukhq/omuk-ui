@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { Chip } from '@omuk/ui/chip';
+import { Button } from 'omuk-ui/button';
+import { Chip } from 'omuk-ui/chip';
 import { useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -39,7 +39,7 @@ function code({ children, removable, removeLabel }: Values) {
   const props = removable
     ? ` onRemove={() => remove(email)}${removeLabel === 'Remove' ? '' : ` removeLabel="${removeLabel}"`}`
     : '';
-  return `import { Chip } from '@omuk/ui/chip';\n\n<Chip${props}>${children}</Chip>`;
+  return `import { Chip } from 'omuk-ui/chip';\n\n<Chip${props}>${children}</Chip>`;
 }
 
 export default function ChipPlayground() {

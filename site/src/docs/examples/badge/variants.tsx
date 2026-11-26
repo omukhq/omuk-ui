@@ -1,4 +1,4 @@
-import { Badge } from '@omuk/ui/badge';
+import { Badge } from 'omuk-ui/badge';
 
 export default function BadgeVariants() {
   return (

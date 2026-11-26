@@ -10,7 +10,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@omuk/ui/context-menu';
+} from 'omuk-ui/context-menu';
 import { useState } from 'react';
 
 export default function ContextMenuChoices() {

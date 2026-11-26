@@ -1,4 +1,4 @@
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
 import {
   Table,
   TableBody,
@@ -6,8 +6,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@omuk/ui/table';
-import { cn } from '@omuk/ui/utils';
+} from 'omuk-ui/table';
+import { cn } from 'omuk-ui/utils';
 import { type ReactNode, useState } from 'react';
 import { highlight } from 'sugar-high';
 import { CopyButton } from '../copy-button';

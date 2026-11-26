@@ -1,12 +1,13 @@
-import { Badge } from '@omuk/ui/badge';
-import { Button } from '@omuk/ui/button';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { Badge } from 'omuk-ui/badge';
+import { Button } from 'omuk-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
+} from 'omuk-ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -14,8 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@omuk/ui/table';
-import { MoreHorizontalIcon } from 'lucide-react';
+} from 'omuk-ui/table';
 
 const INVOICES = [
   {

@@ -3,8 +3,8 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from '@omuk/ui/input-group';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/input-group';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 
 export default function InputGroupPrefix() {

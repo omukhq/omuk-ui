@@ -174,7 +174,7 @@ const PROMPT = { open: openPrompt, closeAll: closeAllPrompts };
  * `open(options)` shows an alert (gives `true` or `false`), a modal or a
  * drawer (gives what its content passes to `close`, or `null`).
  * `closeAll()` closes every open prompt. The same object outside React:
- * `prompt`. Apps import both from `@omukhq/ui/prompt`, which re-exports them.
+ * `prompt`. Apps import both from `omuk-ui/prompt`, which re-exports them.
  */
 export function usePrompt() {
   return PROMPT;

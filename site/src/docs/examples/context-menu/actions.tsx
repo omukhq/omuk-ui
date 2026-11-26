@@ -1,3 +1,4 @@
+import { CopyIcon, FileTextIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -5,8 +6,7 @@ import {
   ContextMenuSeparator,
   ContextMenuShortcut,
   ContextMenuTrigger,
-} from '@omuk/ui/context-menu';
-import { CopyIcon, FileTextIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+} from 'omuk-ui/context-menu';
 
 export default function ContextMenuActions() {
   return (

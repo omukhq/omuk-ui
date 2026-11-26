@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import { CopyButton } from './copy-button';
 import { INSTALL_LINE, REPO_URL, VERSION } from './links';
 

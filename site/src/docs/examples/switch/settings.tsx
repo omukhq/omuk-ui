@@ -4,8 +4,8 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from '@omuk/ui/field';
-import { Switch } from '@omuk/ui/switch';
+} from 'omuk-ui/field';
+import { Switch } from 'omuk-ui/switch';
 import { useId } from 'react';
 
 const SETTINGS = [

@@ -1,4 +1,4 @@
-import { Avatar, AvatarCount, AvatarStack } from '@omuk/ui/avatar';
+import { Avatar, AvatarCount, AvatarStack } from 'omuk-ui/avatar';
 
 const PEOPLE = [
   { id: 'user_ada', name: 'Ada Lovelace', initials: 'AL' },

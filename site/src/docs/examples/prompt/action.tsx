@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { usePrompt } from '@omuk/ui/prompt';
+import { Button } from 'omuk-ui/button';
+import { usePrompt } from 'omuk-ui/prompt';
 
 /** Fails the first time, so the example shows the error in the alert. */
 let tries = 0;

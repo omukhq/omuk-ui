@@ -1,11 +1,11 @@
-import { Label } from '@omuk/ui/label';
+import { Label } from 'omuk-ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@omuk/ui/select';
+} from 'omuk-ui/select';
 import { useId, useState } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -68,14 +68,14 @@ function code({ placeholder, size, disabled, readOnly }: Values) {
   const root = opening('Select', { disabled, readOnly });
   const trigger = opening('SelectTrigger id={id} className="w-full"', { size });
   const value = jsx('SelectValue', { placeholder }, { placeholder: '' });
-  return `import { Label } from '@omuk/ui/label';
+  return `import { Label } from 'omuk-ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@omuk/ui/select';
+} from 'omuk-ui/select';
 
 <Label htmlFor={id}>Region</Label>
 ${root} items={REGIONS} value={region} onValueChange={setRegion}>

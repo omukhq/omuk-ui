@@ -1,4 +1,4 @@
-import { Textarea } from '@omuk/ui/textarea';
+import { Textarea } from 'omuk-ui/textarea';
 
 export default function TextareaStates() {
   return (

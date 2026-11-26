@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Combobox,
   ComboboxContent,
@@ -6,7 +6,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from '@omuk/ui/combobox';
+} from 'omuk-ui/combobox';
 import {
   Drawer,
   DrawerContent,
@@ -14,9 +14,9 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from '@omuk/ui/drawer';
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
-import { cn } from '@omuk/ui/utils';
+} from 'omuk-ui/drawer';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
+import { cn } from 'omuk-ui/utils';
 import { type ReactNode, useId, useState } from 'react';
 import {
   type GoogleFont,

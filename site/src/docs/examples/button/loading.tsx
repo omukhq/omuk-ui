@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import { useState } from 'react';
 
 export default function ButtonLoading() {

@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { Textarea } from '@omuk/ui/textarea';
+import { Label } from 'omuk-ui/label';
+import { Textarea } from 'omuk-ui/textarea';
 import { useId, useState } from 'react';
 
 const LIMIT = 80;

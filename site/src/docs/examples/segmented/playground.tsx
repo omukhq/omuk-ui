@@ -1,4 +1,4 @@
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
 import { Playground } from '../../playground';
 
 const PERIODS = ['Day', 'Week', 'Month', 'Quarter', 'Year'];
@@ -30,7 +30,7 @@ function code(values: Values) {
     return `  <SegmentedItem value="${period.toLowerCase()}"${disabled ? ' disabled' : ''}>${period}</SegmentedItem>`;
   });
   return [
-    "import { Segmented, SegmentedItem } from '@omuk/ui/segmented';",
+    "import { Segmented, SegmentedItem } from 'omuk-ui/segmented';",
     '',
     `<Segmented aria-label="${values['aria-label']}"${values.size === 'md' ? '' : ` size="${values.size}"`} defaultValue="day">`,
     ...items,

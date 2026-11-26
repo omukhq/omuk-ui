@@ -8,7 +8,9 @@ export const REPO_URL = 'https://github.com/omukhq/omuk-ui';
 export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;
 export const CHANGELOG_URL = `${REPO_URL}/blob/main/CHANGELOG.md`;
 export const DESIGN_URL = `${REPO_URL}/blob/main/docs/DESIGN.md`;
-export const INSTALL_LINE = `bun add github:omukhq/omuk-ui#${TAG}`;
+/** The npm package; imports use the same name (`omuk-ui/button`). */
+export const NPM_PACKAGE = 'omuk-ui';
+export const INSTALL_LINE = `bun add ${NPM_PACKAGE}@${version}`;
 
 /** A component's source file on GitHub. */
 export function sourceUrl(file: string) {

@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { toast } from '@omuk/ui/sonner';
+import { Button } from 'omuk-ui/button';
+import { toast } from 'omuk-ui/sonner';
 
 export default function ToastKinds() {
   return (

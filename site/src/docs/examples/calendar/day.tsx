@@ -1,4 +1,4 @@
-import { Calendar, useToday } from '@omuk/ui/calendar';
+import { Calendar, useToday } from 'omuk-ui/calendar';
 import { useState } from 'react';
 
 /** Saturdays and Sundays: the office is closed. */

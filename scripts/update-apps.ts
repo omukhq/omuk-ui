@@ -7,12 +7,13 @@
 //   bun scripts/update-apps.ts --to-npm    installs from npm, not a GitHub tag
 //
 // With --to-npm, an app's GitHub spec becomes the npm alias
-// `"@omuk/ui": "npm:@omukhq/ui@<version>"`, so its imports (`@omuk/ui/button`)
+// `"@omuk/ui": "npm:omuk-ui@<version>"`, so its imports (`@omuk/ui/button`)
 // and its CSS paths (`node_modules/@omuk/ui/…`) stay as they are. The version
-// must be on npm. An app on the alias stays on it in later runs.
+// must be on npm. An app on the alias stays on it in later runs, and an alias
+// to the old npm name (`@omukhq/ui`, up to alpha.30) moves to `omuk-ui`.
 //
 // It finds the apps on this machine: every package.json under `root` that
-// depends on @omuk/ui or @omukhq/ui. The list of apps is the owner's, not
+// depends on @omuk/ui or omuk-ui. The list of apps is the owner's, not
 // this public repo's, so it lives in ~/.config/omuk-ui/apps.json (or the
 // file in OMUK_APPS):
 //

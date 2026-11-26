@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { Skeleton } from '@omuk/ui/skeleton';
+import { Button } from 'omuk-ui/button';
+import { Skeleton } from 'omuk-ui/skeleton';
 import { useState } from 'react';
 
 function wait(ms: number) {

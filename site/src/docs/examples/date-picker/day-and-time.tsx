@@ -1,4 +1,4 @@
-import { DatePicker } from '@omuk/ui/date-picker';
+import { DatePicker } from 'omuk-ui/date-picker';
 import { useState } from 'react';
 
 export default function DatePickerDayAndTime() {

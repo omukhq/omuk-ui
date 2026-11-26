@@ -1,4 +1,4 @@
-import { Toaster } from '@omuk/ui/sonner';
+import { Toaster } from 'omuk-ui/sonner';
 import { CodeView, DocSection, Example, Notes, PropsTable } from '../blocks';
 import Action from '../examples/toast/action';
 import actionSource from '../examples/toast/action.tsx?raw';

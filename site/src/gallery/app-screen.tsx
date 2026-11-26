@@ -1,37 +1,3 @@
-import { Avatar } from '@omuk/ui/avatar';
-import { Badge } from '@omuk/ui/badge';
-import { Button } from '@omuk/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@omuk/ui/input-group';
-import { ListRow, ListRowMeta } from '@omuk/ui/list-row';
-import { PromptProvider, usePrompt } from '@omuk/ui/prompt';
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@omuk/ui/select';
-import { Status } from '@omuk/ui/status';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@omuk/ui/table';
 import {
   CopyIcon,
   EllipsisIcon,
@@ -43,6 +9,40 @@ import {
   SearchIcon,
   Trash2Icon,
 } from 'lucide-react';
+import { Avatar } from 'omuk-ui/avatar';
+import { Badge } from 'omuk-ui/badge';
+import { Button } from 'omuk-ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from 'omuk-ui/dropdown-menu';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from 'omuk-ui/input-group';
+import { ListRow, ListRowMeta } from 'omuk-ui/list-row';
+import { PromptProvider, usePrompt } from 'omuk-ui/prompt';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'omuk-ui/select';
+import { Status } from 'omuk-ui/status';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from 'omuk-ui/table';
 import { useState } from 'react';
 import { LazyToaster, withToast } from './toasts';
 

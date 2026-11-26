@@ -3,8 +3,8 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from '@omuk/ui/input-group';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/input-group';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
@@ -56,8 +56,8 @@ function code({ label, prefix, placeholder, size, disabled }: Values) {
     ? ['InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText']
     : ['InputGroup', 'InputGroupInput'];
   return [
-    `import { ${parts.join(', ')} } from '@omuk/ui/input-group';`,
-    "import { Label } from '@omuk/ui/label';",
+    `import { ${parts.join(', ')} } from 'omuk-ui/input-group';`,
+    "import { Label } from 'omuk-ui/label';",
     '',
     '<div className="flex flex-col gap-1">',
     `  <Label htmlFor="url">${label}</Label>`,

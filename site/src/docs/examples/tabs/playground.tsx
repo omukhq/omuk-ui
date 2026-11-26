@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@omuk/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'omuk-ui/tabs';
 import { Playground } from '../../playground';
 
 const VARIANTS = ['default', 'line'] as const;
@@ -61,7 +61,7 @@ function code({
     (page) =>
       `  <TabsContent value="${page.value}" className="py-4 text-muted">\n    ${page.text}\n  </TabsContent>`,
   );
-  return `import { Tabs, TabsContent, TabsList, TabsTrigger } from '@omuk/ui/tabs';
+  return `import { Tabs, TabsContent, TabsList, TabsTrigger } from 'omuk-ui/tabs';
 
 <Tabs defaultValue="overview"${root} className="w-full">
   <TabsList${list.filter(Boolean).join('')} aria-label="Project">

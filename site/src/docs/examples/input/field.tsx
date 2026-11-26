@@ -1,5 +1,5 @@
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 
 export default function InputWithLabel() {

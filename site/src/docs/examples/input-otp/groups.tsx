@@ -1,6 +1,6 @@
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@omuk/ui/input-otp';
-import { Label } from '@omuk/ui/label';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from 'omuk-ui/input-otp';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 
 export default function InputOTPGroups() {

@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@omuk/ui/table';
+} from 'omuk-ui/table';
 
 const USAGE = [
   { service: 'Web app', requests: 1284330, errors: 212 },

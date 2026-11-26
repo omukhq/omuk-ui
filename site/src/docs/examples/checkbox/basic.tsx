@@ -1,5 +1,5 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { Label } from '@omuk/ui/label';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 export default function CheckboxBasic() {

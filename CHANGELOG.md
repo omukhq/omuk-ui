@@ -4,6 +4,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.31] - 2026-11-26
+
+### Changed (breaking)
+
+- The npm package is `omuk-ui`, and the CLI is `omuk`. `@omukhq/ui` and `@omukhq/cli` (alpha.30 only) are gone.
+  Imports are `omuk-ui/…` (`omuk-ui/button`), and CSS paths are `node_modules/omuk-ui/…`. To update: install
+  `omuk-ui@1.0.0-alpha.31` and replace `@omuk/ui/` with `omuk-ui/` in imports and CSS paths. An app already on
+  `@omuk/ui/…` can keep its imports with an alias: `"@omuk/ui": "npm:omuk-ui@1.0.0-alpha.31"`. Run the CLI as
+  `npx omuk …`. The code is the same as alpha.30.
+
 ## [1.0.0-alpha.30] - 2026-11-26
 
 ### Fixed

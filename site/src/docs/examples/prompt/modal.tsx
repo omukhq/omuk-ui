@@ -1,7 +1,7 @@
-import { Button } from '@omuk/ui/button';
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
-import { usePrompt } from '@omuk/ui/prompt';
+import { Button } from 'omuk-ui/button';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
+import { usePrompt } from 'omuk-ui/prompt';
 import { useId, useState } from 'react';
 
 function RenameForm({

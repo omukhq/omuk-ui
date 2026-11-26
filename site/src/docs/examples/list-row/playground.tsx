@@ -1,5 +1,5 @@
-import { ListRow, ListRowMeta } from '@omuk/ui/list-row';
 import { FileTextIcon } from 'lucide-react';
+import { ListRow, ListRowMeta } from 'omuk-ui/list-row';
 import { Playground } from '../../playground';
 
 type Values = {
@@ -35,7 +35,7 @@ function code({ children, current, level, icon, meta, disabled }: Values) {
   const iconImport = icon
     ? "\nimport { FileTextIcon } from 'lucide-react';"
     : '';
-  return `import { ${imports} } from '@omuk/ui/list-row';${iconImport}
+  return `import { ${imports} } from 'omuk-ui/list-row';${iconImport}
 
 <ListRow${attributes.filter(Boolean).join('')}>
   ${lines.filter(Boolean).join('\n  ')}

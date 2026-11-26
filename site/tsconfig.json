@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "types": ["bun", "react", "react-dom", "vite/client"],
-    "paths": { "@omuk/ui/*": ["../src/*"] }
+    "paths": { "omuk-ui/*": ["../src/*"] }
   },
   "include": ["src", "scripts", "vite.config.ts"]
 }

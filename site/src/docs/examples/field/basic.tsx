@@ -1,10 +1,5 @@
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@omuk/ui/field';
-import { Input } from '@omuk/ui/input';
+import { Field, FieldDescription, FieldGroup, FieldLabel } from 'omuk-ui/field';
+import { Input } from 'omuk-ui/input';
 import { useId } from 'react';
 
 export default function FieldBasic() {

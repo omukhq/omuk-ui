@@ -1,4 +1,4 @@
-import { ListRow } from '@omuk/ui/list-row';
+import { ListRow } from 'omuk-ui/list-row';
 import { useState } from 'react';
 
 const HEADINGS = [

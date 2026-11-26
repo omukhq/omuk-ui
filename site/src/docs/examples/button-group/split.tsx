@@ -1,12 +1,12 @@
-import { Button } from '@omuk/ui/button';
-import { ButtonGroup, ButtonGroupSeparator } from '@omuk/ui/button-group';
+import { ChevronDownIcon } from 'lucide-react';
+import { Button } from 'omuk-ui/button';
+import { ButtonGroup, ButtonGroupSeparator } from 'omuk-ui/button-group';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@omuk/ui/dropdown-menu';
-import { ChevronDownIcon } from 'lucide-react';
+} from 'omuk-ui/dropdown-menu';
 
 export default function ButtonGroupSplit() {
   return (

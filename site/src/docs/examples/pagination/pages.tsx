@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@omuk/ui/pagination';
+} from 'omuk-ui/pagination';
 import { type MouseEvent, useState } from 'react';
 
 const LAST_PAGE = 12;

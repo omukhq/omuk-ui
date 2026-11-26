@@ -3,8 +3,8 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroupTextarea,
-} from '@omuk/ui/input-group';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/input-group';
+import { Label } from 'omuk-ui/label';
 import { useId, useState } from 'react';
 
 const LIMIT = 200;

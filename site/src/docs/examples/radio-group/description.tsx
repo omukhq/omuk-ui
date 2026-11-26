@@ -5,8 +5,8 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from '@omuk/ui/field';
-import { RadioGroup, RadioGroupItem } from '@omuk/ui/radio-group';
+} from 'omuk-ui/field';
+import { RadioGroup, RadioGroupItem } from 'omuk-ui/radio-group';
 import { useId } from 'react';
 
 const RULES = [

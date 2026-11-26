@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { usePrompt } from '@omuk/ui/prompt';
+import { Button } from 'omuk-ui/button';
+import { usePrompt } from 'omuk-ui/prompt';
 import { Playground } from '../../playground';
 
 type Values = {
@@ -48,7 +48,7 @@ function code(values: Values) {
     lines.push(`cancelLabel: ${quote(values.cancelLabel)}`);
   }
   if (values.destructive) lines.push('destructive: true');
-  return `import { usePrompt } from '@omuk/ui/prompt';
+  return `import { usePrompt } from 'omuk-ui/prompt';
 
 const prompt = usePrompt();
 

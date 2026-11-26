@@ -1,7 +1,7 @@
-import { Checkbox } from '@omuk/ui/checkbox';
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
-import { Switch } from '@omuk/ui/switch';
+import { Checkbox } from 'omuk-ui/checkbox';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
+import { Switch } from 'omuk-ui/switch';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -47,8 +47,8 @@ function Preview({ children, control, disabled }: Values) {
 function code({ children, control, disabled }: Values) {
   const field = jsx(control, { id: 'name', disabled }, {});
   const imports = [
-    `import { ${control} } from '@omuk/ui/${control.toLowerCase()}';`,
-    "import { Label } from '@omuk/ui/label';",
+    `import { ${control} } from 'omuk-ui/${control.toLowerCase()}';`,
+    "import { Label } from 'omuk-ui/label';",
   ].sort();
   const body =
     control === 'Input'

@@ -1,4 +1,4 @@
-import { DatePicker, type DateRange } from '@omuk/ui/date-picker';
+import { DatePicker, type DateRange } from 'omuk-ui/date-picker';
 import { type ReactNode, useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -158,7 +158,7 @@ function code(values: Values) {
     values.isDisabled && 'isDisabled',
     values.isInvalid && 'isInvalid',
   ];
-  return `import { DatePicker } from '@omuk/ui/date-picker';
+  return `import { DatePicker } from 'omuk-ui/date-picker';
 
 <DatePicker
   ${lines.filter(Boolean).join('\n  ')}

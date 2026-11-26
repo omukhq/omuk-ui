@@ -1,4 +1,4 @@
-import { Calendar, type DateRange } from '@omuk/ui/calendar';
+import { Calendar, type DateRange } from 'omuk-ui/calendar';
 import { useState } from 'react';
 import { Playground } from '../../playground';
 
@@ -70,7 +70,7 @@ function code(values: Values) {
     values.isReadOnly && 'isReadOnly',
     values.visibleMonths > 1 && `className="${WRAP}"`,
   ];
-  return `import { Calendar } from '@omuk/ui/calendar';
+  return `import { Calendar } from 'omuk-ui/calendar';
 
 <Calendar
   ${lines.filter(Boolean).join('\n  ')}

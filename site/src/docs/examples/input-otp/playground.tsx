@@ -1,10 +1,10 @@
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@omuk/ui/input-otp';
-import { Label } from '@omuk/ui/label';
 import {
   REGEXP_ONLY_CHARS,
   REGEXP_ONLY_DIGITS,
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from 'input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from 'omuk-ui/input-otp';
+import { Label } from 'omuk-ui/label';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
@@ -95,8 +95,8 @@ function code({
     .filter(Boolean)
     .join(' ');
   return [
-    "import { InputOTP, InputOTPGroup, InputOTPSlot } from '@omuk/ui/input-otp';",
-    "import { Label } from '@omuk/ui/label';",
+    "import { InputOTP, InputOTPGroup, InputOTPSlot } from 'omuk-ui/input-otp';",
+    "import { Label } from 'omuk-ui/label';",
     `import { ${pattern} } from 'input-otp';`,
     '',
     '<div className="flex flex-col gap-1">',

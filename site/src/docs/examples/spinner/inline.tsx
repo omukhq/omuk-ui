@@ -1,4 +1,4 @@
-import { Spinner } from '@omuk/ui/spinner';
+import { Spinner } from 'omuk-ui/spinner';
 
 export default function SpinnerInline() {
   return (

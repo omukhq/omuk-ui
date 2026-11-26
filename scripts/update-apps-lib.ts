@@ -3,7 +3,7 @@
 // changelog between two versions.
 
 /** The package names an app can install Omuk UI under. */
-export const PACKAGE_NAMES = ['@omuk/ui', '@omukhq/ui'] as const;
+export const PACKAGE_NAMES = ['@omuk/ui', 'omuk-ui', '@omukhq/ui'] as const;
 
 const DEPENDENCY = new RegExp(
   `("(?:${PACKAGE_NAMES.join('|')})"\\s*:\\s*")([^"]*)(")`,
@@ -11,19 +11,25 @@ const DEPENDENCY = new RegExp(
 );
 
 /** The npm package. An app keeps importing `@omuk/ui` through an alias. */
-export const NPM_PACKAGE = '@omukhq/ui';
+export const NPM_PACKAGE = 'omuk-ui';
+
+/** The npm name up to alpha.30, which an app's alias may still point at. */
+const OLD_NPM_PACKAGE = '@omukhq/ui';
 
 const VERSION = String.raw`\d+\.\d+\.\d+[\w.-]*`;
 
 /**
  * The version an install spec points at, or null for one it does not pin:
  * `github:omukhq/omuk-ui#v1.0.0-alpha.27`, `git+ssh://…/omuk-ui.git#v1.0.0-alpha.18`,
- * `1.0.0-alpha.27` from npm, or the alias `npm:@omukhq/ui@1.0.0-alpha.30`.
+ * `1.0.0-alpha.27` from npm, or the alias `npm:omuk-ui@1.0.0-alpha.31` (or
+ * the old `npm:@omukhq/ui@…`, which a bump moves to the new name).
  */
 export function versionOf(spec: string): string | null {
   const tag = spec.match(new RegExp(`#v(${VERSION})$`));
   if (tag?.[1]) return tag[1];
-  const alias = spec.match(new RegExp(`^npm:${NPM_PACKAGE}@(${VERSION})$`));
+  const alias = spec.match(
+    new RegExp(`^npm:(?:${NPM_PACKAGE}|${OLD_NPM_PACKAGE})@(${VERSION})$`),
+  );
   if (alias?.[1]) return alias[1];
   const exact = spec.match(new RegExp(`^(${VERSION})$`));
   return exact?.[1] ?? null;

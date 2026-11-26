@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { toast } from '@omuk/ui/sonner';
+import { Button } from 'omuk-ui/button';
+import { toast } from 'omuk-ui/sonner';
 import { Playground } from '../../playground';
 import { POSITIONS, setToastPosition } from './position-store';
 
@@ -63,7 +63,7 @@ function code({ type, message, description, actionLabel, position }: Values) {
       ? ''
       : `// Once, near the root of the app:\n<Toaster position="${position}" />\n\n`;
   const names = position === 'bottom-right' ? 'toast' : 'toast, Toaster';
-  return `import { ${names} } from '@omuk/ui/sonner';
+  return `import { ${names} } from 'omuk-ui/sonner';
 
 ${toaster}${call}(${args});`;
 }

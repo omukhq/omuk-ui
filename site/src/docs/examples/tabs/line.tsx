@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@omuk/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'omuk-ui/tabs';
 
 export default function TabsLine() {
   return (

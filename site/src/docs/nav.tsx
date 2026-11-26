@@ -1,10 +1,10 @@
+import { SearchIcon } from 'lucide-react';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from '@omuk/ui/input-group';
-import { ListRow } from '@omuk/ui/list-row';
-import { SearchIcon } from 'lucide-react';
+} from 'omuk-ui/input-group';
+import { ListRow } from 'omuk-ui/list-row';
 import { useState } from 'react';
 import { Link } from '../router';
 import { DOCS_BY_NAME, preloadPage } from './registry';

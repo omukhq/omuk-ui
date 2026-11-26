@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { Switch } from '@omuk/ui/switch';
+import { Label } from 'omuk-ui/label';
+import { Switch } from 'omuk-ui/switch';
 import { useId } from 'react';
 import { jsx, Playground } from '../../playground';
 
@@ -47,8 +47,8 @@ export default function SwitchPlayground() {
       render={(values) => <Preview {...values} />}
       code={({ label, ...props }) =>
         [
-          "import { Label } from '@omuk/ui/label';",
-          "import { Switch } from '@omuk/ui/switch';",
+          "import { Label } from 'omuk-ui/label';",
+          "import { Switch } from 'omuk-ui/switch';",
           '',
           '<div className="flex items-center gap-2">',
           `  ${jsx('Switch', { id: 'lock', defaultChecked: true, ...props }, DEFAULTS)}`,

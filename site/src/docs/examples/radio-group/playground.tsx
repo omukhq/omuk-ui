@@ -1,5 +1,5 @@
-import { Label } from '@omuk/ui/label';
-import { RadioGroup, RadioGroupItem } from '@omuk/ui/radio-group';
+import { Label } from 'omuk-ui/label';
+import { RadioGroup, RadioGroupItem } from 'omuk-ui/radio-group';
 import { useId } from 'react';
 import { Playground } from '../../playground';
 
@@ -51,8 +51,8 @@ function Preview({ label, defaultValue, disabled }: Values) {
 
 function code({ label, defaultValue, disabled }: Values) {
   return [
-    "import { Label } from '@omuk/ui/label';",
-    "import { RadioGroup, RadioGroupItem } from '@omuk/ui/radio-group';",
+    "import { Label } from 'omuk-ui/label';",
+    "import { RadioGroup, RadioGroupItem } from 'omuk-ui/radio-group';",
     '',
     '<div className="flex flex-col gap-3">',
     `  <p id="format" className="text-sm font-medium">${label}</p>`,

@@ -1,15 +1,15 @@
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
-import { Segmented, SegmentedItem } from '@omuk/ui/segmented';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
+import { Segmented, SegmentedItem } from 'omuk-ui/segmented';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@omuk/ui/select';
-import { Switch } from '@omuk/ui/switch';
-import { cn } from '@omuk/ui/utils';
+} from 'omuk-ui/select';
+import { Switch } from 'omuk-ui/switch';
+import { cn } from 'omuk-ui/utils';
 import { type ReactNode, useId, useState } from 'react';
 import { CodeView } from './blocks';
 

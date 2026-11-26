@@ -1,5 +1,5 @@
-import { Button } from '@omuk/ui/button';
-import { usePrompt } from '@omuk/ui/prompt';
+import { Button } from 'omuk-ui/button';
+import { usePrompt } from 'omuk-ui/prompt';
 import { useState } from 'react';
 
 export default function PromptAlert() {

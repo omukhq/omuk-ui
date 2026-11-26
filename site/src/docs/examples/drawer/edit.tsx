@@ -1,4 +1,4 @@
-import { Button } from '@omuk/ui/button';
+import { Button } from 'omuk-ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -8,9 +8,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@omuk/ui/drawer';
-import { Input } from '@omuk/ui/input';
-import { Label } from '@omuk/ui/label';
+} from 'omuk-ui/drawer';
+import { Input } from 'omuk-ui/input';
+import { Label } from 'omuk-ui/label';
 import { type FormEvent, useState } from 'react';
 
 export default function DrawerEdit() {
