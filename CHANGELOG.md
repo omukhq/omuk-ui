@@ -4,6 +4,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.28] - 2026-11-26
+
 ### Changed (breaking)
 
 - Without `data-theme`, the page follows the system's light or dark setting. Before, it was always light. To keep
@@ -11,16 +13,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 - Text sizes are in rem (`text-sm` is `0.875rem`), so they follow the reader's browser font size. At the default
   16px they are the same as before.
 - `Card` is an `<article>` and `CardTitle` an `<h3>` (new prop `level`, 2 to 6). A ref on them is an `HTMLElement`
-  and an `HTMLHeadingElement` now.
+  and an `HTMLHeadingElement` now. To update: change a ref's type from `HTMLDivElement`, and set `level` where the
+  card's title is not a third-level heading.
 - `ListRow current={true}` sets `aria-current="true"`, not `"page"`. Pass `current="page"` for a link to the open
   page.
 - `Textarea` and `InputGroupTextarea` grow up to 320 and then scroll; `Textarea` has no resize handle where the
-  browser sizes it to its text.
+  browser sizes it to its text. To update: pass a `max-h-*` class for another limit.
 - `SortableHandle`: Up and Down move an item only after Space or Enter picks it up. Space, Enter or Tab puts it
   down; Escape puts it back. A screen reader's arrow keys no longer move items. The default `hint` is "Drag, or
-  press Space, then Up or Down".
+  press Space, then Up or Down". To update: change a custom `hint` or help text that says "press Up or Down".
 - `DrawerContent` (left and right): the swipe is a scroll with snap points, not pointer events, so it has the
-  browser's momentum. The `data-swiping` attribute and the `--drawer-swipe-movement-*` variables are gone.
+  browser's momentum. The `data-swiping` attribute and the `--drawer-swipe-movement-*` variables are gone. To
+  update: remove styles that use them.
 
 ### Changed
 
@@ -41,6 +45,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
   - `Calendar` and `DatePicker` use `en-US` and mark no day as today until the page hydrates, then the browser's
     language and today. A page drawn in the browser only has them from the first render.
   - `PromptProvider` renders on a server.
+- `Toaster`: `mobileOffset.bottom` sets the distance from the bottom on a phone (below 640), and `offset.right` the
+  distance from the right edge for a right position. Before, both were ignored.
+- `RadioGroup` with `name`: with no radio picked, the form sends nothing for the group, as with native radios.
+  Before, it sent an empty value.
 - `TabsList`: too many tabs for the width scroll sideways, and the focus ring is not cut off. A `line` tab draws its
   focus ring inside itself, and the line under the tabs is the new `tab-line` utility.
 - A closed toast goes when its closing animation ends, not after a fixed 200 ms; with reduced motion, at once.
