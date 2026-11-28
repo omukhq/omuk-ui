@@ -177,7 +177,8 @@ the component together.
 - Track `inline-flex gap-0.5 p-1 rounded-lg bg-hover`
 - Segment `px-3 rounded-md`, normal weight (owner, 24 Nov 2026: medium read heavy beside field text); chosen
   `bg-raised shadow-sm`, so the fill alone marks it and no label changes width. Height: track = control size,
-  `size` sm 28 (track `p-0.5`, segments `px-2 text-xs`) · md 32, the default · lg 36.
+  `size` sm 28 (track `p-1`, segments `px-2 text-xs`) · md 32, the default · lg 36. The track's padding is
+  never under `p-1`: the chosen fill's shadow reaches 3 px below it and would hide the track there.
 - Use when a setting picks one of a few (a view, the theme, a width, a text size).
 
 ### Tabs

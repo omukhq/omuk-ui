@@ -4,6 +4,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [Unreleased]
 
+## [1.0.0-alpha.33] - 2026-11-28
+
+### Fixed
+
+- Segmented, `size="sm"`: the track's padding is `p-1`, as the other sizes (was `p-0.5`). In dark mode the
+  chosen fill's shadow covered the 2 px under it, so the track showed above the fill and not below. The segments
+  are now 20 px high inside the 28 px track.
+
 ## [1.0.0-alpha.32] - 2026-11-26
 
 ### Changed (breaking)

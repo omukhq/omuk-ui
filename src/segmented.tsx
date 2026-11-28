@@ -23,7 +23,9 @@ const segmentedVariants = cva(
     variants: {
       // The Button's heights (owner, 24 Nov 2026): md, the default, is 32.
       size: {
-        sm: 'h-7 p-0.5',
+        // p-1 as md: the chosen fill's shadow (--elevation-sm) reaches below
+        // it, so p-0.5 left no track showing under the fill in dark mode.
+        sm: 'h-7 p-1',
         md: 'h-8',
         lg: 'h-9',
       },
