@@ -14,21 +14,21 @@ import { cn } from './utils';
 
 // DESIGN.md, section 3, Segmented control: picks one of a few settings
 // (Live/Split, theme, width, text size). A radio group to assistive tech:
-// one tab stop, the arrow keys move and pick. The track is the control's
-// height; the chosen segment is raised (`bg-raised shadow-sm`), where you are.
+// one tab stop, the arrow keys move and pick. The segments have the height;
+// the track only wraps them in its padding (owner, 28 Nov 2026). The chosen
+// segment is raised (`bg-raised shadow-sm`), where you are.
+//
+// Segment + track padding = the Button's heights (owner, 24 Nov 2026):
+// sm 20 + 8 = 28, md 24 + 8 = 32 (the default), lg 28 + 8 = 36. The padding is
+// p-1 at every size: the chosen fill's shadow (--elevation-sm) reaches below
+// it, and with p-0.5 no track showed under the fill in dark mode.
 
 const segmentedVariants = cva(
-  'inline-flex w-fit items-stretch gap-0.5 rounded-lg bg-hover p-1',
+  'inline-flex w-fit items-center gap-0.5 rounded-lg bg-hover p-1',
   {
     variants: {
-      // The Button's heights (owner, 24 Nov 2026): md, the default, is 32.
-      size: {
-        // p-1 as md: the chosen fill's shadow (--elevation-sm) reaches below
-        // it, so p-0.5 left no track showing under the fill in dark mode.
-        sm: 'h-7 p-1',
-        md: 'h-8',
-        lg: 'h-9',
-      },
+      // The size is the segments' height (SegmentedItem reads data-size).
+      size: { sm: '', md: '', lg: '' },
     },
     defaultVariants: { size: 'md' },
   },
@@ -100,7 +100,7 @@ function SegmentedItem({
       tabIndex={chosen || segmented.value === null ? 0 : -1}
       data-slot="segmented-item"
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm in-data-[size=sm]:px-2 in-data-[size=sm]:text-xs whitespace-nowrap text-foreground outline-none transition-colors focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex h-6 items-center justify-center gap-2 rounded-md px-3 text-sm in-data-[size=sm]:h-5 in-data-[size=sm]:px-2 in-data-[size=sm]:text-xs in-data-[size=lg]:h-7 whitespace-nowrap text-foreground outline-none transition-colors focus-visible:focus-ring [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Chosen and disabled only when so (the item knows).
         // The hover fill only on the others: it would cover the raised one.
         chosen ? 'bg-raised shadow-sm' : 'hover:bg-hover',

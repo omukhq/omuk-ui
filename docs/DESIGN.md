@@ -174,11 +174,13 @@ the component together.
   darkening and the always-visible label keep it findable.
 
 ### Segmented control
-- Track `inline-flex gap-0.5 p-1 rounded-lg bg-hover`
+- Track `inline-flex items-center gap-0.5 p-1 rounded-lg bg-hover`, with no height of its own: the segments
+  have the height, and the track only wraps them in its padding (owner, 28 Nov 2026).
 - Segment `px-3 rounded-md`, normal weight (owner, 24 Nov 2026: medium read heavy beside field text); chosen
-  `bg-raised shadow-sm`, so the fill alone marks it and no label changes width. Height: track = control size,
-  `size` sm 28 (track `p-1`, segments `px-2 text-xs`) · md 32, the default · lg 36. The track's padding is
-  never under `p-1`: the chosen fill's shadow reaches 3 px below it and would hide the track there.
+  `bg-raised shadow-sm`, so the fill alone marks it and no label changes width. Height by `size`: sm `h-5`
+  (`px-2 text-xs`) · md `h-6`, the default · lg `h-7`. With the track's `p-1`, the control is 28 · 32 · 36, the
+  Button's heights. The padding is `p-1` at every size: the chosen fill's shadow reaches below it, and a smaller
+  padding hides the track there.
 - Use when a setting picks one of a few (a view, the theme, a width, a text size).
 
 ### Tabs

@@ -6,11 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The
 
 ## [1.0.0-alpha.33] - 2026-11-28
 
+### Changed
+
+- Segmented: the segments have the height (sm `h-5`, md `h-6`, lg `h-7`); the track has none and only wraps
+  them in `p-1`. The control stays 28, 32 and 36 px high. A `className` with a height on `<Segmented>` now sets
+  nothing useful: set the size instead.
+
 ### Fixed
 
 - Segmented, `size="sm"`: the track's padding is `p-1`, as the other sizes (was `p-0.5`). In dark mode the
-  chosen fill's shadow covered the 2 px under it, so the track showed above the fill and not below. The segments
-  are now 20 px high inside the 28 px track.
+  chosen fill's shadow covered the 2 px under it, so the track showed above the fill and not below.
 
 ## [1.0.0-alpha.32] - 2026-11-26
 
